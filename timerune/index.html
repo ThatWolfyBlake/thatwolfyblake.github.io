@@ -8,50 +8,121 @@
 <style>
 @font-face {
     font-family: "Deltarune";
-    src: url("fontes/deltarune.ttf") format("truetype");
+    src: url("fontes/deltarune.ttf");
 }
 
 @font-face {
     font-family: "Determination";
-    src: url("fontes/determinationsansweb-webfont.ttf") format("truetype");
+    src: url("fontes/determinationsansweb-webfont.ttf");
+}
+
+* {
+    box-sizing: border-box;
 }
 
 body{
     margin:0;
     background:#000;
     color:#fff;
-    display:flex;
-    justify-content:center;
-    align-items:center;
-    min-height:100vh;
+    font-family:"Determination", sans-serif;
+    overflow-x:hidden;
 }
 
+/* CONTAINER PRINCIPAL */
 .menu{
-    width:650px;
-    border:4px solid white;
-    padding:25px;
+    max-width:900px;
+    margin:0 auto;
+    padding:30px 20px;
 }
 
+/* LOGO */
 .logo{
     text-align:center;
     font-family:"Deltarune";
-    font-size:60px;
-    margin-bottom:25px;
+    font-size:clamp(36px,6vw,64px);
+    margin-bottom:40px;
+    text-shadow:0 0 10px white;
 }
 
+/* CAIXAS PRINCIPAIS */
 .caixa{
-    border:3px solid white;
-    padding:15px;
+    border:2px solid white;
+    border-radius:18px;
+    padding:18px;
     margin-bottom:20px;
-    font-family:"Determination";
-    font-size:28px;
+    box-shadow:0 0 12px rgba(255,255,255,0.25);
 }
 
 .titulo{
     font-family:"Deltarune";
-    font-size:32px;
+    font-size:clamp(18px,4vw,28px);
     margin-bottom:10px;
 }
+
+/* PROGRESS BAR */
+.barra-container{
+    width:100%;
+    height:18px;
+    border:2px solid white;
+    border-radius:999px;
+    overflow:hidden;
+    margin-top:10px;
+}
+
+.barra{
+    height:100%;
+    width:1%;
+    background:white;
+    box-shadow:0 0 10px white;
+}
+
+/* BLOCO ALTERNADO */
+.bloco{
+    display:flex;
+    align-items:center;
+    gap:20px;
+    margin:50px 0;
+}
+
+/* inverte layout */
+.bloco.reverse{
+    flex-direction:row-reverse;
+}
+
+/* caixa visual */
+.box-img{
+    flex:1;
+    min-height:140px;
+    border:2px solid white;
+    border-radius:16px;
+    box-shadow:0 0 12px rgba(255,255,255,0.25);
+}
+
+/* texto */
+.box-text{
+    flex:1;
+    font-size:clamp(14px,3vw,18px);
+    line-height:1.4;
+}
+
+/* FAQ */
+.faq{
+    margin-top:60px;
+}
+
+.faq-item{
+    border:2px solid white;
+    border-radius:14px;
+    padding:15px;
+    margin-bottom:12px;
+    box-shadow:0 0 10px rgba(255,255,255,0.2);
+}
+
+.faq-q{
+    font-weight:bold;
+    margin-bottom:8px;
+}
+
 </style>
 </head>
 
@@ -59,24 +130,79 @@ body{
 
 <div class="menu">
 
-<div class="logo">TIMERUNE 🌸</div>
+<div class="logo">TIMERUNE</div>
 
+<!-- SEÇÕES -->
 <div class="caixa">
-<div class="titulo">Capítulos que devem sair</div>
-1, 2, 3, 4, 5, 6 e 7
+    <div class="titulo">Capítulos planejados</div>
+    1, 2, 3, 4, 5, 6 e 7
 </div>
 
 <div class="caixa">
-<div class="titulo">Capítulos em prioridade</div>
-1, 2 e 3.
+    <div class="titulo">Prioridade</div>
+    1, 2 e 3
 </div>
-    
+
 <div class="caixa">
-<div class="titulo">Progresso</div>
-(■□□□□□□□□□□□□□□□□□□□□)
+    <div class="titulo">Progresso</div>
+    <div class="barra-container">
+        <div class="barra"></div>
+    </div>
+</div>
+
+<!-- BLOCO 1 -->
+<div class="bloco">
+    <div class="box-img"></div>
+    <div class="box-text">
+        Capítulo 1 — Sua entrada ao universo de Timerune.
+    </div>
+</div>
+
+<!-- BLOCO 2 -->
+<div class="bloco reverse">
+    <div class="box-img"></div>
+    <div class="box-text">
+        Capítulo 2 — Novas aventuras e novos personagens!
+    </div>
+</div>
+
+<!-- BLOCO 3 -->
+<div class="bloco">
+    <div class="box-img"></div>
+    <div class="box-text">
+        Capítulo 3 — Uma Noite especial.
+    </div>
+</div>
+
+<!-- BLOCO 4 -->
+<div class="bloco reverse">
+    <div class="box-img"></div>
+    <div class="box-text">
+        Capítulo 4 — Você verá.
+    </div>
+</div>
+
+<!-- FAQ -->
+<div class="faq">
+
+<div class="faq-item">
+    <div class="faq-q">O que é Timerune?</div>
+    <div>Um projeto fangame de deltarune, onde personagens são ocs ou pessoas que eu conheço!</div>
+</div>
+
+<div class="faq-item">
+    <div class="faq-q">Quando lança o Capítulo 1?</div>
+    <div>Em desenvolvimento.</div>
+</div>
+
+<div class="faq-item">
+    <div class="faq-q">Quando teremos novidades?</div>
+    <div>???</div>
+</div>
+
 </div>
 
 </div>
 
 </body>
-  </html>
+</html>
