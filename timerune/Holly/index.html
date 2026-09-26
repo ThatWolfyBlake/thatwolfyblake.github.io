@@ -1,62 +1,40 @@
 <!DOCTYPE html>
-<html lang="pt-BR">
+<html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Holly</title>
+  <meta charset="UTF-8">
+  <title>Lullaby</title>
 
-    <style>
-        body {
-            margin: 0;
-            height: 100vh;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            background: #111;
-            font-family: Arial, sans-serif;
-            color: white;
-        }
+  <style>
+    body {
+      margin: 0;
+      background: black;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      overflow: hidden; /* sem scroll */
+    }
 
-        .container {
-            text-align: center;
-            background: #222;
-            padding: 30px;
-            border-radius: 20px;
-            box-shadow: 0 0 20px #000;
-        }
-
-        img {
-    max-width: 250px;
-    max-height: 250px;
-    border-radius: 15px;
-    margin-bottom: 20px;
-        }
-
-        audio {
-            width: 300px;
-        }
-
-        h1 {
-            font-size: 24px;
-            margin-bottom: 20px;
-        }
-    </style>
+    img {
+      cursor: pointer;
+      image-rendering: pixelated;
+    }
+  </style>
 </head>
-
 <body>
 
-    <div class="container">
+  <img src="bat.png" id="trigger">
 
-        <img src="Holiday-missing3.png" alt="value not set">
+  <audio id="audio" src="placeholder.ogg"></audio>
 
-        <h1>value not set</h1>
+  <script>
+    const img = document.getElementById("trigger");
+    const audio = document.getElementById("audio");
 
-        <audio controls>
-            <source src="wolfy Blake - Lost girls Lullaby.m4a" type="audio/mpeg">
-            Seu navegador não suporta áudio.
-        </audio>
-
-    </div>
+    img.onclick = () => {
+      audio.play();
+    };
+  </script>
 
 </body>
-  </html>
+</html>
