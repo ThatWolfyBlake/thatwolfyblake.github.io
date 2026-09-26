@@ -1,0 +1,246 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Chapter 5</title>
+
+<style>
+@font-face {
+  font-family: "DeterminationSans";
+  src: url("../fontes/determinationsansweb-webfont.ttf");
+}
+
+body{
+  margin:0;
+  background:black;
+  overflow:hidden;
+  height:100vh;
+  font-family:"DeterminationSans", sans-serif;
+  color:white;
+}
+
+/* ☁️ NUVENS */
+.cloud-layer{
+  position:fixed;
+  top:-20%;
+  left:0;
+  width:220%;
+  height:80%;
+  z-index:0;
+  pointer-events:none;
+  opacity:0.35;
+
+  animation: moveClouds 60s linear infinite;
+
+  background:
+    radial-gradient(circle at 10% 20%, rgba(255,255,255,0.22), transparent 45%),
+    radial-gradient(circle at 40% 10%, rgba(255,255,255,0.20), transparent 50%),
+    radial-gradient(circle at 70% 30%, rgba(255,255,255,0.18), transparent 55%),
+    radial-gradient(circle at 90% 15%, rgba(255,255,255,0.16), transparent 60%),
+    radial-gradient(circle at 50% 40%, rgba(255,255,255,0.14), transparent 65%);
+}
+
+@keyframes moveClouds{
+  from { transform: translateX(0); }
+  to { transform: translateX(-25%); }
+}
+
+/* 🌧️ CHUVA */
+canvas#rain{
+  position:fixed;
+  top:0;
+  left:0;
+  z-index:1;
+}
+
+/* 🌊 OCEANO */
+canvas#ocean{
+  position:fixed;
+  bottom:0;
+  left:0;
+  z-index:1;
+}
+
+/* UI */
+.container{
+  position:relative;
+  z-index:2;
+  height:100vh;
+  display:flex;
+  flex-direction:column;
+  justify-content:center;
+  align-items:center;
+  text-align:center;
+}
+
+.titulo{
+  font-size:26px;
+  margin-bottom:20px;
+}
+
+audio{
+  width:280px;
+  filter: invert(1);
+}
+</style>
+
+</head>
+
+<body>
+
+<div class="cloud-layer"></div>
+
+<canvas id="rain"></canvas>
+<canvas id="ocean"></canvas>
+
+<div class="container">
+  <div class="titulo">Cold Winds</div>
+  <audio controls>
+    <source src="">
+  </audio>
+</div>
+
+<script>
+
+/* ================= RAIN ================= */
+const rain = document.getElementById("rain");
+const rctx = rain.getContext("2d");
+
+rain.width = window.innerWidth;
+rain.height = window.innerHeight;
+
+const drops = [];
+
+for(let i = 0; i < 180; i++){
+  drops.push({
+    x: Math.random() * rain.width,
+    y: Math.random() * rain.height,
+    len: Math.random() * 14 + 8,
+    speed: Math.random() * 7 + 6,
+    alpha: Math.random() * 0.25 + 0.05,
+    blueish: Math.random() > 0.85 // 💙 algumas gotas especiais
+  });
+}
+
+/* ================= OCEAN ================= */
+const ocean = document.getElementById("ocean");
+const octx = ocean.getContext("2d");
+
+function resize(){
+  rain.width = window.innerWidth;
+  rain.height = window.innerHeight;
+
+  ocean.width = window.innerWidth;
+  ocean.height = window.innerHeight * 0.35;
+}
+resize();
+
+let time = 0;
+
+/* 🌊 onda base */
+function waveY(x, t, h, intensity){
+  let base = h * 0.35;
+
+  let w1 = Math.sin((x * 0.01) + t * 1.5) * (6 + intensity * 10);
+  let w2 = Math.sin((x * 0.006) + t * 2.0) * (3 + intensity * 6);
+
+  return base + w1 + w2;
+}
+
+function animate(){
+  requestAnimationFrame(animate);
+
+  time += 0.01;
+
+  /* ================= RAIN ================= */
+  rctx.clearRect(0,0,rain.width,rain.height);
+
+  for(let d of drops){
+
+    if(d.blueish){
+      rctx.strokeStyle = `rgba(170,210,255,${d.alpha})`; // 💙 azul frio
+    } else {
+      rctx.strokeStyle = `rgba(255,255,255,${d.alpha})`;
+    }
+
+    rctx.lineWidth = 1;
+
+    rctx.beginPath();
+    rctx.moveTo(d.x, d.y);
+    rctx.lineTo(d.x - 4, d.y + d.len);
+    rctx.stroke();
+
+    d.x -= 1.8;
+    d.y += d.speed;
+
+    if(d.y > rain.height){
+      d.y = -20;
+      d.x = Math.random() * rain.width;
+    }
+
+    if(d.x < 0){
+      d.x = rain.width;
+    }
+  }
+
+  /* ================= OCEAN ================= */
+  octx.clearRect(0,0,ocean.width,ocean.height);
+
+  const w = ocean.width;
+  const h = ocean.height;
+
+  const intensity = (Math.sin(time * 0.25) + 1) / 2;
+
+  /* 🌊 água */
+  octx.beginPath();
+
+  for(let x = 0; x < w; x++){
+    let y = waveY(x, time, h, intensity);
+    octx.lineTo(x, y);
+  }
+
+  octx.lineTo(w, h);
+  octx.lineTo(0, h);
+  octx.closePath();
+
+  octx.fillStyle = "rgba(255,255,255,0.05)";
+  octx.fill();
+
+  /* 🌊 profundidade */
+  octx.strokeStyle = `rgba(255,255,255,${0.03 + intensity * 0.04})`;
+  octx.lineWidth = 1;
+
+  const layers = 7;
+
+  for(let i = 0; i < layers; i++){
+
+    octx.beginPath();
+
+    let depthFactor = i / (layers - 1);
+
+    for(let x = 0; x < w; x++){
+
+      let surface = waveY(x, time, h, intensity);
+
+      let mid = h * 0.18;
+      let range = h * 0.5;
+
+      let y = surface + mid + depthFactor * range;
+
+      let noise = Math.sin((x * 0.02) + time * 2 + i) * (2 + intensity * 3);
+
+      octx.lineTo(x, y + noise);
+    }
+
+    octx.stroke();
+  }
+}
+
+animate();
+
+window.addEventListener("resize", resize);
+</script>
+
+</body>
+</html>
