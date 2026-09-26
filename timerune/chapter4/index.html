@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Chapter 4</title>
+
+<style>
+@font-face {
+  font-family: "DeterminationSans";
+  src: url("../fontes/determinationsansweb-webfont.ttf");
+}
+
+body{
+  margin:0;
+  background:black;
+  overflow:hidden;
+  font-family:"DeterminationSans", sans-serif;
+  color:white;
+}
+
+/* PIXEL */
+#pixel{
+  position:absolute;
+  width:6px;
+  height:6px;
+  background:red;
+}
+
+/* TEXTO */
+#text{
+  position:absolute;
+  top:50%;
+  left:50%;
+  transform:translate(-50%,-50%);
+  text-align:center;
+  font-size:26px;
+  line-height:1.6;
+  white-space:pre; /* impede quebra automática */
+  opacity:0;
+  transition:opacity 1s ease;
+}
+</style>
+
+</head>
+
+<body>
+
+<div id="pixel"></div>
+<div id="text"></div>
+
+<script>
+const pixel = document.getElementById("pixel");
+const textEl = document.getElementById("text");
+
+let x = window.innerWidth / 2;
+let y = window.innerHeight / 2;
+
+let targetX = x;
+let targetY = y;
+
+function newTarget(){
+  targetX = Math.random() * (window.innerWidth - 6);
+  targetY = Math.random() * (window.innerHeight - 6);
+}
+
+newTarget();
+
+let running = true;
+
+/* movimento do pixel */
+function update(){
+  if(!running) return;
+
+  const speed = 0.0025;
+
+  x += (targetX - x) * speed;
+  y += (targetY - y) * speed;
+
+  const shake = 0.5;
+
+  pixel.style.left = (x + (Math.random()-0.5)*shake) + "px";
+  pixel.style.top = (y + (Math.random()-0.5)*shake) + "px";
+
+  if (Math.abs(x - targetX) < 1) {
+    newTarget();
+  }
+
+  requestAnimationFrame(update);
+}
+
+update();
+
+/* evento */
+setTimeout(() => {
+  running = false;
+
+  pixel.style.transition = "opacity 1s ease";
+  pixel.style.opacity = 0;
+
+  setTimeout(() => {
+    pixel.style.display = "none";
+    startText();
+  }, 1000);
+
+}, 6000);
+
+/* texto */
+const lines = [
+"I M  S T R O N G E R",
+"B E C A U S E  O F  Y O U",
+"T H A N K  Y O U"
+];
+
+let line = 0;
+let char = 0;
+
+function startText(){
+  textEl.style.opacity = 1;
+  textEl.innerHTML = "";
+  type();
+}
+
+function type(){
+  if(line >= lines.length){
+    setTimeout(() => {
+      window.location.href = "../chapter2/";
+    }, 1200);
+    return;
+  }
+
+  const current = lines[line];
+
+  if(char < current.length){
+    textEl.innerHTML += current.charAt(char);
+    char++;
+    setTimeout(type, 65);
+  } else {
+    textEl.innerHTML += "<br>"; // quebra correta
+    line++;
+    char = 0;
+    setTimeout(type, 450);
+  }
+}
+</script>
+
+</body>
+</html>
