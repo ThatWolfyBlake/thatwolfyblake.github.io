@@ -2,13 +2,14 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>* wrong path, wolf here!</title>
+<title>* Wrong path!</title>
 
 <style>
 body{
   margin:0;
   background:black;
+  color:white;
+  font-family:sans-serif;
   display:flex;
   justify-content:center;
   align-items:center;
@@ -16,35 +17,80 @@ body{
   overflow:hidden;
 }
 
-/* imagem central */
-#wolf{
-  width:220px;
+/* TIMERUNE */
+#timerune{
+  display:none;
+  text-align:center;
+}
+#timerune img{
+  width:120px;
+  image-rendering:pixelated;
   cursor:pointer;
-  image-rendering: pixelated;
-  transition: transform 0.2s;
+  transition:transform 0.2s;
+}
+#timerune img:hover{
+  transform:scale(1.1);
 }
 
-#wolf:hover{
-  transform: scale(1.05);
+/* GENERIC */
+#generic{
+  display:none;
+  text-align:center;
+  max-width:500px;
+  padding:20px;
+}
+#generic h1{
+  font-size:42px;
+  margin-bottom:15px;
+}
+#generic p{
+  margin:10px 0;
+  opacity:0.8;
+  line-height:1.5;
 }
 </style>
 </head>
 
 <body>
 
-<img id="wolf" src="/timerune/assets/wof.png">
+<!-- TIMERUNE VERSION -->
+<div id="timerune">
+  <img id="wolf" src="/timerune/assets/wof.png">
+  <audio id="sound" src="/timerune/assets/Creature Feature.m4a"></audio>
+</div>
 
-<audio id="sound" src="/timerune/assets/Creature Feature.m4a"></audio>
-  
+<!-- GENERIC VERSION -->
+<div id="generic">
+  <h1>Page not found</h1>
+  <p>
+    We couldn’t find the page you were looking for. It may have been moved, removed, or the address you entered might be incorrect.
+  </p>
+  <p>
+    Please check the URL for any spelling mistakes and try again. If the problem persists, you can return to the homepage and continue browsing from there.
+  </p>
+  <p>
+    If you believe this is an error, feel free to revisit the link later, as the content may become available in the future.
+  </p>
+</div>
+
 <script>
-const wolf = document.getElementById("wolf");
-const sound = document.getElementById("sound");
+const path = location.pathname.toLowerCase();
 
-wolf.addEventListener("click", () => {
-  sound.currentTime = 0;
-  sound.play();
-});
+if(path.includes("/timerune")){
+  document.getElementById("timerune").style.display = "block";
+
+  const wolf = document.getElementById("wolf");
+  const sound = document.getElementById("sound");
+
+  wolf.addEventListener("click", () => {
+    sound.currentTime = 0;
+    sound.play();
+  });
+
+}else{
+  document.getElementById("generic").style.display = "block";
+}
 </script>
 
 </body>
-</html>
+  </html>
