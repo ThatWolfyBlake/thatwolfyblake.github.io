@@ -1,0 +1,508 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#232428">
+<title>Thatwolfyblake — Profile</title>
+
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap');
+
+:root {
+    --bg: #313338;
+    --panel: #232428;
+    --card: #2b2d31;
+    --muted: #949ba4;
+    --text: #f2f3f5;
+    --accent: #5865f2;
+    --green: #23a55a;
+}
+
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    min-height: 100vh;
+    background: #1e1f22;
+    color: var(--text);
+    font-family: Inter, Arial, sans-serif;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 24px 12px;
+}
+
+.profile {
+    width: 100%;
+    max-width: 600px;
+    background: var(--panel);
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0 12px 40px #0007;
+}
+
+/* BANNER */
+
+.banner {
+    height: 180px;
+    background-image: url("https://thatwolfyblake.github.io/assets/banner.png");
+    background-size: cover;
+    background-position: center;
+    background-color: #5865f2;
+}
+
+/* PROFILE CONTENT */
+
+.profile-content {
+    padding: 0 24px 24px;
+    position: relative;
+}
+
+/* AVATAR */
+
+.avatar-wrap {
+    width: 112px;
+    height: 112px;
+    background: var(--panel);
+    border-radius: 50%;
+    padding: 7px;
+    position: relative;
+    margin-top: -58px;
+    z-index: 2;
+}
+
+.avatar {
+    width: 100%;
+    height: 100%;
+    border-radius: 50%;
+    background-image: url("https://thatwolfyblake.github.io/assets/pfp.png");
+    background-size: cover;
+    background-position: center;
+}
+
+.status {
+    position: absolute;
+    bottom: 7px;
+    right: 7px;
+    width: 23px;
+    height: 23px;
+    border-radius: 50%;
+    background: var(--green);
+    border: 5px solid var(--panel);
+}
+
+/* ACTIONS */
+
+.top-actions {
+    display: flex;
+    justify-content: flex-end;
+    margin-top: -42px;
+    min-height: 42px;
+    gap: 8px;
+}
+
+.action {
+    border: 0;
+    border-radius: 7px;
+    background: #4e5058;
+    color: white;
+    padding: 10px 15px;
+    font-weight: 700;
+    cursor: pointer;
+    text-decoration: none;
+    font-size: 13px;
+    transition: .2s;
+}
+
+.action.primary {
+    background: var(--accent);
+}
+
+.action:hover {
+    filter: brightness(1.2);
+    transform: translateY(-2px);
+}
+
+/* USER IDENTITY */
+
+.identity {
+    margin-top: 14px;
+}
+
+.display-name {
+    font-size: 24px;
+    font-weight: 800;
+}
+
+.username {
+    font-size: 14px;
+    color: var(--muted);
+    margin-top: 3px;
+}
+
+.badges {
+    display: flex;
+    gap: 7px;
+    flex-wrap: wrap;
+    margin-top: 13px;
+}
+
+.badge {
+    background: #383a40;
+    border-radius: 5px;
+    padding: 6px 9px;
+    font-size: 12px;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    color: #e0e1e5;
+}
+
+/* DIVIDERS AND SECTIONS */
+
+.divider {
+    height: 1px;
+    background: #3b3d44;
+    margin: 20px 0;
+}
+
+.section {
+    margin-top: 20px;
+}
+
+.section-title {
+    text-transform: uppercase;
+    letter-spacing: .5px;
+    font-size: 12px;
+    font-weight: 800;
+    margin-bottom: 10px;
+    color: #b5bac1;
+}
+
+/* ABOUT */
+
+.about {
+    font-size: 14px;
+    line-height: 1.7;
+    color: #dbdee1;
+}
+
+/* PROJECT BUTTONS */
+
+.projects {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 10px;
+}
+
+.project-button {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 48px;
+    padding: 12px;
+    border-radius: 8px;
+    background: var(--card);
+    color: var(--text);
+    font-size: 14px;
+    font-weight: 700;
+    text-decoration: none;
+    border: 1px solid #3b3d44;
+    transition: .2s;
+}
+
+.project-button:hover {
+    background: #404249;
+    border-color: var(--accent);
+    transform: translateY(-2px);
+}
+
+/* PERSONAL INFORMATION */
+
+.info-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+}
+
+.info-item {
+    background: var(--card);
+    border-radius: 8px;
+    padding: 12px;
+}
+
+.info-label {
+    font-size: 11px;
+    color: var(--muted);
+    margin-bottom: 6px;
+    text-transform: uppercase;
+    font-weight: 700;
+}
+
+.info-value {
+    font-size: 13px;
+    font-weight: 600;
+}
+
+/* CONNECTIONS */
+
+.connections {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+}
+
+.connection {
+    background: var(--card);
+    padding: 10px 13px;
+    border-radius: 8px;
+    font-size: 13px;
+    display: flex;
+    gap: 8px;
+    align-items: center;
+}
+
+.connection-icon {
+    width: 24px;
+    height: 24px;
+    background: #5865f2;
+    border-radius: 6px;
+    display: grid;
+    place-items: center;
+    font-size: 12px;
+}
+
+/* ACTIVITY */
+
+.activity {
+    display: flex;
+    gap: 14px;
+    background: var(--card);
+    border-radius: 9px;
+    padding: 14px;
+}
+
+.game-icon {
+    width: 58px;
+    height: 58px;
+    background: linear-gradient(135deg, #5865f2, #a855f7);
+    border-radius: 9px;
+    display: grid;
+    place-items: center;
+    font-size: 26px;
+    flex-shrink: 0;
+}
+
+.game-info {
+    min-width: 0;
+}
+
+.game-name {
+    font-size: 14px;
+    font-weight: 700;
+}
+
+.game-detail {
+    font-size: 12px;
+    color: var(--muted);
+    margin-top: 5px;
+    line-height: 1.5;
+}
+
+.member-since {
+    color: var(--muted);
+    font-size: 12px;
+    margin-top: 20px;
+}
+
+/* MOBILE */
+
+@media(max-width: 480px) {
+    body {
+        padding: 12px 8px;
+        align-items: flex-start;
+    }
+
+    .banner {
+        height: 135px;
+    }
+
+    .profile-content {
+        padding: 0 16px 20px;
+    }
+
+    .avatar-wrap {
+        width: 96px;
+        height: 96px;
+        margin-top: -50px;
+    }
+
+    .display-name {
+        font-size: 21px;
+    }
+
+    .top-actions {
+        margin-top: -36px;
+    }
+
+    .action {
+        padding: 9px 11px;
+        font-size: 12px;
+    }
+
+    .info-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .projects {
+        grid-template-columns: 1fr 1fr;
+    }
+}
+</style>
+</head>
+
+<body>
+
+<main class="profile">
+
+    <!-- BANNER -->
+    <div class="banner"></div>
+
+    <div class="profile-content">
+
+        <!-- AVATAR -->
+        <div class="avatar-wrap">
+            <div class="avatar"></div>
+            <div class="status"></div>
+        </div>
+
+        <!-- PROFILE ACTIONS -->
+        <div class="top-actions">
+            <button class="action" onclick="alert('Message button clicked!')">
+                Message
+            </button>
+
+            <button class="action primary" onclick="alert('Friend request sent!')">
+                Add Friend
+            </button>
+        </div>
+
+        <!-- IDENTITY -->
+        <div class="identity">
+            <div class="display-name">Wolfy</div>
+            <div class="username">Thatwolfyblake</div>
+
+            <div class="badges">
+                <!-- Add your badges here -->
+            </div>
+        </div>
+
+        <div class="divider"></div>
+
+        <!-- ABOUT ME -->
+        <section class="section">
+            <div class="section-title">About Me</div>
+
+            <p class="about">
+                <!-- Your description here -->
+            </p>
+        </section>
+
+        <!-- PROJECTS -->
+        <section class="section">
+            <div class="section-title">My Projects</div>
+
+            <div class="projects">
+
+                <a class="project-button"
+                   href="https://thatwolfyblake.github.io/timerune/">
+                    Timerune
+                </a>
+
+                <a class="project-button"
+                   href="https://thatwolfyblake.github.io/lirons-museum/">
+                    Liron's Museum
+                </a>
+
+                <a class="project-button"
+                   href="https://thatwolfyblake.github.io/pro/">
+                    Pro
+                </a>
+
+                <a class="project-button"
+                   href="https://thatwolfyblake.github.io/last-flame/">
+                    Last Flame
+                </a>
+
+            </div>
+        </section>
+
+        <!-- PERSONAL INFORMATION -->
+        <section class="section">
+            <div class="section-title">Personal Information</div>
+
+            <div class="info-grid">
+
+                <div class="info-item">
+                    <div class="info-label">Pronouns</div>
+                    <div class="info-value">Your pronouns</div>
+                </div>
+
+                <div class="info-item">
+                    <div class="info-label">Location</div>
+                    <div class="info-value">Your location</div>
+                </div>
+
+                <div class="info-item">
+                    <div class="info-label">Favorite Color</div>
+                    <div class="info-value">Your favorite color</div>
+                </div>
+
+                <div class="info-item">
+                    <div class="info-label">Status</div>
+                    <div class="info-value">Online</div>
+                </div>
+
+            </div>
+        </section>
+
+        <!-- CONNECTIONS -->
+        <section class="section">
+            <div class="section-title">Connections</div>
+
+            <div class="connections">
+                <!-- Add your connections here -->
+            </div>
+        </section>
+
+        <!-- ACTIVITY -->
+        <section class="section">
+            <div class="section-title">Currently Playing</div>
+
+            <div class="activity">
+                <div class="game-icon">🎮</div>
+
+                <div class="game-info">
+                    <div class="game-name">Game name</div>
+
+                    <div class="game-detail">
+                        Activity description
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <div class="member-since">
+            <!-- Account creation date -->
+        </div>
+
+    </div>
+</main>
+
+</body>
+</html>
