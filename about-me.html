@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -190,6 +191,88 @@ button:disabled {
     color: var(--bright);
 }
 
+/* PROJECT BUTTONS */
+
+.project-list {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+.project {
+    position: relative;
+    isolation: isolate;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    min-height: 145px;
+    padding: 25px 30px;
+    overflow: hidden;
+    border: 1px solid rgba(100,160,255,.16);
+    border-radius: 19px;
+    background-color: #102B55;
+    background-position: center;
+    background-size: cover;
+    transition:
+        transform .25s ease,
+        border-color .25s ease,
+        box-shadow .25s ease;
+}
+
+.project::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    z-index: -1;
+    background: linear-gradient(
+        90deg,
+        rgba(5,23,51,.96) 0%,
+        rgba(5,23,51,.86) 32%,
+        rgba(5,23,51,.25) 100%
+    );
+    transition: opacity .25s ease;
+}
+
+.project:hover {
+    transform: translateY(-3px) scale(1.008);
+    border-color: var(--bright);
+    box-shadow: 0 10px 30px rgba(0,0,0,.25);
+}
+
+.project:hover::before {
+    opacity: .78;
+}
+
+.project.timerune {
+    background-image: url("https://thatwolfyblake.github.io/assets/buttons/blue-checker.png");
+}
+
+.project.museum {
+    background-image: url("https://thatwolfyblake.github.io/assets/buttons/orange-checker.png");
+}
+
+.project.pro {
+    background-image: linear-gradient(110deg, #102B55, #A36BEA);
+}
+
+.project.lastflame {
+    background-image: url("https://thatwolfyblake.github.io/assets/buttons/red-checker.png");
+}
+
+.project-name {
+    font-size: 25px;
+    font-weight: 800;
+    margin-bottom: 9px;
+}
+
+.project-description {
+    color: #B9CBE5;
+    font-size: 16px;
+    line-height: 1.5;
+}
+
+/* OTHER SECTIONS */
+
 .info-grid {
     display: grid;
     grid-template-columns: repeat(2, minmax(0, 1fr));
@@ -216,38 +299,6 @@ button:disabled {
 
 .online {
     color: #61E69A;
-}
-
-.project-list {
-    display: grid;
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-    gap: 10px;
-}
-
-.project {
-    display: block;
-    padding: 14px;
-    border: 1px solid var(--border);
-    border-radius: 10px;
-    background: rgba(4,16,37,.4);
-    transition: .2s;
-}
-
-.project:hover {
-    border-color: var(--bright);
-    background: rgba(36,117,232,.18);
-    transform: translateY(-2px);
-}
-
-.project-name {
-    font-weight: 700;
-    font-size: 14px;
-}
-
-.project-description {
-    color: var(--muted);
-    font-size: 12px;
-    margin-top: 5px;
 }
 
 .connection {
@@ -328,8 +379,20 @@ button:disabled {
         font-size: 25px;
     }
 
-    .info-grid,
-    .project-list {
+    .project {
+        min-height: 125px;
+        padding: 22px;
+    }
+
+    .project-name {
+        font-size: 22px;
+    }
+
+    .project-description {
+        font-size: 14px;
+    }
+
+    .info-grid {
         grid-template-columns: 1fr;
     }
 
@@ -405,25 +468,31 @@ button:disabled {
             <h2>Projects</h2>
 
             <div class="project-list">
-                <a class="project" href="https://thatwolfyblake.github.io/timerune/">
+
+                <a class="project timerune"
+                   href="https://thatwolfyblake.github.io/timerune/">
                     <div class="project-name">Timerune</div>
                     <div class="project-description">A project by Wolfy</div>
                 </a>
 
-                <a class="project" href="https://thatwolfyblake.github.io/lirons-museum/">
+                <a class="project museum"
+                   href="https://thatwolfyblake.github.io/lirons-museum/">
                     <div class="project-name">Liron's Museum</div>
                     <div class="project-description">Explore the world of toons</div>
                 </a>
 
-                <a class="project" href="https://thatwolfyblake.github.io/pro/">
+                <a class="project pro"
+                   href="https://thatwolfyblake.github.io/pro/">
                     <div class="project-name">PRO</div>
                     <div class="project-description">Another Wolfy project</div>
                 </a>
 
-                <a class="project" href="https://thatwolfyblake.github.io/lastflame/">
+                <a class="project lastflame"
+                   href="https://thatwolfyblake.github.io/lastflame/">
                     <div class="project-name">Last Flame</div>
                     <div class="project-description">Another Wolfy project</div>
                 </a>
+
             </div>
         </section>
 
