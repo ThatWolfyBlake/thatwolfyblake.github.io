@@ -1,1 +1,251 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#31022B">
+  <title>What is pro?</title>
+  <style>
+    :root {
+      --purple: #950DA9;
+      --deep: #31022B;
+      --pink: #B6437F;
+      --ink: #090309;
+      --paper: #f8eefa;
+    }
+    * { box-sizing: border-box; }
+    html { min-height: 100%; }
+    body {
+      margin: 0;
+      min-height: 100vh;
+      overflow-x: hidden;
+      color: var(--paper);
+      background:
+        radial-gradient(ellipse at 12% 12%, rgba(149,13,169,.28), transparent 34rem),
+        radial-gradient(ellipse at 90% 85%, rgba(182,67,127,.19), transparent 30rem),
+        var(--deep);
+      font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    }
+    body::before {
+      content: "";
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      opacity: .17;
+      background-image: radial-gradient(rgba(255,255,255,.65) .7px, transparent .7px);
+      background-size: 23px 23px;
+      mask-image: linear-gradient(to bottom, black, transparent 90%);
+    }
+    .shell {
+      width: min(1120px, calc(100% - 40px));
+      min-height: 100vh;
+      margin: auto;
+      display: flex;
+      flex-direction: column;
+      position: relative;
+      z-index: 1;
+    }
+    header {
+      height: 86px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      border-bottom: 1px solid rgba(255,255,255,.12);
+    }
+    .brand {
+      display: inline-flex;
+      align-items: center;
+      gap: 11px;
+      color: white;
+      text-decoration: none;
+      font-size: .9rem;
+      font-weight: 900;
+      letter-spacing: .18em;
+    }
+    .brand-mark {
+      width: 34px;
+      height: 34px;
+      display: grid;
+      place-items: center;
+      color: var(--ink);
+      background: var(--purple);
+      border-radius: 11px;
+      font-size: 1rem;
+      box-shadow: 0 0 28px rgba(149,13,169,.4);
+    }
+    .top-note {
+      color: rgba(255,255,255,.58);
+      font-size: .72rem;
+      font-weight: 750;
+      letter-spacing: .2em;
+      text-transform: uppercase;
+    }
+    main {
+      flex: 1;
+      display: grid;
+      place-items: center;
+      padding: 66px 0 76px;
+    }
+    .hero {
+      width: 100%;
+      position: relative;
+      isolation: isolate;
+      overflow: hidden;
+      padding: clamp(38px, 8vw, 88px) clamp(24px, 8vw, 90px);
+      border: 1px solid rgba(255,255,255,.22);
+      border-radius: 34px;
+      background:
+        radial-gradient(circle at 88% 12%, rgba(255,255,255,.25), transparent 17rem),
+        linear-gradient(135deg, #A619B5 0%, var(--purple) 55%, #78088A 100%);
+      box-shadow: 0 32px 100px rgba(0,0,0,.35), 0 0 70px rgba(149,13,169,.16);
+    }
+    .hero::before, .hero::after {
+      content: "";
+      position: absolute;
+      z-index: -1;
+      border: 1px solid rgba(49,2,43,.22);
+      border-radius: 50%;
+      pointer-events: none;
+    }
+    .hero::before {
+      width: 390px; height: 390px;
+      right: -105px; top: -185px;
+      box-shadow: 0 0 0 34px rgba(49,2,43,.055), 0 0 0 72px rgba(49,2,43,.04);
+    }
+    .hero::after {
+      width: 230px; height: 230px;
+      right: 8%; bottom: -160px;
+      border-color: rgba(255,255,255,.22);
+    }
+    .eyebrow {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      margin: 0 0 24px;
+      color: rgba(9,3,9,.78);
+      font-size: .72rem;
+      font-weight: 900;
+      letter-spacing: .22em;
+      text-transform: uppercase;
+    }
+    .eyebrow::before {
+      content: "";
+      width: 27px;
+      height: 2px;
+      background: var(--deep);
+    }
+    h1 {
+      max-width: 780px;
+      margin: 0;
+      color: var(--ink);
+      font-size: clamp(3.3rem, 10vw, 7.8rem);
+      line-height: .91;
+      letter-spacing: -.085em;
+      font-weight: 950;
+      text-wrap: balance;
+    }
+    .subtitle {
+      margin: 25px 0 0;
+      color: var(--ink);
+      font-size: clamp(1.2rem, 3vw, 1.75rem);
+      line-height: 1.25;
+      font-weight: 800;
+      letter-spacing: -.035em;
+    }
+    .subtitle span { color: var(--deep); }
+    .actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 14px;
+      margin-top: 48px;
+    }
+    .button {
+      min-width: 174px;
+      min-height: 58px;
+      padding: 0 25px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 28px;
+      border: 1px solid rgba(255,255,255,.24);
+      border-radius: 15px;
+      background: var(--deep);
+      color: white;
+      font-size: .95rem;
+      font-weight: 850;
+      text-decoration: none;
+      box-shadow: 0 10px 25px rgba(49,2,43,.2);
+      transition: transform .2s ease, background .2s ease, box-shadow .2s ease;
+    }
+    .button.primary { background: #31022B; }
+    .button.secondary { background: #760B83; }
+    .button .arrow { font-size: 1.2rem; transition: transform .2s ease; }
+    .button:hover, .button:focus-visible {
+      background: var(--pink);
+      transform: translateY(-4px);
+      box-shadow: 0 16px 32px rgba(49,2,43,.28);
+      outline: none;
+    }
+    .button:hover .arrow { transform: translateX(4px); }
+    footer {
+      min-height: 74px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+      color: rgba(255,255,255,.48);
+      font-size: .72rem;
+      letter-spacing: .08em;
+    }
+    footer strong { color: rgba(255,255,255,.78); font-weight: 800; }
+    @media (max-width: 560px) {
+      .shell { width: min(100% - 28px, 1120px); }
+      header { height: 70px; }
+      .top-note { font-size: .61rem; letter-spacing: .12em; }
+      main { padding: 34px 0 42px; }
+      .hero { border-radius: 25px; padding: 42px 25px 38px; }
+      h1 { font-size: clamp(3.2rem, 16vw, 5.2rem); }
+      .actions { margin-top: 36px; flex-direction: column; }
+      .button { width: 100%; }
+      footer { align-items: flex-start; justify-content: center; flex-direction: column; padding: 18px 2px; }
+    }
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after { transition: none !important; }
+    }
+  </style>
+</head>
+<body>
+  <div class="shell">
+    <header>
+      <a class="brand" href="index.html" aria-label="Pro home">
+        <span class="brand-mark">P</span>
+        <span>PRO</span>
+      </a>
+      <span class="top-note">A little corner for projects</span>
+    </header>
+
+    <main>
+      <section class="hero" aria-labelledby="page-title">
+        <p class="eyebrow">Welcome to the project hub</p>
+        <h1 id="page-title">What is pro</h1>
+        <p class="subtitle">its <span>pro-jects!</span></p>
+
+        <nav class="actions" aria-label="Main navigation">
+          <a class="button primary" href="project-listing-purple.html">
+            <span>listing</span><span class="arrow" aria-hidden="true">↗</span>
+          </a>
+          <a class="button secondary" href="https://thatwolfyblake.github.io/pro/videos.html">
+            <span>Videos</span><span class="arrow" aria-hidden="true">↗</span>
+          </a>
+        </nav>
+      </section>
+    </main>
+
+    <footer>
+      <span><strong>PRO</strong> &nbsp;·&nbsp; Projects, ideas &amp; more</span>
+      <span>Made to explore.</span>
+    </footer>
+  </div>
+</body>
+</html>
 
