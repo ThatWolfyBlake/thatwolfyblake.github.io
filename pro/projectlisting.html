@@ -4,63 +4,151 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="theme-color" content="#31022B">
-<title>Project Listing</title>
+<title>PRO — Project Listing</title>
 <style>
-:root{color-scheme:dark;--bg:#1b0018;--panel:#31022B;--panel2:#48083f;--text:#fff0fa;--muted:#d0a9c4;--line:#6b245d;--accent:#950DA9;--accent2:#B6437F;--green:#B6437F;--yellow:#d98bb5;--red:#e17aa0}
-*{box-sizing:border-box}body{margin:0;min-height:100vh;background:radial-gradient(ellipse at top,#5b1260 0,var(--bg) 60%);color:var(--text);font:15px/1.5 system-ui,-apple-system,Segoe UI,sans-serif}
-.wrap{width:min(1100px,calc(100% - 32px));margin:0 auto;padding:42px 0 60px}header{display:flex;align-items:flex-end;justify-content:space-between;gap:20px;margin-bottom:28px}
-.eyebrow{color:var(--accent2);font-size:12px;font-weight:800;letter-spacing:.16em;text-transform:uppercase}h1{margin:7px 0 5px;font-size:clamp(30px,5vw,44px);line-height:1.1;letter-spacing:-.04em}.sub{margin:0;color:var(--muted)}
-button,input,select,textarea{font:inherit}button,.nav-link{cursor:pointer}.primary{display:inline-flex;align-items:center;justify-content:center;border:0;border-radius:12px;padding:12px 17px;color:#fff0fa;background:var(--accent);font-weight:800;text-decoration:none}.primary:hover{filter:brightness(1.08)}
-.toolbar{display:flex;flex-wrap:wrap;gap:10px;padding:14px;margin-bottom:22px;background:#31022B;border:1px solid var(--line);border-radius:16px}
-.toolbar input,.toolbar select,.field input,.field select,.field textarea{min-width:0;color:var(--text);background:#22001f;border:1px solid var(--line);border-radius:10px;padding:11px 12px;outline:none}.toolbar input{flex:1 1 220px}.toolbar select{flex:0 1 180px}input:focus,select:focus,textarea:focus{border-color:var(--accent)}
-.stats{display:flex;flex-wrap:wrap;gap:10px;margin:0 0 22px}.stat{flex:1 1 130px;padding:13px 15px;background:rgba(49,2,43,.88);border:1px solid var(--line);border-radius:14px}.stat strong{display:block;font-size:23px}.stat span{color:var(--muted);font-size:12px}
-.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(255px,1fr));gap:16px}.card{display:flex;flex-direction:column;min-height:220px;padding:18px;background:linear-gradient(150deg,var(--panel2),var(--panel));border:1px solid var(--line);border-radius:17px}
-.card-top{display:flex;justify-content:space-between;align-items:center;gap:10px}.tag{display:inline-flex;padding:5px 9px;border-radius:999px;font-size:11px;font-weight:800;background:#6b245d;color:#fff0fa}.status{font-size:11px;font-weight:800}
-.status.Completed{color:var(--green)}.status.In-progress{color:var(--yellow)}.status.Planned{color:var(--accent2)}.status.Canceled,.status.Redacted{color:var(--red)}
-.card h2{margin:16px 0 7px;font-size:19px}.card p{margin:0;color:var(--muted);font-size:13px}.meta{display:flex;justify-content:space-between;gap:10px;margin-top:auto;padding-top:18px;color:var(--muted);font-size:11px}
-.actions{display:flex;gap:7px;margin-top:13px}.small{padding:7px 10px;border:1px solid var(--line);border-radius:9px;color:var(--text);background:#260021;font-size:12px}.small:hover{border-color:var(--accent)}
-.empty{grid-column:1/-1;text-align:center;padding:55px 20px;border:1px dashed var(--line);border-radius:16px;color:var(--muted)}
-dialog{width:min(480px,calc(100% - 28px));padding:0;color:var(--text);background:var(--panel);border:1px solid var(--line);border-radius:18px}dialog::backdrop{background:rgba(0,0,0,.7);backdrop-filter:blur(4px)}
-.modal{padding:22px}.modal h2{margin:0 0 17px}.field{display:grid;gap:6px;margin:12px 0}.field label{color:var(--muted);font-size:12px;font-weight:700}.field textarea{min-height:85px;resize:vertical}
-.modal-actions{display:flex;justify-content:flex-end;gap:9px;margin-top:20px}.secondary{padding:10px 14px;border:1px solid var(--line);border-radius:10px;color:var(--text);background:transparent}
-.nav{display:flex;flex-wrap:wrap;justify-content:center;gap:10px;margin-top:20px}.nav .primary{font-size:11px;padding:9px 14px}footer{margin-top:30px;text-align:center;color:var(--muted);font-size:11px}
-@media(max-width:600px){.wrap{padding-top:28px}header{align-items:flex-start;flex-direction:column}header .primary{width:100%}}
+:root{
+  color-scheme:dark;
+  --bg:#170019;
+  --panel:#31022B;
+  --panel2:#48083f;
+  --text:#fff0fa;
+  --muted:#d0a9c4;
+  --line:rgba(226,139,207,.22);
+  --accent:#950DA9;
+  --accent2:#B6437F;
+  --shadow:0 22px 70px rgba(0,0,0,.28);
+}
+*{box-sizing:border-box}
+body{
+  margin:0;min-height:100vh;color:var(--text);
+  background:
+    radial-gradient(ellipse at 15% 0%,rgba(149,13,169,.34),transparent 38rem),
+    radial-gradient(ellipse at 95% 28%,rgba(182,67,127,.17),transparent 32rem),
+    radial-gradient(rgba(255,220,250,.055) 1px,transparent 1px),
+    linear-gradient(145deg,#230024 0%,#170019 55%,#100012 100%);
+  background-size:auto,auto,24px 24px,auto;
+  font:15px/1.5 system-ui,-apple-system,Segoe UI,sans-serif;
+}
+button,input,select,textarea{font:inherit}
+button,.nav-link{cursor:pointer}
+.wrap{width:min(1120px,calc(100% - 32px));margin:0 auto;padding:25px 0 48px}
+.site-header{display:flex;align-items:center;justify-content:space-between;gap:16px;margin-bottom:34px}
+.brand{display:flex;align-items:center;gap:11px;color:var(--text);text-decoration:none;font-weight:950;letter-spacing:.12em}
+.brand-mark{display:grid;place-items:center;width:42px;height:42px;border-radius:14px;background:linear-gradient(145deg,var(--accent),var(--accent2));box-shadow:0 8px 28px rgba(149,13,169,.35);font-size:17px}
+.brand-name{font-size:15px}
+.header-note{color:var(--muted);font-size:12px;letter-spacing:.08em;text-transform:uppercase}
+.hero{
+  position:relative;overflow:hidden;padding:clamp(25px,5vw,48px);
+  border:1px solid rgba(255,210,245,.18);border-radius:28px;
+  background:linear-gradient(135deg,rgba(149,13,169,.95),rgba(72,8,63,.97) 58%,rgba(49,2,43,.98));
+  box-shadow:var(--shadow);margin-bottom:25px;
+}
+.hero:before,.hero:after{content:"";position:absolute;border-radius:50%;pointer-events:none}
+.hero:before{width:300px;height:300px;right:-80px;top:-170px;background:rgba(255,255,255,.09);filter:blur(2px)}
+.hero:after{width:190px;height:190px;right:90px;bottom:-150px;border:1px solid rgba(255,255,255,.13)}
+.hero-content{position:relative;z-index:1;display:flex;align-items:flex-end;justify-content:space-between;gap:24px}
+.eyebrow{color:#f4c6e8;font-size:11px;font-weight:900;letter-spacing:.2em;text-transform:uppercase}
+h1{margin:9px 0 8px;color:#160018;font-size:clamp(35px,6vw,58px);line-height:.98;letter-spacing:-.055em}
+.sub{max-width:520px;margin:0;color:#f8dff1;font-size:15px}
+.primary{display:inline-flex;align-items:center;justify-content:center;gap:8px;border:1px solid rgba(255,255,255,.18);border-radius:13px;padding:12px 18px;color:#fff;background:linear-gradient(135deg,#a916bd,#7c0a8e);font-weight:850;text-decoration:none;box-shadow:0 8px 24px rgba(20,0,24,.22);transition:transform .18s,filter .18s}
+.primary:hover{filter:brightness(1.12);transform:translateY(-2px)}
+.hero .primary{flex:none;background:#19001c;color:#fff0fa;border-color:rgba(255,255,255,.16)}
+.stats{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:12px;margin:0 0 20px}
+.stat{padding:16px 17px;background:linear-gradient(145deg,rgba(72,8,63,.88),rgba(35,0,34,.94));border:1px solid var(--line);border-radius:17px;box-shadow:0 10px 28px rgba(0,0,0,.12)}
+.stat strong{display:block;font-size:27px;line-height:1.1;letter-spacing:-.04em}
+.stat span{display:block;margin-top:6px;color:var(--muted);font-size:11px;font-weight:750;letter-spacing:.08em;text-transform:uppercase}
+.toolbar{display:flex;flex-wrap:wrap;gap:10px;padding:13px;margin-bottom:17px;background:rgba(49,2,43,.76);border:1px solid var(--line);border-radius:17px;backdrop-filter:blur(12px)}
+.toolbar input,.toolbar select,.field input,.field select,.field textarea{min-width:0;color:var(--text);background:#22001f;border:1px solid var(--line);border-radius:11px;padding:11px 13px;outline:none}
+.toolbar input{flex:1 1 230px}.toolbar select{flex:0 1 180px}
+input:focus,select:focus,textarea:focus{border-color:#c54bd0;box-shadow:0 0 0 3px rgba(149,13,169,.16)}
+.section-heading{display:flex;align-items:center;justify-content:space-between;gap:12px;margin:22px 2px 13px}
+.section-heading h2{margin:0;font-size:16px;letter-spacing:-.02em}
+.section-heading span{color:var(--muted);font-size:12px}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(255px,1fr));gap:15px}
+.card{position:relative;display:flex;flex-direction:column;min-height:225px;padding:19px;background:linear-gradient(150deg,rgba(80,13,70,.96),rgba(38,0,35,.98));border:1px solid var(--line);border-radius:19px;box-shadow:0 13px 35px rgba(0,0,0,.16);transition:transform .2s,border-color .2s}
+.card:hover{transform:translateY(-3px);border-color:rgba(198,75,208,.55)}
+.card-top{display:flex;justify-content:space-between;align-items:center;gap:10px}
+.tag{display:inline-flex;padding:5px 10px;border-radius:999px;font-size:10px;font-weight:900;letter-spacing:.07em;text-transform:uppercase;background:rgba(149,13,169,.3);border:1px solid rgba(206,100,220,.24);color:#f7d9fa}
+.status{font-size:10px;font-weight:900;letter-spacing:.06em;text-transform:uppercase}
+.status.Completed{color:#e6a1d0}.status.In-progress{color:#f0c2e0}.status.Planned{color:#d88be8}.status.Canceled,.status.Redacted{color:#e58bad}
+.card h2{margin:17px 0 7px;font-size:19px;line-height:1.2;letter-spacing:-.025em}
+.card p{margin:0;color:var(--muted);font-size:13px}
+.meta{display:flex;justify-content:space-between;gap:10px;margin-top:auto;padding-top:19px;color:#bd91b2;font-size:11px}
+.actions{display:flex;gap:8px;margin-top:13px}
+.small{padding:7px 11px;border:1px solid var(--line);border-radius:9px;color:var(--text);background:rgba(25,0,28,.65);font-size:12px;font-weight:750}
+.small:hover{border-color:#b53bc4;background:rgba(149,13,169,.18)}
+.empty{grid-column:1/-1;text-align:center;padding:55px 20px;border:1px dashed rgba(226,139,207,.32);border-radius:18px;color:var(--muted);background:rgba(49,2,43,.35)}
+dialog{width:min(490px,calc(100% - 28px));padding:0;color:var(--text);background:#31022B;border:1px solid var(--line);border-radius:20px;box-shadow:var(--shadow)}
+dialog::backdrop{background:rgba(8,0,10,.76);backdrop-filter:blur(5px)}
+.modal{padding:23px}.modal h2{margin:0 0 17px;font-size:22px;letter-spacing:-.03em}
+.field{display:grid;gap:6px;margin:12px 0}
+.field label{color:var(--muted);font-size:11px;font-weight:850;letter-spacing:.07em;text-transform:uppercase}
+.field textarea{min-height:88px;resize:vertical}
+.modal-actions{display:flex;justify-content:flex-end;gap:9px;margin-top:21px}
+.secondary{padding:10px 14px;border:1px solid var(--line);border-radius:11px;color:var(--text);background:transparent;font-weight:750}
+.secondary:hover{background:rgba(255,255,255,.06)}
+.nav{display:flex;flex-wrap:wrap;justify-content:center;gap:10px;margin-top:30px}
+.nav .primary{font-size:11px;padding:10px 16px;letter-spacing:.06em;text-transform:uppercase}
+footer{margin-top:27px;padding-top:17px;border-top:1px solid rgba(226,139,207,.13);text-align:center;color:#a77a9b;font-size:11px}
+@media(max-width:760px){.stats{grid-template-columns:repeat(3,minmax(0,1fr))}.hero-content{align-items:flex-start;flex-direction:column}.hero .primary{width:100%}}
+@media(max-width:480px){.wrap{padding-top:17px}.header-note{display:none}.stats{grid-template-columns:repeat(2,minmax(0,1fr))}.stat:last-child{grid-column:1/-1}.hero{border-radius:22px}.grid{grid-template-columns:1fr}}
 </style>
 </head>
 <body>
 <main class="wrap">
-<header><div><div class="eyebrow">Workspace / Overview</div><h1>My Projects</h1><p class="sub">A simple place to organize and track your work.</p></div><button class="primary" id="addBtn" type="button">＋ Add project here</button></header>
+<header class="site-header">
+  <a class="brand" href="https://thatwolfyblake.github.io/pro/index.html" aria-label="PRO home"><span class="brand-mark">P</span><span class="brand-name">PRO</span></a>
+  <div class="header-note">Projects · Ideas · Experiments</div>
+</header>
+
+<section class="hero">
+  <div class="hero-content">
+    <div>
+      <div class="eyebrow">PRO / Workspace</div>
+      <h1>My Projects</h1>
+      <p class="sub">A place for projects, experiments, and ideas — all organized in one spot.</p>
+    </div>
+    <button class="primary" id="addBtn" type="button">＋ Add project</button>
+  </div>
+</section>
+
 <section class="stats" aria-label="Project statistics">
-<div class="stat"><strong id="totalCount">0</strong><span>Total projects</span></div>
-<div class="stat"><strong id="progressCount">0</strong><span>In progress</span></div>
-<div class="stat"><strong id="completedCount">0</strong><span>Completed</span></div>
-<div class="stat"><strong id="canceledCount">0</strong><span>Canceled</span></div>
-<div class="stat"><strong id="redactedCount">0</strong><span>Redacted</span></div>
+  <div class="stat"><strong id="totalCount">0</strong><span>Total projects</span></div>
+  <div class="stat"><strong id="progressCount">0</strong><span>In progress</span></div>
+  <div class="stat"><strong id="completedCount">0</strong><span>Completed</span></div>
+  <div class="stat"><strong id="canceledCount">0</strong><span>Canceled</span></div>
+  <div class="stat"><strong id="redactedCount">0</strong><span>Redacted</span></div>
 </section>
+
 <section class="toolbar" aria-label="Search and filters">
-<input id="search" type="search" placeholder="Search projects..." aria-label="Search projects">
-<select id="statusFilter" aria-label="Filter by status"><option value="All">All statuses</option><option>Planned</option><option>In progress</option><option>Completed</option><option>Canceled</option><option>Redacted</option></select>
-<select id="categoryFilter" aria-label="Filter by category"><option value="All">All categories</option><option>Web</option><option>App</option><option>Game</option><option>Story</option><option>Arg</option></select>
+  <input id="search" type="search" placeholder="Search projects..." aria-label="Search projects">
+  <select id="statusFilter" aria-label="Filter by status"><option value="All">All statuses</option><option>Planned</option><option>In progress</option><option>Completed</option><option>Canceled</option><option>Redacted</option></select>
+  <select id="categoryFilter" aria-label="Filter by category"><option value="All">All categories</option><option>Web</option><option>App</option><option>Game</option><option>Story</option><option>Arg</option></select>
 </section>
+
+<div class="section-heading"><h2>Project board</h2><span id="resultCount">0 projects</span></div>
 <section class="grid" id="projectGrid" aria-live="polite"></section>
+
 <nav class="nav" aria-label="Site navigation">
-<a class="primary nav-link" href="https://thatwolfyblake.github.io/pro/index.html">Home</a>
-<a class="primary nav-link" href="https://thatwolfyblake.github.io/pro/wrong-warp.html" aria-label="More">...</a>
-<a class="primary nav-link" href="https://thatwolfyblake.github.io/pro/videos.html">Videos</a>
+  <a class="primary nav-link" href="https://thatwolfyblake.github.io/pro/index.html">Home</a>
+  <a class="primary nav-link" href="https://thatwolfyblake.github.io/pro/wrong-warp.html" aria-label="More">...</a>
+  <a class="primary nav-link" href="https://thatwolfyblake.github.io/pro/videos.html">Videos</a>
 </nav>
-<footer>Projects are saved in this browser on this device.</footer>
+<footer>PRO · Projects are saved in this browser on this device.</footer>
 </main>
+
 <dialog id="projectDialog">
 <form class="modal" id="projectForm">
-<h2 id="dialogTitle">Add a project</h2><input type="hidden" id="projectId">
-<div class="field"><label for="name">Project name</label><input id="name" required maxlength="60" placeholder="e.g. Personal website"></div>
-<div class="field"><label for="description">Description</label><textarea id="description" maxlength="220" placeholder="What is this project about?"></textarea></div>
-<div class="field"><label for="category">Category</label><select id="category"><option>Web</option><option>App</option><option>Game</option><option>Story</option><option>Arg</option></select></div>
-<div class="field"><label for="status">Status</label><select id="status"><option>Planned</option><option>In progress</option><option>Completed</option><option>Canceled</option><option>Redacted</option></select></div>
-<div class="field"><label for="dueDate">Target date (optional)</label><input id="dueDate" type="date"></div>
-<div class="modal-actions"><button type="button" class="secondary" id="cancelBtn">Cancel</button><button type="submit" class="primary">Save project</button></div>
+  <h2 id="dialogTitle">Add a project</h2><input type="hidden" id="projectId">
+  <div class="field"><label for="name">Project name</label><input id="name" required maxlength="60" placeholder="e.g. Personal website"></div>
+  <div class="field"><label for="description">Description</label><textarea id="description" maxlength="220" placeholder="What is this project about?"></textarea></div>
+  <div class="field"><label for="category">Category</label><select id="category"><option>Web</option><option>App</option><option>Game</option><option>Story</option><option>Arg</option></select></div>
+  <div class="field"><label for="status">Status</label><select id="status"><option>Planned</option><option>In progress</option><option>Completed</option><option>Canceled</option><option>Redacted</option></select></div>
+  <div class="field"><label for="dueDate">Target date (optional)</label><input id="dueDate" type="date"></div>
+  <div class="modal-actions"><button type="button" class="secondary" id="cancelBtn">Cancel</button><button type="submit" class="primary">Save project</button></div>
 </form>
 </dialog>
+
 <script>
 const starterProjects=[
 {id:1,name:"Personal Portfolio",description:"A website to showcase my work, skills, and contact information.",category:"Web",status:"In progress",dueDate:""},
@@ -87,6 +175,7 @@ function render(){
  $("redactedCount").textContent=projects.filter(p=>p.status==="Redacted").length;
  const query=$("search").value.trim().toLowerCase(),status=$("statusFilter").value,category=$("categoryFilter").value;
  const visible=projects.filter(p=>(String(p.name||"")+" "+String(p.description||"")).toLowerCase().includes(query)&&(status==="All"||p.status===status)&&(category==="All"||p.category===category));
+ $("resultCount").textContent=visible.length+" "+(visible.length===1?"project":"projects");
  grid.replaceChildren();
  if(!visible.length){const empty=document.createElement("div");empty.className="empty";empty.textContent=projects.length?"No projects match your filters.":"No projects yet. Add your first project!";grid.append(empty);return}
  visible.forEach(p=>{
