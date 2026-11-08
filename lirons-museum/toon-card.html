@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Toon Profile — Liron's Museum</title>
+<title>Character Profile — Liron's Museum</title>
 
 <style>
 :root {
@@ -306,14 +306,14 @@ footer {
   </a>
 
   <p class="subtitle">
-    Discover the museum's extraordinary toons.
+    Discover the museum's extraordinary characters.
   </p>
 </header>
 
 <main id="profileContainer"></main>
 
 <footer>
-  © Liron's Museum · Every toon has a story.
+  © Liron's Museum · Every character has a story.
 </footer>
 
 </div>
@@ -321,7 +321,7 @@ footer {
 <script>
 
 /* =====================================
-   TOON DATABASE
+   CHARACTER DATABASE
 ===================================== */
 
 const categories = {
@@ -385,12 +385,43 @@ const categories = {
     "Gummy"
   ],
 
-  EX: []
+  EX: [],
+
+  Humans: [
+    "Kevin",
+    "Mary",
+    "John",
+    "Noah",
+    "Stella",
+    "Alan",
+    "Eliza",
+    "Charlie",
+    "Aubrey"
+  ]
 
 };
 
 /* =====================================
-   CUSTOM TOON INFORMATION
+   HUMAN ROLES
+===================================== */
+
+const humanRoles = {
+
+  Kevin: "Founder",
+  Mary: "Founder",
+  John: "Founder",
+
+  Noah: "Handler",
+  Stella: "Handler",
+  Alan: "Handler",
+  Eliza: "Handler",
+  Charlie: "Handler",
+  Aubrey: "Handler"
+
+};
+
+/* =====================================
+   CUSTOM CHARACTER INFORMATION
 ===================================== */
 
 const toonData = {
@@ -554,12 +585,50 @@ const toonData = {
       "Puffin is a yellow cushion toon. He wears an orangish-yellow hoodie, brown shorts, and yellow slippers.",
 
     trinket: "CloudCushion"
+  },
+
+  /* HUMANS */
+
+  "Kevin": {
+    displayName: "Kevin"
+  },
+
+  "Mary": {
+    displayName: "Mary"
+  },
+
+  "John": {
+    displayName: "John"
+  },
+
+  "Noah": {
+    displayName: "Noah"
+  },
+
+  "Stella": {
+    displayName: "Stella"
+  },
+
+  "Alan": {
+    displayName: "Alan"
+  },
+
+  "Eliza": {
+    displayName: "Eliza"
+  },
+
+  "Charlie": {
+    displayName: "Charlie"
+  },
+
+  "Aubrey": {
+    displayName: "Aubrey"
   }
 
 };
 
 /* =====================================
-   GET TOON FROM URL
+   GET CHARACTER FROM URL
 ===================================== */
 
 const params = new URLSearchParams(window.location.search);
@@ -605,8 +674,8 @@ function formatDescription(text) {
 
 function getRarity(name) {
 
-  for (const [rarity, toons] of Object.entries(categories)) {
-    if (toons.includes(name)) {
+  for (const [rarity, characters] of Object.entries(categories)) {
+    if (characters.includes(name)) {
       return rarity;
     }
   }
@@ -618,11 +687,7 @@ function getRarity(name) {
    IMAGE SYSTEM
 ===================================== */
 
-let currentImage = "regular";
-
 function changeImage(type) {
-
-  currentImage = type;
 
   const slug = slugify(toonName);
 
@@ -656,26 +721,44 @@ function changeImage(type) {
 }
 
 /* =====================================
+   HUMAN IMAGE SYSTEM
+===================================== */
+
+function loadHumanDrawing() {
+
+  const slug = slugify(toonName);
+
+  const image = document.getElementById("toonImage");
+  const placeholder = document.getElementById("imagePlaceholder");
+
+  image.onerror = function() {
+    image.style.display = "none";
+    placeholder.style.display = "block";
+  };
+
+  image.src = `/lirons-museum/assets/drawings/d_${slug}.png`;
+}
+
+/* =====================================
    PROFILE RENDERING
 ===================================== */
 
 function renderProfile() {
 
   if (!toonName) {
-    showNotFound("No toon was specified.");
+    showNotFound("No character was specified.");
     return;
   }
 
-  const allToons = Object.values(categories).flat();
+  const allCharacters = Object.values(categories).flat();
 
-  if (!allToons.includes(toonName)) {
-    showNotFound("This toon does not exist in the museum's collection.");
+  if (!allCharacters.includes(toonName)) {
+    showNotFound("This character does not exist in the museum's collection.");
     return;
   }
 
   /*
     K, M, and J are not ready for profile pages yet.
-    They remain in the roster, but cannot be opened.
   */
 
   const unavailableProfiles = ["K", "M", "J"];
@@ -687,12 +770,15 @@ function renderProfile() {
 
   const data = toonData[toonName] || {};
 
+  const isHuman = Object.prototype.hasOwnProperty.call(humanRoles, toonName);
+  const humanRole = humanRoles[toonName];
+
   const displayName = data.displayName ||
     (data.surname ? `${toonName} ${data.surname}` : toonName);
 
   const rarity = getRarity(toonName);
 
-  const description = data.description || "Description coming soon.";
+  const description = data.description || "Information coming soon.";
   const appearance = data.appearance || "Appearance information coming soon.";
   const trinket = data.trinket || "Not added yet.";
 
@@ -722,28 +808,32 @@ function renderProfile() {
 
         </div>
 
-        <div class="image-buttons">
+        ${!isHuman ? `
 
-          <button
-            id="regularButton"
-            class="active"
-            onclick="changeImage('regular')"
-          >
-            Regular Image
-          </button>
+          <div class="image-buttons">
 
-          <button
-            id="drawingButton"
-            onclick="changeImage('drawing')"
-          >
-            Drawing
-          </button>
+            <button
+              id="regularButton"
+              class="active"
+              onclick="changeImage('regular')"
+            >
+              Regular Image
+            </button>
 
-        </div>
+            <button
+              id="drawingButton"
+              onclick="changeImage('drawing')"
+            >
+              Drawing
+            </button>
 
-        <div class="image-label" id="imageLabel">
-          Regular Toon Card
-        </div>
+          </div>
+
+          <div class="image-label" id="imageLabel">
+            Regular Toon Card
+          </div>
+
+        ` : ""}
 
       </section>
 
@@ -760,7 +850,7 @@ function renderProfile() {
         ` : ""}
 
         <span class="rarity">
-          ${escapeHTML(rarity)}
+          ${escapeHTML(isHuman ? humanRole : rarity)}
         </span>
 
         <div class="divider"></div>
@@ -822,7 +912,11 @@ function renderProfile() {
 
   `;
 
-  changeImage("regular");
+  if (isHuman) {
+    loadHumanDrawing();
+  } else {
+    changeImage("regular");
+  }
 
 }
 
@@ -836,7 +930,7 @@ function showNotFound(message) {
 
     <section class="not-found">
 
-      <h1>Toon Not Found</h1>
+      <h1>Character Not Found</h1>
 
       <p>${escapeHTML(message)}</p>
 
