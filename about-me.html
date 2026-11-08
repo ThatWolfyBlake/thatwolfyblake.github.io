@@ -43,8 +43,6 @@ body {
     position: relative;
 }
 
-/* BACKGROUND TEXTURE */
-
 body::before {
     content: "";
     position: fixed;
@@ -58,8 +56,6 @@ body::before {
     opacity: .15;
 }
 
-/* PROFILE */
-
 .profile {
     width: 100%;
     max-width: 600px;
@@ -67,15 +63,11 @@ body::before {
     border: 1px solid var(--border);
     border-radius: 16px;
     overflow: hidden;
-    box-shadow:
-        0 12px 40px #0008,
-        0 0 35px #2475E822;
+    box-shadow: 0 12px 40px #0008, 0 0 35px #2475E822;
     position: relative;
     z-index: 1;
     backdrop-filter: blur(15px);
 }
-
-/* BANNER */
 
 .banner {
     height: 180px;
@@ -97,14 +89,10 @@ body::before {
     );
 }
 
-/* PROFILE CONTENT */
-
 .profile-content {
     padding: 0 24px 24px;
     position: relative;
 }
-
-/* AVATAR */
 
 .avatar-wrap {
     width: 112px;
@@ -128,8 +116,6 @@ body::before {
     background-position: center;
 }
 
-/* STAT SYMBOL */
-
 .stat-symbol {
     position: absolute;
     bottom: 5px;
@@ -146,8 +132,6 @@ body::before {
     font-weight: 800;
 }
 
-/* FOLLOW BUTTON */
-
 .top-actions {
     display: flex;
     justify-content: flex-end;
@@ -163,7 +147,6 @@ body::before {
     padding: 10px 18px;
     font-weight: 700;
     cursor: pointer;
-    text-decoration: none;
     font-size: 13px;
     transition: .2s;
 }
@@ -183,7 +166,11 @@ body::before {
     border: 1px solid var(--bright);
 }
 
-/* USER IDENTITY */
+.action:disabled {
+    opacity: .6;
+    cursor: wait;
+    transform: none;
+}
 
 .identity {
     margin-top: 14px;
@@ -215,8 +202,6 @@ body::before {
     font-weight: 800;
 }
 
-/* BADGES */
-
 .badges {
     display: flex;
     gap: 7px;
@@ -235,8 +220,6 @@ body::before {
     gap: 5px;
     color: var(--text);
 }
-
-/* DIVIDERS AND SECTIONS */
 
 .divider {
     height: 1px;
@@ -257,15 +240,11 @@ body::before {
     color: var(--bright);
 }
 
-/* ABOUT */
-
 .about {
     font-size: 14px;
     line-height: 1.7;
     color: #D5E7FA;
 }
-
-/* PROJECT BUTTONS */
 
 .projects {
     display: grid;
@@ -296,8 +275,6 @@ body::before {
     box-shadow: 0 4px 15px #2475E822;
 }
 
-/* PERSONAL INFORMATION */
-
 .info-grid {
     display: grid;
     grid-template-columns: 1fr 1fr;
@@ -323,8 +300,6 @@ body::before {
     font-size: 13px;
     font-weight: 600;
 }
-
-/* CONNECTIONS */
 
 .connections {
     display: flex;
@@ -359,8 +334,6 @@ body::before {
     object-fit: contain;
     flex-shrink: 0;
 }
-
-/* ACTIVITY */
 
 .activity {
     display: flex;
@@ -403,8 +376,6 @@ body::before {
     font-size: 12px;
     margin-top: 20px;
 }
-
-/* MOBILE */
 
 @media(max-width: 480px) {
     body {
@@ -453,32 +424,27 @@ body::before {
 <body>
 
 <main class="profile">
-
-    <!-- BANNER -->
     <div class="banner"></div>
 
     <div class="profile-content">
 
-        <!-- AVATAR -->
         <div class="avatar-wrap">
             <div class="avatar"></div>
             <div class="stat-symbol">✦</div>
         </div>
 
-        <!-- FOLLOW BUTTON -->
         <div class="top-actions">
-            <button class="action primary" id="followButton">
-                + Follow
+            <button class="action primary" id="followButton" disabled>
+                Loading...
             </button>
         </div>
 
-        <!-- IDENTITY -->
         <div class="identity">
             <div class="display-name">Wolfy</div>
             <div class="username">Thatwolfyblake</div>
 
             <div class="followers">
-                <strong id="followerCount">0</strong>
+                <strong id="followerCount">...</strong>
                 <span>Followers</span>
             </div>
 
@@ -489,51 +455,27 @@ body::before {
 
         <div class="divider"></div>
 
-        <!-- ABOUT ME -->
         <section class="section">
             <div class="section-title">About Me</div>
-
             <p class="about">
                 Just a dude making projects!
                 Brazillian Artist!
             </p>
         </section>
 
-        <!-- PROJECTS -->
         <section class="section">
             <div class="section-title">My Projects</div>
-
             <div class="projects">
-
-                <a class="project-button"
-                   href="https://thatwolfyblake.github.io/timerune/">
-                    Timerune
-                </a>
-
-                <a class="project-button"
-                   href="https://thatwolfyblake.github.io/lirons-museum/">
-                    Liron's Museum
-                </a>
-
-                <a class="project-button"
-                   href="https://thatwolfyblake.github.io/pro/">
-                    Pro
-                </a>
-
-                <a class="project-button"
-                   href="https://thatwolfyblake.github.io/lastflame/">
-                    Last Flame
-                </a>
-
+                <a class="project-button" href="https://thatwolfyblake.github.io/timerune/">Timerune</a>
+                <a class="project-button" href="https://thatwolfyblake.github.io/lirons-museum/">Liron's Museum</a>
+                <a class="project-button" href="https://thatwolfyblake.github.io/pro/">Pro</a>
+                <a class="project-button" href="https://thatwolfyblake.github.io/lastflame/">Last Flame</a>
             </div>
         </section>
 
-        <!-- PERSONAL INFORMATION -->
         <section class="section">
             <div class="section-title">Personal Information</div>
-
             <div class="info-grid">
-
                 <div class="info-item">
                     <div class="info-label">Pronouns</div>
                     <div class="info-value">He/Him</div>
@@ -548,46 +490,32 @@ body::before {
                     <div class="info-label">Status</div>
                     <div class="info-value">Online</div>
                 </div>
-
             </div>
         </section>
 
-        <!-- CONNECTIONS -->
         <section class="section">
             <div class="section-title">Connections</div>
-
             <div class="connections">
-
                 <a class="connection"
                    href="YOUR_TIKTOK_URL"
                    target="_blank"
                    rel="noopener noreferrer">
-
                     <img
                         src="https://thatwolfyblake.github.io/lirons-museum/assets/tiktok-icon.png"
                         alt="TikTok"
-                        class="connection-icon"
-                    >
-
+                        class="connection-icon">
                     TikTok
                 </a>
-
             </div>
         </section>
 
-        <!-- ACTIVITY -->
         <section class="section">
             <div class="section-title">Currently Playing</div>
-
             <div class="activity">
                 <div class="game-icon">🎮</div>
-
                 <div class="game-info">
                     <div class="game-name">Game name</div>
-
-                    <div class="game-detail">
-                        Activity description
-                    </div>
+                    <div class="game-detail">Activity description</div>
                 </div>
             </div>
         </section>
@@ -600,22 +528,107 @@ body::before {
 </main>
 
 <script>
-/*
-FOLLOW SYSTEM
-
-The button is currently a visual placeholder.
-A global follower count requires a shared database,
-such as Supabase or Firebase.
-
-Do not use localStorage for a global count:
-it only stores data in each visitor's own browser.
-*/
+const FOLLOWER_API =
+"https://script.google.com/macros/s/AKfycbxTUIaPWkCTHj4zBiHLRC5c8l5ZEodI_L_TnOj_EHNU48AbwjhJT4FFuyi8zcmDxp7A/exec";
 
 const followButton = document.getElementById("followButton");
+const followerCount = document.getElementById("followerCount");
 
-followButton.addEventListener("click", () => {
-    alert("The global follow system is not connected yet!");
+let isFollowing = false;
+let busy = false;
+
+let browserID = localStorage.getItem("wolfyFollowerID");
+
+if (!browserID) {
+    browserID = crypto.randomUUID
+        ? crypto.randomUUID()
+        : "browser-" + Date.now() + "-" +
+          Math.random().toString(36).slice(2);
+
+    localStorage.setItem("wolfyFollowerID", browserID);
+}
+
+function requestFollowers(action) {
+    return new Promise((resolve, reject) => {
+        const callbackName =
+            "wolfyCallback_" + Math.random().toString(36).slice(2);
+
+        const script = document.createElement("script");
+
+        const timeout = setTimeout(() => {
+            delete window[callbackName];
+            script.remove();
+            reject(new Error("Request timed out"));
+        }, 15000);
+
+        window[callbackName] = (data) => {
+            clearTimeout(timeout);
+            delete window[callbackName];
+            script.remove();
+            resolve(data);
+        };
+
+        script.onerror = () => {
+            clearTimeout(timeout);
+            delete window[callbackName];
+            script.remove();
+            reject(new Error("Connection failed"));
+        };
+
+        const params = new URLSearchParams({
+            action: action,
+            id: browserID,
+            callback: callbackName
+        });
+
+        script.src = FOLLOWER_API + "?" + params.toString();
+        document.body.appendChild(script);
+    });
+}
+
+function updateDisplay(data) {
+    isFollowing = data.followed;
+    followerCount.textContent = data.count.toLocaleString("en-US");
+
+    followButton.textContent = isFollowing
+        ? "Following ✓"
+        : "+ Follow";
+
+    followButton.classList.toggle("following", isFollowing);
+}
+
+async function loadFollowers() {
+    try {
+        const data = await requestFollowers("count");
+        updateDisplay(data);
+        followButton.disabled = false;
+    } catch (error) {
+        console.error(error);
+        followerCount.textContent = "?";
+        followButton.textContent = "Unavailable";
+    }
+}
+
+followButton.addEventListener("click", async () => {
+    if (busy) return;
+
+    busy = true;
+    followButton.disabled = true;
+
+    try {
+        const action = isFollowing ? "unfollow" : "follow";
+        const data = await requestFollowers(action);
+        updateDisplay(data);
+    } catch (error) {
+        alert("Couldn't update your follow. Please try again.");
+        console.error(error);
+    } finally {
+        busy = false;
+        followButton.disabled = false;
+    }
 });
+
+loadFollowers();
 </script>
 
 </body>
