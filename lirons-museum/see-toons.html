@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>See Toons — Liron's Museum</title>
+<style>
+:root{
+  --bg:#160A05;--chocolate:#241006;--panel:#2B1408;--orange:#FF9B32;
+  --gold:#FFB65B;--cream:#FFE5C5;--beige:#D9BDA5;--muted:#987B68;--border:#FF8C42;
+}
+*{box-sizing:border-box}
+body{
+  margin:0;min-height:100vh;color:var(--cream);font-family:system-ui,"Segoe UI",sans-serif;
+  background:radial-gradient(ellipse at 50% 0%,#54270f 0%,transparent 48%),
+             radial-gradient(ellipse at 100% 45%,#351509 0%,transparent 40%),
+             linear-gradient(145deg,var(--chocolate),var(--bg) 65%);
+}
+.page{width:min(100% - 32px,760px);margin:auto;padding:30px 0 56px}
+header{text-align:center;margin-bottom:28px}
+.brand{
+  display:inline-block;color:var(--orange);font-size:clamp(2rem,7vw,3.3rem);font-weight:850;
+  letter-spacing:-.045em;text-decoration:none;text-shadow:0 0 22px #ff8c4238;
+}
+.subtitle{color:var(--beige);margin:8px 0 0;font-size:1.05rem}
+.nav-wrap{position:sticky;top:0;z-index:5;padding:10px 0 14px;background:linear-gradient(#1d0c05f2,#1d0c05e8);backdrop-filter:blur(10px)}
+nav{display:flex;align-items:center;justify-content:center;gap:8px;flex-wrap:nowrap;overflow-x:auto;padding:3px 0 7px;scrollbar-width:thin;scrollbar-color:#7d3d18 transparent}
+nav button{flex:0 0 auto;border:1px solid #70401f;background:#2b1408;color:var(--beige);padding:10px 14px;border-radius:12px;font:750 .9rem system-ui;cursor:pointer;transition:.18s}
+nav button:hover{border-color:var(--border);color:var(--cream);transform:translateY(-1px)}
+nav button.active{background:linear-gradient(135deg,var(--orange),var(--gold));border-color:var(--gold);color:#281006;box-shadow:0 0 18px #ff9b3233}
+.section-head{display:flex;align-items:center;gap:16px;margin:28px 0 18px}
+.section-head h1{margin:0;color:var(--orange);font-size:1.9rem;font-weight:850;letter-spacing:-.03em;text-shadow:0 0 15px #ff9b3224}
+.section-head .line{height:1px;flex:1;background:linear-gradient(90deg,#9b542a,#482312 75%,transparent)}
+.description{color:var(--beige);margin:-6px 0 22px}
+.grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:16px}
+.toon-card{min-width:0;text-align:center;padding:12px;border:1px solid #87431f;border-radius:15px;background:linear-gradient(160deg,#3b1d0d99,#241006d9);box-shadow:0 8px 24px #00000020;transition:transform .2s,border-color .2s}
+.toon-card:hover{transform:translateY(-4px);border-color:var(--orange)}
+.portrait{aspect-ratio:1/1;width:100%;border-radius:11px;overflow:hidden;display:grid;place-items:center;background:radial-gradient(circle at 50% 35%,#6c3518,#2b1408 70%);border:1px solid #a85a2b55;position:relative}
+.portrait img{width:100%;height:100%;object-fit:cover;display:block}
+.portrait .placeholder{font-size:clamp(2rem,8vw,4rem);font-weight:850;color:#ffb65b;text-shadow:0 0 20px #ff9b3255}
+.portrait:after{content:"";position:absolute;inset:0;pointer-events:none;background:linear-gradient(180deg,transparent 65%,#160a0540)}
+.toon-name{margin:11px 0 1px;font-weight:800;color:var(--cream);font-size:1rem;overflow-wrap:anywhere}
+.empty{grid-column:1/-1;text-align:center;padding:44px 20px;border:1px dashed #87502d;border-radius:15px;background:#2b140866;color:var(--beige)}
+.empty strong{display:block;color:var(--gold);font-size:1.25rem;margin-bottom:7px}
+footer{text-align:center;color:var(--muted);font-size:.8rem;margin-top:42px}
+@media(max-width:520px){.page{width:min(100% - 22px,760px);padding-top:22px}.grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:11px}.toon-card{padding:9px}nav{justify-content:flex-start}nav button{padding:9px 12px;font-size:.82rem}.section-head h1{font-size:1.65rem}}
+@media(min-width:680px){.grid{grid-template-columns:repeat(3,minmax(0,1fr))}}
+</style>
+</head>
+<body>
+<div class="page">
+  <header>
+    <a class="brand" href="/lirons-museum/" aria-label="Return to Liron's Museum home">Liron's Museum</a>
+    <p class="subtitle">A little collection of extraordinary toons.</p>
+  </header>
+
+  <div class="nav-wrap">
+    <nav id="categoryNav" aria-label="Toon categories">
+      <button class="active" data-category="Primary">Primary</button>
+      <button data-category="Leads">Leads</button>
+      <button data-category="Mains">Mains</button>
+      <button data-category="Rares">Rares</button>
+      <button data-category="Uncommons">Uncommons</button>
+      <button data-category="Commons">Commons</button>
+      <button data-category="EX">EX</button>
+    </nav>
+  </div>
+
+  <main>
+    <div class="section-head"><h1 id="categoryTitle">Primary</h1><span class="line"></span></div>
+    <p class="description" id="categoryDescription">Meet the museum's one-of-a-kind toon.</p>
+    <section class="grid" id="toonGrid" aria-live="polite"></section>
+  </main>
+  <footer>© Liron's Museum · Every toon has a story.</footer>
+</div>
+
+<script>
+const categories = {
+  Primary: ["Liron FireBloom"],
+  Leads: ["Don", "Countess Lockie", "Nixxy", "K", "M", "J"],
+  Mains: ["Bluy", "Hazel", "Solaris", "N3x0r", "Rose", "Shiro"],
+  Rares: [],
+  Uncommons: [],
+  Commons: [],
+  EX: []
+};
+const descriptions = {
+  Primary: "Meet the museum's one-of-a-kind toon.",
+  Leads: "The faces guiding the museum's story.",
+  Mains: "The main cast of Liron's Museum.",
+  Rares: "A few rare faces may appear here someday.",
+  Uncommons: "This collection is still being assembled.",
+  Commons: "The museum's collection is waiting to grow.",
+  EX: "Extraordinary exhibits. Coming soon."
+};
+const grid = document.getElementById("toonGrid");
+const title = document.getElementById("categoryTitle");
+const description = document.getElementById("categoryDescription");
+const nav = document.getElementById("categoryNav");
+
+function slugify(name){
+  return name.toLowerCase().replace(/[^a-z0-9]+/g,"-").replace(/^-|-$/g,"");
+}
+function render(category){
+  title.textContent = category;
+  description.textContent = descriptions[category];
+  grid.innerHTML = "";
+  const toons = categories[category];
+
+  if(!toons.length){
+    grid.innerHTML = `<div class="empty"><strong>Exhibits coming soon...</strong>This section is still being prepared for visitors.</div>`;
+    return;
+  }
+
+  toons.forEach(name => {
+    const card = document.createElement("article");
+    card.className = "toon-card";
+    const slug = slugify(name);
+    card.innerHTML = `
+      <div class="portrait">
+        <img src="/lirons-museum/assets/${slug}.png" alt="${name}" loading="lazy"
+             onerror="this.style.display='none';this.nextElementSibling.style.display='grid'">
+        <span class="placeholder" style="display:none" aria-hidden="true">${name.charAt(0)}</span>
+      </div>
+      <div class="toon-name">${name}</div>`;
+    grid.appendChild(card);
+  });
+}
+nav.addEventListener("click", event => {
+  const button = event.target.closest("button[data-category]");
+  if(!button) return;
+  nav.querySelectorAll("button").forEach(item => item.classList.toggle("active", item === button));
+  render(button.dataset.category);
+});
+render("Primary");
+</script>
+</body>
+</html>
