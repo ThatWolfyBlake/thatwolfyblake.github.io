@@ -215,6 +215,47 @@ header {
   font-weight: 750;
 }
 
+/* HANDLER TRACE BUTTONS */
+
+.trace-section {
+  margin-top: 23px;
+  padding: 18px;
+  border: 1px solid var(--border);
+  border-radius: 15px;
+  background: linear-gradient(145deg, #49200d, #241006);
+  box-shadow: 0 0 22px #ff9b3215;
+}
+
+.trace-section h2 {
+  color: var(--gold);
+  font-size: 1.1rem;
+  margin: 0 0 13px;
+}
+
+.trace-buttons {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.trace-button {
+  display: block;
+  padding: 13px 15px;
+  text-align: center;
+  text-decoration: none;
+  border-radius: 10px;
+  border: 1px solid var(--border);
+  background: linear-gradient(135deg, var(--orange), var(--gold));
+  color: #281006;
+  font-weight: 850;
+  transition: .2s;
+}
+
+.trace-button:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 0 18px #ff9b3244;
+}
+
 /* PUFFIN EXCLUSIVE */
 
 .special-card {
@@ -417,6 +458,21 @@ const humanRoles = {
   Eliza: "Handler",
   Charlie: "Handler",
   Aubrey: "Handler"
+
+};
+
+/* =====================================
+   HANDLER ASSIGNMENTS
+===================================== */
+
+const handlerToons = {
+
+  Noah: ["Bluy"],
+  Stella: ["Solaris"],
+  Alan: ["N3x0r"],
+  Eliza: ["Rose"],
+  Charlie: ["Hazel"],
+  Aubrey: ["Liron FireBloom", "Shiro"]
 
 };
 
@@ -740,6 +796,50 @@ function loadHumanDrawing() {
 }
 
 /* =====================================
+   HANDLER BUTTONS
+===================================== */
+
+function renderTraceButtons(handlerName) {
+
+  const assignedToons = handlerToons[handlerName];
+
+  if (!assignedToons || assignedToons.length === 0) {
+    return "";
+  }
+
+  const buttons = assignedToons.map(toon => {
+
+    const label = assignedToons.length > 1
+      ? `Trace Toon: ${toon === "Liron FireBloom" ? "Liron" : toon}`
+      : "Trace Toon";
+
+    const url = `toon-card.html?=${encodeURIComponent(toon)}`;
+
+    return `
+      <a
+        class="trace-button"
+        href="${url}"
+      >
+        ${escapeHTML(label)}
+      </a>
+    `;
+
+  }).join("");
+
+  return `
+    <section class="trace-section">
+
+      <h2>Assigned Toons</h2>
+
+      <div class="trace-buttons">
+        ${buttons}
+      </div>
+
+    </section>
+  `;
+}
+
+/* =====================================
    PROFILE RENDERING
 ===================================== */
 
@@ -880,6 +980,8 @@ function renderProfile() {
         </p>
 
       </section>
+
+      ${isHuman ? renderTraceButtons(toonName) : ""}
 
       ${isPuffin ? `
 
