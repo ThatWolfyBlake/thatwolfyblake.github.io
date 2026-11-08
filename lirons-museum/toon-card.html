@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -527,12 +526,34 @@ const toonData = {
     trinket: "Prized Possession"
   },
 
-  /* OTHER EXISTING PROFILES */
+  /* RARES */
+
+  "Lunaris": {
+    displayName: "Lunaris Aurelyn",
+
+    quote: "Sometimes, i see and feel things that i shouldn't...",
+
+    description:
+      "Lunaris helps with any tech-related issue, even if it's not an issue. Want help finishing a school project? Ask Lunaris and he will show you how to do it the better way!\n\nJoin him in the computer lab or in the technology sector and learn about technology and its evolution through time!\n\nBut he also gets sleepy very easily!",
+
+    appearance:
+      "Lunaris has a purple TV head, purple stars at the ends of his antennas, and wears his pajamas.",
+
+    trinket: "LunarRemote"
+  },
+
+  /* COMMONS */
 
   "Puffin": {
-    surname: "",
-    description: "Description coming soon.",
-    trinket: "Not added yet."
+    displayName: "Puffin Cloudtail",
+
+    description:
+      "Puffin is a very kind and silly toon. He loves to hang out with his friends; most guests say he is cute!\n\nHe gets excited over small things!\n\nBluy's bestest of friends!\n\nJoin him in the weekly art club and draw as you wish!",
+
+    appearance:
+      "Puffin is a yellow cushion toon. He wears an orangish-yellow hoodie, brown shorts, and yellow slippers.",
+
+    trinket: "CloudCushion"
   }
 
 };
@@ -649,6 +670,18 @@ function renderProfile() {
 
   if (!allToons.includes(toonName)) {
     showNotFound("This toon does not exist in the museum's collection.");
+    return;
+  }
+
+  /*
+    K, M, and J are not ready for profile pages yet.
+    They remain in the roster, but cannot be opened.
+  */
+
+  const unavailableProfiles = ["K", "M", "J"];
+
+  if (unavailableProfiles.includes(toonName)) {
+    showNotFound("This toon does not have a profile yet.");
     return;
   }
 
