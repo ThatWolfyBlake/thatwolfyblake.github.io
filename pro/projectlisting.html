@@ -71,7 +71,17 @@ input:focus,select:focus,textarea:focus{border-color:#c54bd0;box-shadow:0 0 0 3p
 .tag{display:inline-flex;padding:5px 10px;border-radius:999px;font-size:10px;font-weight:900;letter-spacing:.07em;text-transform:uppercase;background:rgba(149,13,169,.3);border:1px solid rgba(206,100,220,.24);color:#f7d9fa}
 .status{font-size:10px;font-weight:900;letter-spacing:.06em;text-transform:uppercase}
 .status.Completed{color:#e6a1d0}.status.In-progress{color:#f0c2e0}.status.Planned{color:#d88be8}.status.Canceled,.status.Redacted{color:#e58bad}
+.card-gallery{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:7px;margin:15px 0 0}
+.card-gallery img{display:block;width:100%;height:145px;object-fit:cover;border-radius:11px;border:1px solid var(--line);background:#22001f}
 .card h2{margin:17px 0 7px;font-size:19px;line-height:1.2;letter-spacing:-.025em}
+.card-links{display:flex;flex-wrap:wrap;gap:8px;margin-top:13px}
+.card-link{display:inline-flex;align-items:center;padding:7px 10px;border:1px solid var(--line);border-radius:9px;color:#f4c6e8;background:rgba(149,13,169,.13);font-size:11px;font-weight:800;text-decoration:none}
+.card-link:hover{border-color:#c54bd0;background:rgba(149,13,169,.25)}
+.field small{color:#b98eaf;font-size:11px}
+.image-preview-list{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}
+.image-preview-item{position:relative;min-width:0}
+.image-preview-item img{width:100%;height:105px;object-fit:cover;border-radius:10px;border:1px solid var(--line)}
+.image-preview-item button{position:absolute;top:6px;right:6px;padding:4px 7px;border:0;border-radius:7px;color:white;background:rgba(20,0,20,.85);font-size:11px}
 .card p{margin:0;color:var(--muted);font-size:13px}
 .meta{display:flex;justify-content:space-between;gap:10px;margin-top:auto;padding-top:19px;color:#bd91b2;font-size:11px}
 .actions{display:flex;gap:8px;margin-top:13px}
@@ -144,6 +154,14 @@ footer{margin-top:27px;padding-top:17px;border-top:1px solid rgba(226,139,207,.1
   <div class="field"><label for="description">Description</label><textarea id="description" maxlength="220" placeholder="What is this project about?"></textarea></div>
   <div class="field"><label for="category">Category</label><select id="category"><option>Web</option><option>App</option><option>Game</option><option>Story</option><option>Arg</option></select></div>
   <div class="field"><label for="status">Status</label><select id="status"><option>Planned</option><option>In progress</option><option>Completed</option><option>Canceled</option><option>Redacted</option></select></div>
+  <div class="field">
+    <label for="projectImages">Images (optional · up to 2)</label>
+    <input id="projectImages" type="file" accept="image/*" multiple>
+    <small>Choose up to two images. Large images are automatically resized to save space.</small>
+    <div class="image-preview-list" id="imagePreviewList"></div>
+  </div>
+  <div class="field"><label for="sourceLink">Source link (optional)</label><input id="sourceLink" type="url" maxlength="500" placeholder="https://example.com"></div>
+  <div class="field"><label for="videoId">Video ID (optional)</label><input id="videoId" type="text" maxlength="100" placeholder="e.g. project-demo"><small>Clicking the video link on the project card opens videos.html?id=your-id</small></div>
   <div class="field"><label for="dueDate">Target date (optional)</label><input id="dueDate" type="date"></div>
   <div class="modal-actions"><button type="button" class="secondary" id="cancelBtn">Cancel</button><button type="submit" class="primary">Save project</button></div>
 </form>
@@ -163,6 +181,41 @@ function loadProjects(){
  catch{return [...starterProjects]}
 }
 let projects=loadProjects();
+let editorImages=[];
+
+function showImagePreviews(){
+ const holder=$("imagePreviewList");
+ holder.replaceChildren();
+ editorImages.forEach((src,index)=>{
+  const item=document.createElement("div");item.className="image-preview-item";
+  const img=document.createElement("img");img.src=src;img.alt="Project image "+(index+1);
+  const remove=document.createElement("button");remove.type="button";remove.textContent="Remove";
+  remove.addEventListener("click",()=>{editorImages.splice(index,1);showImagePreviews()});
+  item.append(img,remove);holder.append(item);
+ });
+}
+
+function compressImage(file){
+ return new Promise((resolve,reject)=>{
+  if(!file.type.startsWith("image/")){reject(new Error("Please select image files only."));return}
+  const reader=new FileReader();
+  reader.onerror=()=>reject(new Error("Could not read that image."));
+  reader.onload=()=>{
+   const image=new Image();
+   image.onerror=()=>reject(new Error("Could not open that image."));
+   image.onload=()=>{
+    const max=1000,scale=Math.min(1,max/Math.max(image.width,image.height));
+    const canvas=document.createElement("canvas");
+    canvas.width=Math.max(1,Math.round(image.width*scale));
+    canvas.height=Math.max(1,Math.round(image.height*scale));
+    canvas.getContext("2d").drawImage(image,0,0,canvas.width,canvas.height);
+    resolve(canvas.toDataURL("image/jpeg",.78));
+   };
+   image.src=reader.result;
+  };
+  reader.readAsDataURL(file);
+ });
+}
 function saveProjects(){
  try{localStorage.setItem(STORAGE_KEY,JSON.stringify(projects))}
  catch{alert("Could not save in this browser. Your changes may not persist.")}
@@ -183,20 +236,47 @@ function render(){
   const top=document.createElement("div");top.className="card-top";
   const tag=document.createElement("span");tag.className="tag";tag.textContent=p.category;
   const state=document.createElement("span");state.className="status "+String(p.status).replaceAll(" ","-");state.textContent=p.status;
+  let gallery=null;
+  if(Array.isArray(p.images)&&p.images.length){
+   gallery=document.createElement("div");gallery.className="card-gallery";
+   p.images.slice(0,2).forEach((src,index)=>{
+    if(typeof src!=="string"||!src.startsWith("data:image/"))return;
+    const img=document.createElement("img");img.src=src;img.alt=p.name+" image "+(index+1);gallery.append(img);
+   });
+  }
   const title=document.createElement("h2");title.textContent=p.name;
   const desc=document.createElement("p");desc.textContent=p.description||"No description provided.";
   const meta=document.createElement("div");meta.className="meta";
   const date=document.createElement("span");date.textContent=p.dueDate?"Target: "+p.dueDate:"No target date";
   const label=document.createElement("span");label.textContent="Project";meta.append(date,label);
+  const links=document.createElement("div");links.className="card-links";
+  if(p.sourceLink){
+   try{
+    const source=new URL(p.sourceLink);
+    if(source.protocol==="http:"||source.protocol==="https:"){
+     const a=document.createElement("a");a.className="card-link";a.href=source.href;a.target="_blank";a.rel="noopener noreferrer";a.textContent="↗ Source";links.append(a);
+    }
+   }catch{}
+  }
+  if(p.videoId){
+   const a=document.createElement("a");a.className="card-link";
+   a.href="videos.html?id="+encodeURIComponent(String(p.videoId).trim());
+   a.textContent="▶ Watch video";links.append(a);
+  }
   const actions=document.createElement("div");actions.className="actions";
   const edit=document.createElement("button");edit.type="button";edit.className="small";edit.textContent="Edit";edit.addEventListener("click",()=>openEditor(p.id));
   const del=document.createElement("button");del.type="button";del.className="small";del.textContent="Delete";del.addEventListener("click",()=>deleteProject(p.id));
-  top.append(tag,state);actions.append(edit,del);card.append(top,title,desc,meta,actions);grid.append(card);
+  top.append(tag,state);actions.append(edit,del);
+  card.append(top);
+  if(gallery&&gallery.children.length)card.append(gallery);
+  card.append(title,desc,meta);
+  if(links.children.length)card.append(links);
+  card.append(actions);grid.append(card);
  });
 }
 function openEditor(id=null){
- $("projectForm").reset();$("projectId").value="";$("dialogTitle").textContent=id===null?"Add a project":"Edit project";
- if(id!==null){const p=projects.find(item=>item.id===id);if(!p)return;$("projectId").value=p.id;$("name").value=p.name||"";$("description").value=p.description||"";$("category").value=p.category||"Web";$("status").value=p.status||"Planned";$("dueDate").value=p.dueDate||""}
+ $("projectForm").reset();$("projectId").value="";editorImages=[];showImagePreviews();$("dialogTitle").textContent=id===null?"Add a project":"Edit project";
+ if(id!==null){const p=projects.find(item=>item.id===id);if(!p)return;$("projectId").value=p.id;$("name").value=p.name||"";$("description").value=p.description||"";$("category").value=p.category||"Web";$("status").value=p.status||"Planned";$("dueDate").value=p.dueDate||"";$("sourceLink").value=p.sourceLink||"";$("videoId").value=p.videoId||"";editorImages=Array.isArray(p.images)?p.images.slice(0,2):[];showImagePreviews()}
  dialog.showModal();$("name").focus();
 }
 function deleteProject(id){
@@ -205,9 +285,22 @@ function deleteProject(id){
 }
 $("addBtn").addEventListener("click",()=>openEditor());
 $("cancelBtn").addEventListener("click",()=>dialog.close());
+$("projectImages").addEventListener("change",async event=>{
+ const files=[...event.target.files];
+ event.target.value="";
+ if(!files.length)return;
+ const available=2-editorImages.length;
+ if(available<=0){alert("You can add up to two images per project. Remove an image first.");return}
+ if(files.length>available)alert("Only "+available+" more image"+(available===1?"":"s")+" can be added.");
+ try{
+  const selected=await Promise.all(files.slice(0,available).map(compressImage));
+  editorImages.push(...selected);
+  showImagePreviews();
+ }catch(error){alert(error.message||"Could not add that image.")}
+});
 $("projectForm").addEventListener("submit",event=>{
  event.preventDefault();const id=$("projectId").value;
- const project={id:id?Number(id):Date.now(),name:$("name").value.trim(),description:$("description").value.trim(),category:$("category").value,status:$("status").value,dueDate:$("dueDate").value};
+ const project={id:id?Number(id):Date.now(),name:$("name").value.trim(),description:$("description").value.trim(),category:$("category").value,status:$("status").value,dueDate:$("dueDate").value,images:editorImages.slice(0,2),sourceLink:$("sourceLink").value.trim(),videoId:$("videoId").value.trim()};
  if(!project.name)return;
  if(id)projects=projects.map(p=>p.id===project.id?project:p);else projects.unshift(project);
  saveProjects();render();dialog.close();
