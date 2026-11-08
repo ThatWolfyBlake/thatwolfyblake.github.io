@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -5,6 +6,11 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
 <title>Harm</title>
+
+<!-- PIXEL FONT FOR L -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
 
 <style>
 :root {
@@ -55,9 +61,7 @@ body {
   display: block;
   width: 100%;
   height: 100%;
-
   object-fit: cover;
-
   filter: grayscale(100%);
 }
 
@@ -68,7 +72,6 @@ body {
   padding: 22px 25px 28px;
 
   background: var(--panel);
-
   border-left: 3px solid #242936;
   min-height: 100px;
 }
@@ -78,43 +81,58 @@ body {
 .dialogue {
   display: flex;
   align-items: flex-start;
-  gap: 16px;
+  gap: 13px;
 
-  margin-bottom: 14px;
+  margin-bottom: 17px;
 
   font-size: clamp(12px, 1.8vw, 17px);
-  line-height: 1.35;
+  line-height: 1.5;
 }
 
 .marker {
   flex-shrink: 0;
   width: 22px;
-
   text-align: center;
-  font-size: 14px;
-  padding-top: 2px;
+  font-size: 15px;
+  padding-top: 1px;
 }
 
-.dialogue.a {
+.speaker {
+  flex-shrink: 0;
+}
+
+/* L — TELEVISION */
+
+.dialogue.l {
   color: var(--purple);
-  font-weight: 900;
-  letter-spacing: .055em;
+  font-family: "Press Start 2P", monospace;
+  font-size: clamp(9px, 1.35vw, 13px);
+  line-height: 1.8;
+  letter-spacing: 0;
   text-shadow: 0 0 8px #9c72e522;
 }
 
-.dialogue.a .marker {
+.dialogue.l .marker {
   color: var(--cyan);
+  font-family: system-ui, sans-serif;
+  font-size: 15px;
 }
 
-.dialogue.b {
+/* V — SHARK */
+
+.dialogue.v {
   color: var(--blue);
+  font-family: "Courier New", monospace;
   font-weight: 500;
   letter-spacing: -.025em;
 }
 
-.dialogue.b .marker {
+.dialogue.v .marker {
   color: #aebdca;
+  font-family: system-ui, sans-serif;
 }
+
+/* TEXT */
 
 .dialogue .text {
   min-width: 0;
@@ -123,14 +141,12 @@ body {
 .continuation {
   display: block;
   margin-top: 10px;
-  margin-left: 0;
 }
 
 /* END */
 
 .end-record {
   margin-top: 38px;
-
   text-align: center;
 
   color: #444755;
@@ -159,14 +175,19 @@ body {
 
   .dialogue {
     gap: 9px;
-    margin-bottom: 13px;
+    margin-bottom: 14px;
     font-size: 12px;
-    line-height: 1.45;
+    line-height: 1.5;
+  }
+
+  .dialogue.l {
+    font-size: 9px;
+    line-height: 1.8;
   }
 
   .marker {
-    width: 17px;
-    font-size: 12px;
+    width: 19px;
+    font-size: 13px;
   }
 
   .end-record {
@@ -194,45 +215,51 @@ body {
 
   <section class="record">
 
-    <div class="dialogue a">
-      <span class="marker">▪</span>
+    <div class="dialogue l">
+      <span class="marker">📺</span>
       <span class="text">
-        A: "Did you know Bluy didn't always have just one eye?"
+        <span class="speaker">L:</span>
+        "Did you know Bluy didn't always have just one eye?"
       </span>
     </div>
 
-    <div class="dialogue b">
-      <span class="marker">◢</span>
+    <div class="dialogue v">
+      <span class="marker">🦈</span>
       <span class="text">
-        B: "Seriously?"
+        <span class="speaker">V:</span>
+        "Seriously?"
       </span>
     </div>
 
-    <div class="dialogue a">
-      <span class="marker">▪</span>
+    <div class="dialogue l">
+      <span class="marker">📺</span>
       <span class="text">
-        A: "Yes. He's already had two like everyone else, but..."
+        <span class="speaker">L:</span>
+        "Yes. He's already had two like everyone else, but..."
       </span>
     </div>
 
-    <div class="dialogue b">
-      <span class="marker">◢</span>
+    <div class="dialogue v">
+      <span class="marker">🦈</span>
       <span class="text">
-        B: "What?"
+        <span class="speaker">V:</span>
+        "What?"
       </span>
     </div>
 
-    <div class="dialogue a">
-      <span class="marker">▪</span>
+    <div class="dialogue l">
+      <span class="marker">📺</span>
       <span class="text">
-        A: "Liron hurt him. Just like he hurt the others..."
+        <span class="speaker">L:</span>
+        "Liron hurt him. Just like he hurt the others..."
       </span>
     </div>
 
-    <div class="dialogue b">
-      <span class="marker">◢</span>
+    <div class="dialogue v">
+      <span class="marker">🦈</span>
       <span class="text">
-        B: "Ah...I couldn't expect anything else from Liron..."
+        <span class="speaker">V:</span>
+        "Ah...I couldn't expect anything else from Liron..."
 
         <span class="continuation">
           "But how... did this happen?"
@@ -240,17 +267,19 @@ body {
       </span>
     </div>
 
-    <div class="dialogue a">
-      <span class="marker">▪</span>
+    <div class="dialogue l">
+      <span class="marker">📺</span>
       <span class="text">
-        A: "Liron... was forced to pretend to be Bluy's friend while the Museum was open, operating, and having visitors... and so on..."
+        <span class="speaker">L:</span>
+        "Liron... was forced to pretend to be Bluy's friend while the Museum was open, operating, and having visitors... and so on..."
       </span>
     </div>
 
-    <div class="dialogue a">
-      <span class="marker">▪</span>
+    <div class="dialogue l">
+      <span class="marker">📺</span>
       <span class="text">
-        A: "Liron waited for the Museum to close. He took Bluy to a room without permission... and threw ICHOR in Bluy's eye... that's why... Bluy doesn't have his other eye. He lost it..."
+        <span class="speaker">L:</span>
+        "Liron waited for the Museum to close. He took Bluy to a room without permission... and threw ICHOR in Bluy's eye... that's why... Bluy doesn't have his other eye. He lost it..."
       </span>
     </div>
 
