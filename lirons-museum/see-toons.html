@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -18,13 +19,16 @@
   --border: #FF8C42;
 }
 
-* { box-sizing: border-box; }
+* {
+  box-sizing: border-box;
+}
 
 body {
   margin: 0;
   min-height: 100vh;
   color: var(--cream);
   font-family: system-ui, "Segoe UI", sans-serif;
+
   background:
     radial-gradient(ellipse at 50% 0%, #54270f 0%, transparent 48%),
     radial-gradient(ellipse at 100% 45%, #351509 0%, transparent 40%),
@@ -50,6 +54,10 @@ header {
   letter-spacing: -.045em;
   text-decoration: none;
   text-shadow: 0 0 22px #ff8c4238;
+}
+
+.brand:hover {
+  color: var(--gold);
 }
 
 .subtitle {
@@ -123,7 +131,12 @@ nav button.active {
 .section-head .line {
   height: 1px;
   flex: 1;
-  background: linear-gradient(90deg, #9b542a, #482312 75%, transparent);
+  background: linear-gradient(
+    90deg,
+    #9b542a,
+    #482312 75%,
+    transparent
+  );
 }
 
 .description {
@@ -138,6 +151,7 @@ nav button.active {
 }
 
 .toon-card {
+  display: block;
   min-width: 0;
   text-align: center;
   padding: 12px;
@@ -146,11 +160,20 @@ nav button.active {
   background: linear-gradient(160deg, #3b1d0d99, #241006d9);
   box-shadow: 0 8px 24px #00000020;
   transition: transform .2s, border-color .2s;
+  text-decoration: none;
+  color: inherit;
+  cursor: pointer;
 }
 
 .toon-card:hover {
   transform: translateY(-4px);
   border-color: var(--orange);
+  box-shadow: 0 8px 28px #ff9b3220;
+}
+
+.toon-card:focus-visible {
+  outline: 2px solid var(--gold);
+  outline-offset: 4px;
 }
 
 .portrait {
@@ -160,7 +183,11 @@ nav button.active {
   overflow: hidden;
   display: grid;
   place-items: center;
-  background: radial-gradient(circle at 50% 35%, #6c3518, #2b1408 70%);
+  background: radial-gradient(
+    circle at 50% 35%,
+    #6c3518,
+    #2b1408 70%
+  );
   border: 1px solid #a85a2b55;
   position: relative;
 }
@@ -184,7 +211,11 @@ nav button.active {
   position: absolute;
   inset: 0;
   pointer-events: none;
-  background: linear-gradient(180deg, transparent 65%, #160a0540);
+  background: linear-gradient(
+    180deg,
+    transparent 65%,
+    #160a0540
+  );
 }
 
 .toon-name {
@@ -230,16 +261,22 @@ footer {
     gap: 11px;
   }
 
-  .toon-card { padding: 9px; }
+  .toon-card {
+    padding: 9px;
+  }
 
-  nav { justify-content: flex-start; }
+  nav {
+    justify-content: flex-start;
+  }
 
   nav button {
     padding: 9px 12px;
     font-size: .82rem;
   }
 
-  .section-head h1 { font-size: 1.65rem; }
+  .section-head h1 {
+    font-size: 1.65rem;
+  }
 }
 
 @media(min-width:680px) {
@@ -254,44 +291,47 @@ footer {
 
 <div class="page">
 
-<header>
-  <a class="brand" href="/lirons-museum/">
-    Liron's Museum
-  </a>
+  <header>
+    <a class="brand" href="/lirons-museum/">
+      Liron's Museum
+    </a>
 
-  <p class="subtitle">
-    A little collection of extraordinary toons.
-  </p>
-</header>
+    <p class="subtitle">
+      A little collection of extraordinary toons.
+    </p>
+  </header>
 
-<div class="nav-wrap">
-  <nav id="categoryNav">
-    <button class="active" data-category="Primary">Primary</button>
-    <button data-category="Leads">Leads</button>
-    <button data-category="Mains">Mains</button>
-    <button data-category="Rares">Rares</button>
-    <button data-category="Uncommons">Uncommons</button>
-    <button data-category="Commons">Commons</button>
-    <button data-category="EX">EX</button>
-  </nav>
-</div>
+  <div class="nav-wrap">
+    <nav id="categoryNav" aria-label="Toon categories">
 
-<main>
+      <button class="active" data-category="Primary">Primary</button>
+      <button data-category="Leads">Leads</button>
+      <button data-category="Mains">Mains</button>
+      <button data-category="Rares">Rares</button>
+      <button data-category="Uncommons">Uncommons</button>
+      <button data-category="Commons">Commons</button>
+      <button data-category="EX">EX</button>
 
-  <div class="section-head">
-    <h1 id="categoryTitle">Primary</h1>
-    <span class="line"></span>
+    </nav>
   </div>
 
-  <p class="description" id="categoryDescription"></p>
+  <main>
 
-  <section class="grid" id="toonGrid" aria-live="polite"></section>
+    <div class="section-head">
+      <h1 id="categoryTitle">Primary</h1>
+      <span class="line"></span>
+    </div>
 
-</main>
+    <p class="description" id="categoryDescription"></p>
 
-<footer>
-  © Liron's Museum · Every toon has a story.
-</footer>
+    <section class="grid" id="toonGrid" aria-live="polite">
+    </section>
+
+  </main>
+
+  <footer>
+    © Liron's Museum · Every toon has a story.
+  </footer>
 
 </div>
 
@@ -408,10 +448,16 @@ function render(category) {
 
   toons.forEach(name => {
 
-    const card = document.createElement("article");
+    const card = document.createElement("a");
     card.className = "toon-card";
 
     const slug = slugify(name);
+
+    card.href =
+      "https://thatwolfyblake.github.io/lirons-museum/toon-card.html?="
+      + encodeURIComponent(name);
+
+    card.setAttribute("aria-label", "View " + name);
 
     card.innerHTML = `
       <div class="portrait">
