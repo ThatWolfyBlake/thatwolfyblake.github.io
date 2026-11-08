@@ -4,20 +4,22 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<meta name="theme-color" content="#232428">
+<meta name="theme-color" content="#06152F">
 <title>Thatwolfyblake — Profile</title>
 
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap');
 
 :root {
-    --bg: #313338;
-    --panel: #232428;
-    --card: #2b2d31;
-    --muted: #949ba4;
-    --text: #f2f3f5;
-    --accent: #5865f2;
-    --green: #23a55a;
+    --bg: #06152F;
+    --panel: rgba(9,29,65,.92);
+    --card: rgba(255,255,255,.075);
+    --muted: #A9BEDB;
+    --text: #EAF4FF;
+    --accent: #2475E8;
+    --bright: #48A5FF;
+    --green: #35D68B;
+    --border: rgba(255,255,255,.14);
 }
 
 * {
@@ -28,22 +30,49 @@
 
 body {
     min-height: 100vh;
-    background: #1e1f22;
+    background:
+        radial-gradient(ellipse at 15% 10%, #123D78 0%, transparent 40%),
+        radial-gradient(ellipse at 85% 90%, #102C59 0%, transparent 40%),
+        #06152F;
     color: var(--text);
     font-family: Inter, Arial, sans-serif;
     display: flex;
     justify-content: center;
     align-items: center;
     padding: 24px 12px;
+    position: relative;
 }
+
+/* BACKGROUND TEXTURE */
+
+body::before {
+    content: "";
+    position: fixed;
+    inset: 0;
+    pointer-events: none;
+    background-image: radial-gradient(
+        rgba(255,255,255,.12) 1px,
+        transparent 1px
+    );
+    background-size: 24px 24px;
+    opacity: .15;
+}
+
+/* PROFILE */
 
 .profile {
     width: 100%;
     max-width: 600px;
     background: var(--panel);
-    border-radius: 12px;
+    border: 1px solid var(--border);
+    border-radius: 16px;
     overflow: hidden;
-    box-shadow: 0 12px 40px #0007;
+    box-shadow:
+        0 12px 40px #0008,
+        0 0 35px #2475E822;
+    position: relative;
+    z-index: 1;
+    backdrop-filter: blur(15px);
 }
 
 /* BANNER */
@@ -53,7 +82,19 @@ body {
     background-image: url("https://thatwolfyblake.github.io/assets/pfp-banner.png");
     background-size: cover;
     background-position: center;
-    background-color: #5865f2;
+    background-color: #2475E8;
+    position: relative;
+}
+
+.banner::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(
+        180deg,
+        transparent 45%,
+        rgba(6,21,47,.35)
+    );
 }
 
 /* PROFILE CONTENT */
@@ -69,11 +110,13 @@ body {
     width: 112px;
     height: 112px;
     background: var(--panel);
+    border: 1px solid var(--border);
     border-radius: 50%;
     padding: 7px;
     position: relative;
     margin-top: -58px;
     z-index: 2;
+    box-shadow: 0 5px 20px #0005;
 }
 
 .avatar {
@@ -94,11 +137,11 @@ body {
     width: 29px;
     height: 29px;
     border-radius: 50%;
-    background: var(--panel);
+    background: #123D78;
     border: 4px solid var(--panel);
     display: grid;
     place-items: center;
-    color: #f5d76e;
+    color: #FFD76A;
     font-size: 17px;
     font-weight: 800;
 }
@@ -115,7 +158,7 @@ body {
 .action {
     border: 0;
     border-radius: 7px;
-    background: #4e5058;
+    background: #173968;
     color: white;
     padding: 10px 18px;
     font-weight: 700;
@@ -127,11 +170,17 @@ body {
 
 .action.primary {
     background: var(--accent);
+    box-shadow: 0 3px 12px #2475E844;
 }
 
 .action:hover {
     filter: brightness(1.2);
     transform: translateY(-2px);
+}
+
+.action.following {
+    background: #173968;
+    border: 1px solid var(--bright);
 }
 
 /* USER IDENTITY */
@@ -143,6 +192,7 @@ body {
 .display-name {
     font-size: 24px;
     font-weight: 800;
+    color: white;
 }
 
 .username {
@@ -161,7 +211,7 @@ body {
 }
 
 .followers strong {
-    color: var(--text);
+    color: var(--bright);
     font-weight: 800;
 }
 
@@ -175,21 +225,22 @@ body {
 }
 
 .badge {
-    background: #383a40;
+    background: #173968;
+    border: 1px solid var(--border);
     border-radius: 5px;
     padding: 6px 9px;
     font-size: 12px;
     display: flex;
     align-items: center;
     gap: 5px;
-    color: #e0e1e5;
+    color: var(--text);
 }
 
 /* DIVIDERS AND SECTIONS */
 
 .divider {
     height: 1px;
-    background: #3b3d44;
+    background: var(--border);
     margin: 20px 0;
 }
 
@@ -203,7 +254,7 @@ body {
     font-size: 12px;
     font-weight: 800;
     margin-bottom: 10px;
-    color: #b5bac1;
+    color: var(--bright);
 }
 
 /* ABOUT */
@@ -211,7 +262,7 @@ body {
 .about {
     font-size: 14px;
     line-height: 1.7;
-    color: #dbdee1;
+    color: #D5E7FA;
 }
 
 /* PROJECT BUTTONS */
@@ -234,14 +285,15 @@ body {
     font-size: 14px;
     font-weight: 700;
     text-decoration: none;
-    border: 1px solid #3b3d44;
+    border: 1px solid var(--border);
     transition: .2s;
 }
 
 .project-button:hover {
-    background: #404249;
-    border-color: var(--accent);
+    background: #173968;
+    border-color: var(--bright);
     transform: translateY(-2px);
+    box-shadow: 0 4px 15px #2475E822;
 }
 
 /* PERSONAL INFORMATION */
@@ -254,6 +306,7 @@ body {
 
 .info-item {
     background: var(--card);
+    border: 1px solid var(--border);
     border-radius: 8px;
     padding: 12px;
 }
@@ -281,6 +334,7 @@ body {
 
 .connection {
     background: var(--card);
+    border: 1px solid var(--border);
     padding: 10px 13px;
     border-radius: 8px;
     font-size: 13px;
@@ -293,7 +347,8 @@ body {
 }
 
 .connection:hover {
-    background: #404249;
+    background: #173968;
+    border-color: var(--bright);
     transform: translateY(-2px);
 }
 
@@ -311,6 +366,7 @@ body {
     display: flex;
     gap: 14px;
     background: var(--card);
+    border: 1px solid var(--border);
     border-radius: 9px;
     padding: 14px;
 }
@@ -318,7 +374,7 @@ body {
 .game-icon {
     width: 58px;
     height: 58px;
-    background: linear-gradient(135deg, #5865f2, #a855f7);
+    background: linear-gradient(135deg, #2475E8, #754DDB);
     border-radius: 9px;
     display: grid;
     place-items: center;
@@ -545,26 +601,20 @@ body {
 
 <script>
 /*
-GLOBAL FOLLOW SYSTEM
+FOLLOW SYSTEM
 
-The counter below is only a visual placeholder.
-
-To make it global, connect this page to a backend
+The button is currently a visual placeholder.
+A global follower count requires a shared database,
 such as Supabase or Firebase.
 
-The backend should:
-1. Store the profile's follower count.
-2. Store which visitors follow this profile.
-3. Prevent duplicate follows.
-4. Update the count for everyone.
-
-GitHub Pages alone cannot securely do this.
+Do not use localStorage for a global count:
+it only stores data in each visitor's own browser.
 */
 
 const followButton = document.getElementById("followButton");
 
 followButton.addEventListener("click", () => {
-    alert("The follow system is not connected yet!");
+    alert("The global follow system is not connected yet!");
 });
 </script>
 
