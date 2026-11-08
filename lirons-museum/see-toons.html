@@ -18,16 +18,13 @@
   --border: #FF8C42;
 }
 
-* {
-  box-sizing: border-box;
-}
+* { box-sizing: border-box; }
 
 body {
   margin: 0;
   min-height: 100vh;
   color: var(--cream);
   font-family: system-ui, "Segoe UI", sans-serif;
-
   background:
     radial-gradient(ellipse at 50% 0%, #54270f 0%, transparent 48%),
     radial-gradient(ellipse at 100% 45%, #351509 0%, transparent 40%),
@@ -126,12 +123,7 @@ nav button.active {
 .section-head .line {
   height: 1px;
   flex: 1;
-  background: linear-gradient(
-    90deg,
-    #9b542a,
-    #482312 75%,
-    transparent
-  );
+  background: linear-gradient(90deg, #9b542a, #482312 75%, transparent);
 }
 
 .description {
@@ -183,7 +175,7 @@ nav button.active {
 .portrait .placeholder {
   font-size: clamp(2rem, 8vw, 4rem);
   font-weight: 850;
-  color: #ffb65b;
+  color: var(--gold);
   text-shadow: 0 0 20px #ff9b3255;
 }
 
@@ -238,22 +230,16 @@ footer {
     gap: 11px;
   }
 
-  .toon-card {
-    padding: 9px;
-  }
+  .toon-card { padding: 9px; }
 
-  nav {
-    justify-content: flex-start;
-  }
+  nav { justify-content: flex-start; }
 
   nav button {
     padding: 9px 12px;
     font-size: .82rem;
   }
 
-  .section-head h1 {
-    font-size: 1.65rem;
-  }
+  .section-head h1 { font-size: 1.65rem; }
 }
 
 @media(min-width:680px) {
@@ -268,51 +254,44 @@ footer {
 
 <div class="page">
 
-  <header>
-    <a class="brand"
-       href="/lirons-museum/"
-       aria-label="Return to Liron's Museum home">
-      Liron's Museum
-    </a>
+<header>
+  <a class="brand" href="/lirons-museum/">
+    Liron's Museum
+  </a>
 
-    <p class="subtitle">
-      A little collection of extraordinary toons.
-    </p>
-  </header>
+  <p class="subtitle">
+    A little collection of extraordinary toons.
+  </p>
+</header>
 
-  <div class="nav-wrap">
+<div class="nav-wrap">
+  <nav id="categoryNav">
+    <button class="active" data-category="Primary">Primary</button>
+    <button data-category="Leads">Leads</button>
+    <button data-category="Mains">Mains</button>
+    <button data-category="Rares">Rares</button>
+    <button data-category="Uncommons">Uncommons</button>
+    <button data-category="Commons">Commons</button>
+    <button data-category="EX">EX</button>
+  </nav>
+</div>
 
-    <nav id="categoryNav" aria-label="Toon categories">
-      <button class="active" data-category="Primary">Primary</button>
-      <button data-category="Leads">Leads</button>
-      <button data-category="Mains">Mains</button>
-      <button data-category="Rares">Rares</button>
-      <button data-category="Uncommons">Uncommons</button>
-      <button data-category="Commons">Commons</button>
-      <button data-category="EX">EX</button>
-    </nav>
+<main>
 
+  <div class="section-head">
+    <h1 id="categoryTitle">Primary</h1>
+    <span class="line"></span>
   </div>
 
-  <main>
+  <p class="description" id="categoryDescription"></p>
 
-    <div class="section-head">
-      <h1 id="categoryTitle">Primary</h1>
-      <span class="line"></span>
-    </div>
+  <section class="grid" id="toonGrid" aria-live="polite"></section>
 
-    <p class="description" id="categoryDescription">
-      Meet the museum's one-of-a-kind toon.
-    </p>
+</main>
 
-    <section class="grid" id="toonGrid" aria-live="polite">
-    </section>
-
-  </main>
-
-  <footer>
-    © Liron's Museum · Every toon has a story.
-  </footer>
+<footer>
+  © Liron's Museum · Every toon has a story.
+</footer>
 
 </div>
 
@@ -352,11 +331,33 @@ const categories = {
     "Maris",
     "Sarah",
     "Milly",
-    "Creamy"
+    "Creamy",
+    "Randy",
+    "Leon",
+    "Balley",
+    "Ashy"
   ],
 
-  Uncommons: [],
-  Commons: [],
+  Uncommons: [
+    "Lily",
+    "Willy",
+    "Lurian",
+    "Matt",
+    "Sleeper",
+    "Garret",
+    "Luki",
+    "Violet-Lizzy",
+    "Cardog",
+    "Marshy"
+  ],
+
+  Commons: [
+    "Puffin",
+    "Spike",
+    "Straps",
+    "Gummy"
+  ],
+
   EX: []
 
 };
@@ -367,8 +368,8 @@ const descriptions = {
   Leads: "The faces guiding the museum's story.",
   Mains: "The main cast of Liron's Museum.",
   Rares: "Meet the museum's rare toons.",
-  Uncommons: "This collection is still being assembled.",
-  Commons: "The museum's collection is waiting to grow.",
+  Uncommons: "Discover the uncommon members of the collection.",
+  Commons: "Meet the museum's common toons.",
   EX: "Extraordinary exhibits. Coming soon."
 
 };
