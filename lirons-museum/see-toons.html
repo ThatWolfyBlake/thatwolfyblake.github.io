@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -226,6 +225,22 @@ nav button.active {
   overflow-wrap: anywhere;
 }
 
+.human-role {
+  margin-top: 5px;
+  color: var(--gold);
+  font-size: .78rem;
+  font-weight: 750;
+  letter-spacing: .04em;
+  text-transform: uppercase;
+}
+
+.subsection-title {
+  color: var(--gold);
+  font-size: 1.25rem;
+  font-weight: 850;
+  margin: 28px 0 14px;
+}
+
 .empty {
   grid-column: 1 / -1;
   text-align: center;
@@ -302,7 +317,7 @@ footer {
   </header>
 
   <div class="nav-wrap">
-    <nav id="categoryNav" aria-label="Toon categories">
+    <nav id="categoryNav" aria-label="Museum categories">
 
       <button class="active" data-category="Primary">Primary</button>
       <button data-category="Leads">Leads</button>
@@ -311,6 +326,7 @@ footer {
       <button data-category="Uncommons">Uncommons</button>
       <button data-category="Commons">Commons</button>
       <button data-category="EX">EX</button>
+      <button data-category="Humans">Humans</button>
 
     </nav>
   </div>
@@ -398,7 +414,24 @@ const categories = {
     "Gummy"
   ],
 
-  EX: []
+  EX: [],
+
+  Humans: {
+    Founders: [
+      "Kevin",
+      "Mary",
+      "John"
+    ],
+
+    Handlers: [
+      "Noah",
+      "Stella",
+      "Alan",
+      "Eliza",
+      "Charlie",
+      "Aubrey"
+    ]
+  }
 
 };
 
@@ -410,7 +443,8 @@ const descriptions = {
   Rares: "Meet the museum's rare toons.",
   Uncommons: "Discover the uncommon members of the collection.",
   Commons: "Meet the museum's common toons.",
-  EX: "Extraordinary exhibits. Coming soon."
+  EX: "Extraordinary exhibits. Coming soon.",
+  Humans: "Meet the humans who founded and help run the museum."
 
 };
 
@@ -425,12 +459,80 @@ function slugify(name) {
     .replace(/^-|-$/g, "");
 }
 
+function createCard(name, role = "") {
+
+  const card = document.createElement("a");
+  card.className = "toon-card";
+
+  const slug = slugify(name);
+
+  card.href =
+    "/lirons-museum/toon-card.html?="
+    + encodeURIComponent(name);
+
+  card.setAttribute("aria-label", "View " + name);
+
+  card.innerHTML = `
+    <div class="portrait">
+
+      <img
+        src="/lirons-museum/assets/${slug}.png"
+        alt="${name}"
+        loading="lazy"
+        onerror="
+          this.style.display='none';
+          this.nextElementSibling.style.display='grid';
+        "
+      >
+
+      <span
+        class="placeholder"
+        style="display:none"
+        aria-hidden="true"
+      >${name.charAt(0)}</span>
+
+    </div>
+
+    <div class="toon-name">${name}</div>
+
+    ${role ? `<div class="human-role">${role}</div>` : ""}
+  `;
+
+  return card;
+}
+
 function render(category) {
 
   title.textContent = category;
   description.textContent = descriptions[category];
 
   grid.innerHTML = "";
+
+  if (category === "Humans") {
+
+    const humans = categories.Humans;
+
+    const foundersTitle = document.createElement("h2");
+    foundersTitle.className = "subsection-title";
+    foundersTitle.textContent = "Founders";
+    grid.appendChild(foundersTitle);
+
+    humans.Founders.forEach(name => {
+      grid.appendChild(createCard(name, "Founder"));
+    });
+
+    const handlersTitle = document.createElement("h2");
+    handlersTitle.className = "subsection-title";
+    handlersTitle.style.gridColumn = "1 / -1";
+    handlersTitle.textContent = "Handlers";
+    grid.appendChild(handlersTitle);
+
+    humans.Handlers.forEach(name => {
+      grid.appendChild(createCard(name, "Handler"));
+    });
+
+    return;
+  }
 
   const toons = categories[category];
 
@@ -447,44 +549,7 @@ function render(category) {
   }
 
   toons.forEach(name => {
-
-    const card = document.createElement("a");
-    card.className = "toon-card";
-
-    const slug = slugify(name);
-
-    card.href =
-      "https://thatwolfyblake.github.io/lirons-museum/toon-card.html?="
-      + encodeURIComponent(name);
-
-    card.setAttribute("aria-label", "View " + name);
-
-    card.innerHTML = `
-      <div class="portrait">
-
-        <img
-          src="/lirons-museum/assets/${slug}.png"
-          alt="${name}"
-          loading="lazy"
-          onerror="
-            this.style.display='none';
-            this.nextElementSibling.style.display='grid';
-          "
-        >
-
-        <span
-          class="placeholder"
-          style="display:none"
-          aria-hidden="true"
-        >${name.charAt(0)}</span>
-
-      </div>
-
-      <div class="toon-name">${name}</div>
-    `;
-
-    grid.appendChild(card);
-
+    grid.appendChild(createCard(name));
   });
 
 }
