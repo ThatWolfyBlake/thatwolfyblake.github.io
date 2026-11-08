@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="theme-color" content="#1b0b05">
-<meta name="description" content="Explore the Liron Museum, uncover its lore, and discover the toons left behind.">
+<meta name="description" content="Explore Liron's Museum, uncover its lore, and discover the toons left behind.">
 <title>Liron's Museum</title>
 <style>
 :root{
@@ -45,7 +45,7 @@ a{color:inherit}
 .page:before,.page:after{content:"";position:absolute;z-index:-1;pointer-events:none;border:2px solid rgba(255,119,45,.4);border-radius:48% 52% 45% 55%;filter:drop-shadow(0 0 15px rgba(255,105,40,.18))}
 .page:before{width:190px;height:230px;left:-145px;bottom:45px;transform:rotate(-25deg);box-shadow:inset 0 0 35px rgba(166,30,89,.25),0 0 0 22px rgba(112,19,67,.12)}
 .page:after{width:150px;height:210px;right:-125px;top:90px;transform:rotate(30deg);box-shadow:inset 0 0 35px rgba(166,30,89,.22),0 0 0 22px rgba(112,19,67,.12)}
-.spark{position:absolute;color:#ff765e;font-size:24px;opacity:.85;pointer-events:none}
+.spark{position:absolute;z-index:-1;color:#ff765e;font-size:24px;opacity:.85;pointer-events:none}
 .spark.one{top:185px;left:7%}.spark.two{top:420px;right:7%}.spark.three{bottom:250px;left:8%}.spark.four{bottom:110px;right:9%}
 .hero{text-align:center}
 h1{margin:0;color:var(--orange);font-size:clamp(30px,6vw,42px);line-height:1.15;font-weight:850;letter-spacing:-.04em;text-shadow:0 0 22px rgba(255,139,44,.22)}
@@ -64,6 +64,10 @@ h1{margin:0;color:var(--orange);font-size:clamp(30px,6vw,42px);line-height:1.15;
 .main-actions{display:flex;justify-content:center;flex-wrap:wrap;gap:15px;margin:26px 0 42px}
 .button{display:inline-flex;align-items:center;justify-content:center;min-width:142px;padding:12px 21px;border:0;border-radius:13px;color:#241005;text-decoration:none;text-align:center;font-weight:750;background:linear-gradient(135deg,#ff8e2d,#ffb13f);box-shadow:0 0 22px rgba(255,145,42,.35);transition:transform .18s,filter .18s}
 .button:hover{transform:translateY(-2px);filter:brightness(1.08)}
+.button-icon{width:20px;height:20px;object-fit:contain;flex:none;margin-right:9px}
+.button.light .button-icon{width:19px;height:19px}
+.button.dark .button-icon{width:21px;height:21px}
+.button.roblox .button-icon{width:21px;height:21px}
 .button.light{background:linear-gradient(135deg,#ffbd72,#ffe0b0)}
 section.content-section{margin-top:32px}
 .section-title{display:flex;align-items:center;gap:13px;margin:0 0 17px;color:#ffb36b;font-size:22px;line-height:1.2;font-weight:800}
@@ -89,8 +93,6 @@ footer{margin-top:48px;text-align:center;color:#987b68;font-size:11px}
 </div>
 
 <main class="page">
-  <span class="spark one">✦</span><span class="spark two">✦</span>
-  <span class="spark three">✦</span><span class="spark four">✦</span>
 
   <header class="hero">
     <h1>Liron's Museum</h1>
@@ -99,15 +101,15 @@ footer{margin-top:48px;text-align:center;color:#987b68;font-size:11px}
     <img class="banner" src="https://thatwolfyblake.github.io/lirons-museum/assets/banner.png" alt="Liron's Museum banner">
   </header>
 
-  <div class="progress-wrap" aria-label="Project progress: 10 percent">
+  <div class="progress-wrap" aria-label="Project progress: 1 percent">
     <div class="progress-track"><div class="progress-fill"></div></div>
-    <p class="progress-label">Progress: 10%</p>
+    <p class="progress-label">Progress: 1%</p>
   </div>
 
   <nav class="main-actions" aria-label="Main links">
     <!-- Replace the # links below with your actual destinations. -->
-    <a class="button" href="#toons">Ver Toons</a>
-    <a class="button light" href="#documentation">▤ Documentation</a>
+    <a class="button" href="#toons"><img class="button-icon" src="https://thatwolfyblake.github.io/lirons-museum/assets/toons-icon.png" alt="">See Toons</a>
+    <a class="button light" href="#documentation"><img class="button-icon" src="https://thatwolfyblake.github.io/lirons-museum/assets/documentation-icon.png" alt="">Documentation</a>
   </nav>
 
   <section class="content-section lore" id="lore">
@@ -127,15 +129,15 @@ footer{margin-top:48px;text-align:center;color:#987b68;font-size:11px}
     <p>Find new toons and updates on TikTok!</p>
     <div class="social-actions">
       <!-- Add your official TikTok and Roblox URLs to these href attributes. -->
-      <a class="button dark" href="#" target="_blank" rel="noopener noreferrer">♪ TikTok Official</a>
-      <a class="button roblox" href="#" target="_blank" rel="noopener noreferrer">▣ Roblox!</a>
+      <a class="button dark" href="#" target="_blank" rel="noopener noreferrer"><img class="button-icon" src="https://thatwolfyblake.github.io/lirons-museum/assets/tiktok-icon.png" alt="">Official Tiktok</a>
+      <a class="button roblox" href="#" target="_blank" rel="noopener noreferrer"><img class="button-icon" src="https://thatwolfyblake.github.io/lirons-museum/assets/roblox-icon.png" alt="">Roblox!</a>
     </div>
     <div class="coming-wrap">
       <span class="button disabled" aria-disabled="true">Comics (coming soon)</span>
     </div>
   </section>
 
-  <footer>Liron's Museum · A project by Me!</footer>
+  <footer>Liron's Museum · A project by me!</footer>
 </main>
 </body>
-        </html>
+</html>
