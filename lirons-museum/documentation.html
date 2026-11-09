@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta name="theme-color" content="#245edb">
 <meta name="application-version" content="1.0.0">
-<title>Documentation</title>
+<title>Investigator Desktop</title>
 
 <style>
 * { box-sizing: border-box; }
@@ -146,9 +146,7 @@ body {
   line-height: 14px;
 }
 
-#clock {
-  font-weight: bold;
-}
+#clock { font-weight: bold; }
 
 #clockDate {
   font-size: 10px;
@@ -194,11 +192,15 @@ body {
   display: flex;
   align-items: center;
   gap: 7px;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
 }
 
 .window-controls {
   display: flex;
   gap: 3px;
+  flex-shrink: 0;
 }
 
 .window-controls button {
@@ -251,11 +253,19 @@ body {
   cursor: pointer;
 }
 
+.explorer-toolbar button:disabled {
+  opacity: .45;
+  cursor: default;
+}
+
 .address-bar {
   padding: 7px 10px;
   background: #f3f0e5;
   border-bottom: 1px solid #ddd;
   font-size: 12px;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
 }
 
 .file-area {
@@ -263,6 +273,7 @@ body {
   display: grid;
   grid-template-columns: repeat(auto-fill,minmax(95px,1fr));
   gap: 12px;
+  align-content: start;
 }
 
 .file-item {
@@ -276,6 +287,8 @@ body {
   text-align: center;
   cursor: pointer;
   border: 1px solid transparent;
+  padding: 5px;
+  overflow-wrap: anywhere;
 }
 
 .file-item:hover {
@@ -296,8 +309,8 @@ body {
 /* NOTEPAD */
 
 #textWindow {
-  width: min(550px,calc(100vw - 30px));
-  height: min(400px,calc(100dvh - 65px));
+  width: min(650px,calc(100vw - 30px));
+  height: min(500px,calc(100dvh - 65px));
 }
 
 .notepad-menu {
@@ -306,6 +319,7 @@ body {
   background: #f5f3eb;
   border-bottom: 1px solid #ccc;
   font-size: 12px;
+  flex-shrink: 0;
 }
 
 .notepad-content {
@@ -327,6 +341,7 @@ body {
   font-size: 14px;
   line-height: 1.5;
   user-select: text;
+  white-space: pre-wrap;
 }
 
 .notepad-status {
@@ -335,6 +350,7 @@ body {
   background: #f3f0e5;
   border-top: 1px solid #ccc;
   font-size: 11px;
+  flex-shrink: 0;
 }
 
 /* TERMINAL */
@@ -354,6 +370,7 @@ body {
   overflow-y: auto;
   white-space: pre-wrap;
   line-height: 1.5;
+  user-select: text;
 }
 
 .terminal-input-line {
@@ -363,9 +380,7 @@ body {
   margin-top: 8px;
 }
 
-#terminalPrompt {
-  white-space: nowrap;
-}
+#terminalPrompt { white-space: nowrap; }
 
 #terminalInput {
   flex: 1;
@@ -419,6 +434,72 @@ body {
   font-size: 12px;
 }
 
+/* DIALOG */
+
+#dialogOverlay {
+  display: none;
+  position: absolute;
+  inset: 0;
+  z-index: 20000;
+  background: rgba(0,0,0,.48);
+  align-items: center;
+  justify-content: center;
+  padding: 15px;
+}
+
+#dialogBox {
+  width: min(390px,100%);
+  background: #ece9d8;
+  border: 1px solid #003c9d;
+  border-radius: 7px;
+  box-shadow: 3px 5px 18px rgba(0,0,0,.5);
+  overflow: hidden;
+  color: #222;
+}
+
+#dialogTitle {
+  padding: 8px 10px;
+  color: white;
+  font-weight: bold;
+  font-size: 13px;
+  background: linear-gradient(90deg,#0058e6,#3b91ff,#0055d8);
+}
+
+#dialogMessage {
+  padding: 18px 15px;
+  font-size: 13px;
+  line-height: 1.5;
+  user-select: text;
+}
+
+#dialogInput {
+  display: none;
+  width: calc(100% - 30px);
+  margin: 0 15px 12px;
+  padding: 7px;
+  border: 1px solid #888;
+  font-family: Tahoma, Arial, sans-serif;
+}
+
+.dialog-buttons {
+  display: flex;
+  justify-content: flex-end;
+  gap: 8px;
+  padding: 10px 15px 15px;
+}
+
+.dialog-buttons button {
+  min-width: 75px;
+  padding: 6px 13px;
+  background: linear-gradient(#fff,#e4e4e4);
+  border: 1px solid #999;
+  border-radius: 2px;
+  cursor: pointer;
+  font-family: Tahoma, Arial, sans-serif;
+}
+
+.dialog-buttons button:hover { background: #dcecff; }
+
 /* MOBILE */
 
 @media(max-width:500px) {
@@ -435,6 +516,10 @@ body {
     min-width: 105px;
     padding-left: 5px;
     padding-right: 5px;
+  }
+
+  #textWindow {
+    width: calc(100vw - 20px);
   }
 }
 </style>
@@ -481,43 +566,21 @@ body {
       </div>
 
       <div class="explorer-toolbar">
-        <button onclick="historyBack()">← Back</button>
-        <button onclick="showDocuments()">↑ Up</button>
+        <button id="backButton" onclick="historyBack()">← Back</button>
+        <button onclick="goUp()">↑ Up</button>
         <button onclick="showDocuments()">Folders</button>
       </div>
 
       <div class="address-bar">
-        Address: <span id="currentPath">C:\Documents</span>
+        Address: <span id="currentPath">C:\Investigator\Documents</span>
       </div>
 
-      <div class="file-area" id="fileArea">
-
-        <div class="file-item" onclick="openFolder('My Pictures')">
-          <span class="file-emoji">📁</span>
-          My Pictures
-        </div>
-
-        <div class="file-item" onclick="openFolder('My Music')">
-          <span class="file-emoji">📁</span>
-          My Music
-        </div>
-
-        <div class="file-item" onclick="openFolder('My Projects')">
-          <span class="file-emoji">📁</span>
-          My Projects
-        </div>
-
-        <div class="file-item" onclick="openFile('Welcome.txt')">
-          <span class="file-emoji">📄</span>
-          Documentation.txt
-        </div>
-
-      </div>
+      <div class="file-area" id="fileArea"></div>
 
     </div>
 
     <div class="explorer-status" id="explorerStatus">
-      4 objects
+      2 folders
     </div>
 
   </div>
@@ -527,7 +590,7 @@ body {
   <div class="window hidden" id="textWindow">
 
     <div class="titlebar">
-      <div class="window-title">📄 Documentation.txt - Notepad</div>
+      <div class="window-title" id="notepadTitle">📄 Documentation.txt - Notepad</div>
 
       <div class="window-controls">
         <button onclick="minimizeWindow('textWindow')">_</button>
@@ -543,14 +606,11 @@ body {
       </div>
 
       <div class="notepad-content">
-        <textarea id="textContent" spellcheck="false" readonly>Documentation.
-Investigation on progress.
-          
-- Investigator</textarea>
+        <textarea id="textContent" spellcheck="false" readonly></textarea>
       </div>
 
-      <div class="notepad-status">
-        Welcome.txt &nbsp; | &nbsp; Windows Notepad
+      <div class="notepad-status" id="notepadStatus">
+        Documentation.txt &nbsp; | &nbsp; Windows Notepad
       </div>
 
     </div>
@@ -575,8 +635,8 @@ Investigation on progress.
 
       <div id="terminalOutput">Microsoft Windows XP [Version 5.1.2600]
 
-Liron's Museum Terminal
-Copyright (C) Liron's Museum.
+Investigator Terminal
+Copyright (C) Microsoft Corporation.
 
 Type "help" to see available commands.
 
@@ -596,7 +656,7 @@ Type "help" to see available commands.
   <div id="startMenu">
 
     <div class="start-header">
-      🪟 Liron's Museum
+      🪟 Investigator
     </div>
 
     <div class="start-content">
@@ -621,6 +681,20 @@ Type "help" to see available commands.
 
   </div>
 
+  <!-- DIALOG -->
+
+  <div id="dialogOverlay">
+    <div id="dialogBox">
+      <div id="dialogTitle">System Message</div>
+      <div id="dialogMessage"></div>
+      <input id="dialogInput" type="password" autocomplete="off">
+      <div class="dialog-buttons">
+        <button id="dialogCancel" onclick="closeDialog()">Cancel</button>
+        <button id="dialogConfirm" onclick="confirmDialog()">OK</button>
+      </div>
+    </div>
+  </div>
+
   <!-- TASKBAR -->
 
   <div id="taskbar">
@@ -643,16 +717,767 @@ Type "help" to see available commands.
 <script>
 let highestZ = 10;
 let activeWindow = null;
+let currentFolder = "";
+let folderHistory = [];
+let pendingDialogAction = null;
 
 const SYSTEM_VERSION = "1.0.0";
 const SYSTEM_DATE = "10/06/2001";
 const TERMINAL_DIRECTORY = "C:\\Investigator";
+const DISCLAIMER = "Not canon, this is only for viewing purposes.";
 
 const windowNames = {
   documentsWindow: "Documents",
-  textWindow: "Welcome.txt - Notepad",
+  textWindow: "Notepad",
   terminalWindow: "Terminal"
 };
+
+/* DOCUMENT CONTENTS */
+
+const fileContents = {
+
+"lirons-museum.txt": `DISCLAIMER:
+${DISCLAIMER}
+
+========================================
+
+LORE
+
+• Lore:
+Liron's Museum is an AU of the Dandy's World universe, where my characters are Toons from a location affiliated with "Gardenview", known as "LIFEMUSEUM" or, more commonly, "Liron's Museum".
+
+• Toon Classes:
+
+• Class EX: Disposable Toons
+• Class A: Common Toons
+• Class B: Uncommon Toons
+• Class C: Rare Toons
+• Class D: Main Toons
+• Class E: Holiday Toons
+• Sub-Class F: Sector Leads
+• Class F: Leads
+
+• Sub-Class H: Primary Lead
+
+• Human Classes:
+
+• Class 0: Visitors
+• Class G: Toon Handlers
+• Class H: Founders
+
+• What is the difference between Sector Leads and Leads?
+
+• Sector Leads are Toons from any of the classes "A, B, C, or D" who are assigned to be the Lead of a specific area.
+
+========================================
+
+• GENERAL CONTEXT
+
+• The game and almost all tapes take place after Liron's Show goes bankrupt.
+
+• The Founders abandoned the Museum, fired the Toon Handlers, and left the Toons alone.
+
+• The Toons:
+  - Cannot leave.
+  - Cannot communicate with the outside world.
+
+• Only Liron and Class F Toons (Leads) can operate the Train, but they do not allow others to leave because they fear the Founders.
+
+• TRAIN AND TRACKS:
+
+• The Train has class sensors.
+
+• Toons below Class F are blocked from operating the Train to other sections of the Museum, except for the Leads' offices and locations authorized by access cards.
+
+• The Train only travels between the Lobby and the Leads' offices.
+
+• Walking along the tracks to escape has already been attempted.
+
+• A Class EX Toon [REDACTED] attempted to escape and died after 5 days of starvation and exhaustion.
+
+========================================
+
+• CLASS EX — "DISPOSABLE"
+
+• Toons created by mistake or rejected.
+
+• Used as assistants or test subjects.
+
+• Most have disappeared.
+
+• In the Laboratory (Floor 10), there are rejected concepts.
+
+• In the Reactor (Floor -1000), discarded Toons are kept in tubes, never awakened.
+
+========================================
+
+• LOBBY MECHANICS
+
+• The Lobby will be the entrance to the Museum.
+
+• It will have two shops in the main area.
+
+• The Lobby has 5 wooden elevators that lead underground. More about how the elevators work can be found in the Game section.
+
+• There will be a Train station for traveling to another section of the Museum. The offices of Countess Lockie and Nixxy are located there. Each Lead has a shop; Sector Leads do not, but they can help event Toons run their shops.
+
+• All Lobby shops use Shards as their currency.
+
+• What are Shards?
+
+• Shards are rare stones that glow with tiny stars.
+
+========================================
+
+• SHOPS
+
+• Liron's Shop (Lobby version)
+  - Where the player buys Toons and Trinkets to use in the game.
+  - "Just buy something already."
+
+• Don's Shop (Lobby)
+  - Where the player buys skins, cosmetics, and accessories. Nothing affects gameplay; these are visual items only.
+  - It will also have different game GUI modes.
+  - Example: "Night Theme, dark blue buttons."
+  - "Hello, dear Toon. Would you mind paying my shop a visit?"
+
+• Countess Lockie's Shop (Lobby)
+  - Where the player buys items, skin packs that cost Robux, and avatar items.
+  - "Welcome. How may I help you?"
+
+• Nixxy's Shop (Lobby)
+  - Where the player buys different modes and earning boosts.
+  - Examples:
+    - "Twisted Hell Mode: 3000 Shards"
+    - "2x Shard Gain Boost: 2500 Shards"
+    - (Depends on how long the boost lasts.)
+  - "Hello. Could you spare some of your time to shop at my store?"
+
+========================================
+
+• GAME
+
+• ELEVATORS:
+
+• Instead of more technological elevators like the current ones, these elevators are made of wood. They are mining elevators.
+
+• They can go upward on special occasions.
+  - Example: The elevator goes up to the Museum's Main floors instead of descending into the mining caves beneath the Museum.
+
+• FLOOR EVENTS:
+
+• Flood
+• Blackout
+• Exposed
+• OnFlames
+• Fallen
+
+• TAPES:
+
+After secret missions, the player can earn tapes: videos containing moments between the Toons.
+
+• Each floor may have a different type of machine or mission to complete.
+
+• The number of missions per floor increases with depth. Lower floors have more objectives, making the challenge harder.
+
+• Normal:
+  - Connect cables to the power panels.
+  - Redirect power to the elevator.
+
+• Flood:
+  - Repair 5 pipes.
+  - Drain the water.
+
+• Blackout:
+  - Turn on 4 generators.
+  - Restore the power.
+
+• OnFlames:
+  - Activate 6 fire alarms.
+  - Stop the fire.
+
+• Fallen:
+  - No spoilers!
+  - T1BFUkHDh8ODTyBDT1JF
+
+========================================
+
+📅 EVENT CALENDAR
+
+The events in Liron's Museum follow their corresponding real-world holidays and have extended durations.
+
+⏱️ EVENT DURATION
+
+• Start: 12 days before the real-world holiday.
+
+• End: 29 days after the real-world holiday.
+
+• Total duration: 42 days.
+
+During this period:
+
+• The event floor is available.
+• The event shop remains open.
+• Progress is saved between appearances.
+
+========================================
+
+🎄 CHRISTMAS — WORKSHOP
+
+Floor: Workshop
+Shop: Fiona Starling
+Currency: Ornaments (tree toppers, baubles, and stockings)
+
+FLOOR OBJECTIVE
+
+• Build 6 toys.
+
+• The amount increases depending on:
+  - The floor's depth.
+  - More than 2 players in the match.
+
+CHRISTMAS TOONS — COSTS AND REQUIREMENTS
+
+Henry Gifty 🎁
+
+• 300 Ornaments.
+• Explore the Workshop floor for the first time.
+
+Frostey Snowy ☃️
+
+• 1000 Ornaments.
+• 50% research on Twisted Frostey.
+
+Cappy WinterWhisper 🎩
+
+• 1700 Ornaments.
+• Build 25 toys.
+• 60% research on Twisted Cappy.
+
+Fiona Starling 🌟
+
+• 3500 Ornaments.
+• 2500 Shards.
+• 100% research on Twisted Fiona.
+
+========================================
+
+🎃 HALLOWEEN — GRAVEYARD
+
+Floor: Graveyard
+Shop: Candy SugarTooth
+Currency: Candy / Pumpkin-shaped baskets
+
+FLOOR OBJECTIVE
+
+• Light 4 pumpkins.
+• Help 2 souls find their gravestones.
+
+• The quantities increase depending on:
+  - The floor's depth.
+  - The number of players.
+
+HALLOWEEN TOONS — COSTS AND REQUIREMENTS
+
+Batly DeepEcho 🦇
+
+• 300 Candy / Baskets.
+• Explore the Graveyard floor for the first time.
+• Experience 1 Blackout.
+
+Billy Gourdyard 🎃
+
+• 1000 Candy / Baskets.
+• 50% research on Twisted Billy.
+• Complete Master Missions with Chris Gravey.
+
+Harley 厄运 🐈‍⬛
+
+• 1700 Candy / Baskets.
+• Help 15 souls.
+• 60% research on Twisted Harley.
+• Experience good luck (have someone playing as Bluy in the match).
+
+Candy SugarTooth 🍬
+
+• 3500 Candy / Baskets.
+• 2500 Shards.
+• 100% research on Twisted Candy.
+• Find Twisted Harley.
+
+========================================
+
+🥚 EASTER — FOREST
+
+Floor: Forest
+Shop: Choccy Vanilloa
+Currency: Eggs
+
+FLOOR OBJECTIVE
+
+• Find 6 eggs.
+• Deposit the eggs into the basket near the elevator.
+
+• The amount increases depending on:
+  - The floor's depth.
+  - The number of players.
+
+EASTER TOONS — COSTS AND REQUIREMENTS
+
+Eggsley Vanilloa 🥚
+
+• 300 Eggs.
+• Explore the Forest floor for the first time.
+• Collect 4 hidden eggs.
+
+Carrol Farmey 🥕
+
+• 1000 Eggs.
+• 50% research on Twisted Carrol.
+• Experience good luck (have someone playing as Bluy in the same match).
+
+Basley Egginton 🧺
+
+• 1700 Eggs.
+• Collect 30 eggs.
+• 60% research on Twisted Basley.
+• Find Twisted Eggsley.
+
+Choccy (Chocolate) Vanilloa 🐇
+
+• 3500 Eggs.
+• 2500 Shards.
+• 100% research on Twisted Choccy.
+• Find Twisted Basley.
+
+========================================
+
+• SPECIAL FLOORS
+
+• FIXED FLOORS:
+
+• Laboratory Floor:
+  - A large laboratory that always appears on Floor 10.
+
+• Theater Floor:
+  - A large theater that always appears on Floor 20.
+
+• Storage Floor:
+  - A large storage area that always appears on Floor 30.
+
+• REACTOR FLOOR:
+  - The main laboratory. The player can access this floor by paying attention to small details in the Theater.
+  - 10 generators. 15 on special occasions.
+
+• Destroyed Floor:
+  - Floor -1001, a destroyed floor. No Twisteds. 4 generators.
+
+• Incinerator Floor:
+  - A huge incinerator, the Museum's dump. Where unwanted things are thrown away. The place where mistakes go.
+  - And never come back...?
+`,
+
+"Tapes.txt": `DISCLAIMER:
+${DISCLAIMER}
+
+========================================
+
+• TAPES:
+
+All tapes can only be collected after the previous tape has been collected.
+
+========================================
+
+TAPE #1 — "Greatest Customer!"
+
+HOW TO OBTAIN:
+
+• Buy something from Liron's Shop 50 times.
+
+TRANSCRIPT:
+
+AUBREY:
+"Liron. Time to open the Museum. If I dream that you're doing that stupid thing of hating Main-002 again... you're going to be in trouble."
+
+Primary-001 (Liron):
+"...Yes, ma'am..."
+
+AUBREY:
+"Good. Get ready. We have 20 minutes before the visitors start arriving."
+
+Primary-001 (Liron):
+"...Yes, ma'am... I'll get ready..."
+
+========================================
+
+TAPE #2 — "Once in a Year"
+
+HOW TO OBTAIN:
+
+• Reach Floor 20 while playing as Bluy.
+
+TRANSCRIPT:
+
+Main-002 (Bluy):
+"It must be so awful... you can only appear during Easter..."
+
+Uncommon-E-CP-003 (Carrol):
+"It's horrible... I wish I could be here for longer... cousin..."
+
+Main-002 (Bluy):
+"I hope that someday we'll get to see each other more often..."
+
+Uncommon-E-CP-003 (Carrol):
+"Me too, cousin."
+
+========================================
+
+TAPE #3 — "Operation CORE"
+
+----------------------------------------
+
+PART 1 — "Going Down"
+
+HOW TO OBTAIN:
+
+• Reach Floor 20 while playing as Solaris.
+
+TRANSCRIPT:
+
+Main-003 (Solaris):
+"Bluy... do you think Liron is going too far? He's always been... bad... but... he tried to hurt Shiro-!"
+
+Main-002 (Bluy):
+"Solaris. He's a devil. He's going to hurt everyone, and our job as Sector Leads is to protect our friends."
+
+Main-003 (Solaris):
+"I just... I'm worried... he's always been..."
+
+Main-002 (Bluy):
+"A jerk."
+
+Main-003 (Solaris):
+"That's true... but... him hurting Shiro...? That's strange... I know he hates us... but... Shiro is his pet!"
+
+Main-002 (Bluy):
+"Even Shiro knows how bad Liron is."
+
+"Why do you think Shiro is always walking around near me?"
+
+Main-003 (Solaris):
+"Yeah... because of Liron..."
+"Wow... that changes a lot..."
+
+----------------------------------------
+
+PART 2 — "N3x0r's Interruption"
+
+HOW TO OBTAIN:
+
+• Survive a floor against Twisted N3x0r.
+
+TRANSCRIPT:
+
+(N3x0r enters the elevator using the backup elevator.)
+
+Main-005 (N3x0r/V1rus):
+"H3ll0 my sw33t fr13nds."
+
+Main-002 (Bluy, jokingly):
+"N3x0r? Do you just show up out of nowhere now?"
+
+Main-005 (N3x0r/V1rus):
+"Th1nk1ng ab0ut th3 1d10t L1r0n? H3 w0n't b3 c0m1ng back s00n. D0n 1s k33p1ng h1m d1stract3d."
+
+Main-002 (Bluy):
+"Good work. We're heading straight to the Museum's CORE."
+"We have some dirty work to do."
+
+(Rose appears a little later, coming from the same backup elevator.)
+
+Main-006 (Rose):
+"Bluy! I heard about the operation. I came running."
+
+(The sound of metallic footsteps. The tape cuts off.)
+
+----------------------------------------
+
+PART 3 — "The CORE"
+
+HOW TO OBTAIN:
+
+• Complete the secret code on Floor 10 (Laboratory).
+
+• The next floor will have Twisted Bluy and Twisted Don. Survive against them.
+
+TRANSCRIPT:
+
+Main-002 (Bluy):
+"Huh? The elevator already opened? Wait... wasn't the CORE further down...?"
+
+Main-003 (Solaris):
+"No... it's right here..."
+
+Main-005 (N3x0r/V1rus):
+"Wow... 1t's s0 b1g... and w31rd..."
+
+(They explore the REACTOR floor.)
+
+Main-003 (Solaris):
+"Wow... it's like... enormous! I've never seen anything so big... it's gigantic!"
+
+Main-002 (Bluy):
+"You could say that, I guess... but focus, Solaris. We need to get the energy crystal and run back to the elevator."
+
+Main-006 (Rose):
+"I think... I found it."
+
+(They steal the energy crystal.)
+
+Main-002 (Bluy):
+"Good work! Let's get back to the elevator, quickly!"
+
+(They run to the elevator...)
+
+(But there is no power...)
+
+(The elevator falls...)
+
+(They die from the impact when the elevator hits the bottom of the shaft. Except for Solaris, who floated before the elevator hit the bottom.)
+
+========================================
+
+TAPE #4 — "After the CORE"
+
+HOW TO OBTAIN:
+
+• While playing as Solaris, find Twisted Bluy.
+
+TRANSCRIPT:
+
+Main-003 (Solaris):
+"They... they... died...? Bluy died...? NO... NO...! I... Donovan can help...! I know he can!"
+
+(Solaris takes his "unconscious" friends to the backup elevator and goes up to Don's office.)
+
+Main-003 (Solaris):
+"Don... you need to help me..."
+
+Lead-001 (Don):
+"What happened, my ray of sunshine?"
+
+Main-003 (Solaris):
+"The operation went wrong... they died..."
+
+Lead-001 (Don):
+"Bring me their bodies... I'll bring them back to life."
+
+========================================
+
+TAPE #5 — "Bring Them Back"
+
+----------------------------------------
+
+PART 1 — "Don's Help"
+
+HOW TO OBTAIN:
+
+• Complete the Theater map mission.
+• Find 3 hidden Liron plushies and burn them.
+
+TRANSCRIPT: rrr4nn4vn4n4bn4
+
+Main-003 (Solaris):
+"Well... take care..."
+
+Lead-001 (Don):
+"U-Oh! Of course I will. Thank you for caring, Sol."
+
+----------------------------------------
+
+PART 2 — "The Countess's Help"
+
+HOW TO OBTAIN:
+
+• Survive a floor against Twisted Countess Lockie.
+
+TRANSCRIPT:
+
+(Solaris steps onto the train platform.)
+
+Main-003 (Solaris):
+"If Don's... instructions are... correct... the next train will take me to Countess..."
+
+(Solaris boards the Train and waits until it reaches Countess Lockie's office.)
+
+(Solaris admires the crystals on the walls of the train tunnels.)
+
+Main-003 (Solaris):
+"Wow...! These crystals are much more beautiful than the ones in the mines..."
+
+(The Train stops.)
+
+(Solaris gets off the Train and reaches the door to Countess Lockie's office.)
+
+(Solaris reaches for the doorknob, but Countess Lockie is already opening the door.)
+
+Lead-002 (Countess Lockie):
+"Solaris? You, here? I thought Liron didn't allow Trains to carry Toons. Come in."
+
+Main-003 (Solaris):
+"Countess... the operation failed... Don needs you to revive... Bluy... N3x0r... and Rose..."
+
+Lead-002 (Countess Lockie):
+"THE OPERATION FAILED?! Ahem-! I'll operate the Train to go back right now. We need to return."
+
+(The Train returns, and they go back to Don's office.)
+
+----------------------------------------
+
+PART 3 — "The Last Resource"
+
+HOW TO OBTAIN:
+
+• Complete the Greenhouse mission.
+• Collect 10 orange flowers and burn them.
+
+TRANSCRIPT:
+
+Lead-002 (Countess Lockie):
+"Donovan. I'm here. How can I help?"
+
+Lead-001 (Don):
+"Help me. With your power. Mine isn't enough to bring them back to life..."
+
+Lead-002 (Countess Lockie):
+"Let's just get this over with, you wannabe pirate."
+
+Lead-001 (Don):
+"Hey-!"
+
+(They join forces and channel their powers to revive the three dead Toons.)
+
+(They revive them, but the Toons are still unconscious. Solaris, Countess, and Donovan take the sleeping Toons to their rooms.)
+
+========================================
+
+TAPE #6 — "More Headache"
+
+HOW TO OBTAIN:
+
+• During the survival mission in the abandoned mansion, go to the kitchen and turn on the stove.
+
+TRANSCRIPT:
+
+Main-002 (Bluy):
+"Ugh... my head hurts..."
+
+Common-001 (Puffin):
+"Bluy!! You're awake!!!"
+
+Main-002 (Bluy):
+"Puffin? Oh, it's you... wait... what's that...? I smell something burning. Did you mess with the stove!?"
+
+Common-001 (Puffin):
+"No, no! This time Creamy was the one who burned down the kitchen..."
+
+Main-002 (Bluy):
+"Oh, good...- WAIT, CREAMY BURNED DOWN THE KITCHEN?? OH MY GOD-!!!"
+
+========================================
+
+TAPE #7 — "Confronting the Fire"
+
+HOW TO OBTAIN:
+
+• Survive a floor with the OnFlames floor event.
+
+TRANSCRIPT:
+
+Lead-003 (Nixxy):
+"Liron."
+
+Primary-001 (Liron):
+"Nixxy."
+
+Lead-003 (Nixxy):
+"Are you happy with the pain you've caused?"
+
+Primary-001 (Liron):
+"...Those idiots used the elevator without my permission."
+
+Lead-003 (Nixxy):
+"Liron. Stop. I've already told you. We're not going to let you hurt them anymore."
+
+Primary-001 (Liron):
+"..."
+
+Lead-003 (Nixxy):
+"Countess Lockie... Donovan and I... we're going to stop you from hurting our friends."
+
+Primary-001 (Liron):
+"..."
+
+Lead-003 (Nixxy):
+"The Founders really failed when they made you. How could they expect you to be the Liron from the show? You're a monster. The Liron from the Show was a friend. Someone who helped others."
+
+Primary-001 (Liron):
+"Lies..."
+
+Lead-003 (Nixxy):
+"You don't deserve to be the face of this Museum. Other Toons here deserved that."
+
+Primary-001 (Liron):
+"NIXXY..."
+
+========================================
+
+TAPE #8 — "Failed Star"
+
+HOW TO OBTAIN:
+
+• Buy 10 items from Nixxy's Shop.
+
+TRANSCRIPT:
+
+Primary-001 (Liron):
+"WHO DO YOU THINK YOU'RE TALKING TO? I'M NOT AN IDIOT LIKE YOU! YOU'RE USELESS!"
+
+Lead-003 (Nixxy):
+"Listen to your own words. There are cameras all over the Museum. Everyone will hear."
+
+Lead-003 (Nixxy):
+"Bluy really was right. You're a jerk."
+
+Primary-001 (Liron):
+"AND YOU think I CARE about what other Toons think?"
+
+Lead-003 (Nixxy):
+"You may not care. But... I know that deep down, we're getting under your skin."
+
+Primary-001 (Liron):
+"You... YOU [CENSORED]!"
+
+Lead-003 (Nixxy):
+"What loving words."
+
+Primary-001 (Liron):
+"Get out of my office. NOW!"
+
+========================================
+`
+};
+
+/* RESEARCH FILES */
+
+const researchFiles = [
+  { name: "image-001.jpg", icon: "🖼️", type: "image" },
+  { name: "image-002.png", icon: "🖼️", type: "image" },
+  { name: "image-003.jpg", icon: "🖼️", type: "image" },
+  { name: "research-log.txt", icon: "📄", type: "text" },
+  { name: "incident-report.txt", icon: "📄", type: "text" },
+  { name: "subject-notes.txt", icon: "📄", type: "text" }
+];
 
 /* WINDOWS */
 
@@ -666,7 +1491,7 @@ function openWindow(id) {
   updateTaskbar();
 
   if(id === "terminalWindow") {
-    setTimeout(() => document.getElementById("terminalInput").focus(), 50);
+    setTimeout(() => terminalInput.focus(), 50);
   }
 }
 
@@ -784,61 +1609,173 @@ function toggleStart() {
     menu.style.display === "block" ? "none" : "block";
 }
 
-/* DOCUMENTS */
+/* DOCUMENTS NAVIGATION */
 
 function showDocuments() {
-  document.getElementById("currentPath").textContent =
-    "C:\\Documents";
-
-  document.getElementById("fileArea").innerHTML = `
-    <div class="file-item" onclick="openFolder('My Pictures')">
-      <span class="file-emoji">📁</span>My Pictures
-    </div>
-    <div class="file-item" onclick="openFolder('My Music')">
-      <span class="file-emoji">📁</span>My Music
-    </div>
-    <div class="file-item" onclick="openFolder('My Projects')">
-      <span class="file-emoji">📁</span>My Projects
-    </div>
-    <div class="file-item" onclick="openFile('Welcome.txt')">
-      <span class="file-emoji">📄</span>Welcome.txt
-    </div>
-  `;
-
-  document.getElementById("explorerStatus").textContent =
-    "4 objects";
-}
-
-function selectFile(element) {
-  document.querySelectorAll(".file-item").forEach(item => {
-    item.style.background = "";
-  });
-
-  element.style.background = "#cce5ff";
+  currentFolder = "";
+  folderHistory = [];
+  renderFolder();
 }
 
 function openFolder(name) {
-  document.getElementById("currentPath").textContent =
-    "C:\\Documents\\" + name;
-
-  document.getElementById("fileArea").innerHTML = `
-    <div class="file-item" onclick="showDocuments()">
-      <span class="file-emoji">📁</span>Back to Documents
-    </div>
-  `;
-
-  document.getElementById("explorerStatus").textContent =
-    "This folder is empty";
+  folderHistory.push(currentFolder);
+  currentFolder = name;
+  renderFolder();
 }
 
 function historyBack() {
-  showDocuments();
+  if(folderHistory.length === 0) return;
+
+  currentFolder = folderHistory.pop();
+  renderFolder();
 }
 
-function openFile(name) {
-  if(name === "Welcome.txt") {
-    openWindow("textWindow");
+function goUp() {
+  historyBack();
+}
+
+function renderFolder() {
+  const area = document.getElementById("fileArea");
+  const path = document.getElementById("currentPath");
+  const status = document.getElementById("explorerStatus");
+  const backButton = document.getElementById("backButton");
+
+  backButton.disabled = folderHistory.length === 0;
+
+  if(currentFolder === "") {
+    path.textContent = TERMINAL_DIRECTORY + "\\Documents";
+
+    area.innerHTML = `
+      <div class="file-item" onclick="openFolder('Research')">
+        <span class="file-emoji">📁</span>
+        Research
+      </div>
+
+      <div class="file-item" onclick="openFolder('Documentation')">
+        <span class="file-emoji">📁</span>
+        Documentation
+      </div>
+    `;
+
+    status.textContent = "2 folders";
+    return;
   }
+
+  if(currentFolder === "Research") {
+    path.textContent = TERMINAL_DIRECTORY + "\\Documents\\Research";
+
+    area.innerHTML = researchFiles.map((file, index) => `
+      <div class="file-item" onclick="requestPassword(${index})">
+        <span class="file-emoji">${file.icon}</span>
+        ${file.name}
+        <span style="font-size:10px;color:#777;">🔒 Protected</span>
+      </div>
+    `).join("");
+
+    status.textContent = researchFiles.length + " protected objects";
+    return;
+  }
+
+  if(currentFolder === "Documentation") {
+    path.textContent = TERMINAL_DIRECTORY + "\\Documents\\Documentation";
+
+    area.innerHTML = `
+      <div class="file-item" onclick="openFile('lirons-museum.txt')">
+        <span class="file-emoji">📄</span>
+        lirons-museum.txt
+      </div>
+
+      <div class="file-item" onclick="openFile('Tapes.txt')">
+        <span class="file-emoji">📄</span>
+        Tapes.txt
+      </div>
+    `;
+
+    status.textContent = "2 objects";
+  }
+}
+
+/* DIALOG SYSTEM */
+
+function showDialog(title, message, inputMode, action) {
+  document.getElementById("dialogTitle").textContent = title;
+  document.getElementById("dialogMessage").textContent = message;
+
+  const input = document.getElementById("dialogInput");
+  input.style.display = inputMode ? "block" : "none";
+  input.value = "";
+
+  document.getElementById("dialogCancel").style.display =
+    inputMode ? "inline-block" : "none";
+
+  pendingDialogAction = action;
+
+  document.getElementById("dialogOverlay").style.display = "flex";
+
+  if(inputMode) {
+    setTimeout(() => input.focus(), 50);
+  }
+}
+
+function closeDialog() {
+  document.getElementById("dialogOverlay").style.display = "none";
+  pendingDialogAction = null;
+}
+
+function confirmDialog() {
+  if(!pendingDialogAction) {
+    closeDialog();
+    return;
+  }
+
+  const action = pendingDialogAction;
+  closeDialog();
+  action();
+}
+
+/* PASSWORD-PROTECTED RESEARCH */
+
+function requestPassword(index) {
+  const file = researchFiles[index];
+
+  showDialog(
+    "Password Required",
+    "The file \"" + file.name + "\" is protected. Enter the password to access this file:",
+    true,
+    () => {
+      showDialog(
+        "Access Denied",
+        "The password is incorrect. Access to this file is restricted.",
+        false,
+        () => {}
+      );
+    }
+  );
+}
+
+/* OPEN DOCUMENTATION FILES */
+
+function openFile(name) {
+  if(!fileContents[name]) return;
+
+  showDialog(
+    "Disclaimer",
+    DISCLAIMER,
+    false,
+    () => {
+      const content = fileContents[name];
+
+      document.getElementById("textContent").value = content;
+      document.getElementById("notepadTitle").textContent =
+        "📄 " + name + " - Notepad";
+      document.getElementById("notepadStatus").textContent =
+        name + " | Windows Notepad";
+
+      windowNames.textWindow = name + " - Notepad";
+
+      openWindow("textWindow");
+    }
+  );
 }
 
 /* TERMINAL */
@@ -903,7 +1840,7 @@ exit       - Close terminal`
       break;
 
     case "whoami":
-      printTerminal("LironsMuseum\\Guest");
+      printTerminal("Investigator");
       break;
 
     case "dir":
@@ -911,7 +1848,7 @@ exit       - Close terminal`
 `Directory of ${TERMINAL_DIRECTORY}
 
 <DIR> Documents
-<DIR> Terminal
+       Terminal
        desktop.html`
       );
       break;
@@ -923,7 +1860,7 @@ exit       - Close terminal`
     case "ver":
       printTerminal(
 `Microsoft Windows XP [Version 5.1.2600]
-Liron's Museum Desktop [Version ${SYSTEM_VERSION}]`
+Investigator Desktop [Version ${SYSTEM_VERSION}]`
       );
       break;
 
@@ -955,6 +1892,18 @@ function updateClock() {
 
 updateClock();
 setInterval(updateClock, 1000);
+
+/* INITIALIZE DOCUMENTS */
+
+showDocuments();
+
+/* ENTER KEY IN PASSWORD DIALOG */
+
+document.getElementById("dialogInput").addEventListener("keydown", e => {
+  if(e.key === "Enter") {
+    confirmDialog();
+  }
+});
 </script>
 
 </body>
