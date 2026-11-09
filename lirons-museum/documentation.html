@@ -4,1812 +4,617 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta name="theme-color" content="#245edb">
-<meta name="application-version" content="1.0.0">
+<meta name="application-version" content="1.1.0">
 <title>Investigator Desktop</title>
-
 <style>
-* { box-sizing: border-box; }
-
-body {
-  margin: 0;
-  overflow: hidden;
-  font-family: Tahoma, Arial, sans-serif;
-  user-select: none;
-  background: #000;
-}
-
-#desktop {
-  width: 100vw;
-  height: 100dvh;
-  position: relative;
-  overflow: hidden;
-  background-image: url("https://r4.wallpaperflare.com/wallpaper/33/394/438/windows-xp-bliss-wallpaper-a2c182d00dc64e8bcae832b55078b942.jpg");
-  background-size: cover;
-  background-position: center;
-  background-repeat: no-repeat;
-}
-
-/* DESKTOP ICONS */
-
-.desktop-icons {
-  position: absolute;
-  top: 15px;
-  left: 12px;
-  display: flex;
-  flex-direction: column;
-  gap: 15px;
-}
-
-.desktop-icon {
-  width: 85px;
-  min-height: 85px;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  gap: 5px;
-  color: white;
-  font-size: 12px;
-  text-align: center;
-  text-shadow: 1px 1px 3px black;
-  cursor: pointer;
-  border: 1px solid transparent;
-  padding: 5px;
-}
-
-.desktop-icon:hover {
-  background: rgba(30,110,210,.35);
-  border: 1px dotted white;
-}
-
-.desktop-icon img {
-  width: 42px;
-  height: 42px;
-  object-fit: contain;
-  filter: drop-shadow(1px 2px 2px #333);
-}
-
-/* TASKBAR */
-
-#taskbar {
-  height: 36px;
-  position: absolute;
-  bottom: 0;
-  left: 0;
-  right: 0;
-  z-index: 9999;
-  background: linear-gradient(#3989e7,#1764c5 45%,#1455b4);
-  border-top: 1px solid #70baff;
-  display: flex;
-  align-items: center;
-  box-shadow: 0 -2px 5px rgba(0,0,0,.2);
-}
-
-#start {
-  height: 36px;
-  width: 110px;
-  border: none;
-  border-radius: 0 15px 15px 0;
-  background: linear-gradient(#62c44b,#278c20);
-  color: white;
-  font-size: 17px;
-  font-weight: bold;
-  font-style: italic;
-  text-shadow: 1px 2px 2px #174c12;
-  box-shadow: inset 0 1px 3px #a8f58c;
-  cursor: pointer;
-}
-
-#start:hover { filter: brightness(1.15); }
-
-.task-buttons {
-  display: flex;
-  gap: 4px;
-  padding-left: 8px;
-  flex: 1;
-  overflow: hidden;
-}
-
-.task-button {
-  min-width: 100px;
-  max-width: 180px;
-  height: 27px;
-  border: 1px solid #1552a1;
-  border-radius: 3px;
-  color: white;
-  background: linear-gradient(#4389d7,#2463b4);
-  text-align: left;
-  padding: 3px 9px;
-  cursor: pointer;
-  overflow: hidden;
-  white-space: nowrap;
-  text-overflow: ellipsis;
-}
-
-.task-button.active {
-  background: linear-gradient(#174a9b,#2867b9);
-  box-shadow: inset 1px 1px 3px #103b78;
-}
-
-.tray {
-  min-height: 36px;
-  min-width: 112px;
-  padding: 3px 10px;
-  background: linear-gradient(#1889e9,#0962bd);
-  border-left: 1px solid #5bb6ff;
-  color: white;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  font-size: 11px;
-  line-height: 14px;
-}
-
-#clock { font-weight: bold; }
-
-#clockDate {
-  font-size: 10px;
-  opacity: .95;
-}
-
-/* WINDOWS */
-
-.window {
-  position: absolute;
-  top: 100px;
-  left: 150px;
-  width: min(650px,calc(100vw - 30px));
-  height: min(440px,calc(100dvh - 65px));
-  min-width: 280px;
-  min-height: 200px;
-  display: flex;
-  flex-direction: column;
-  background: #ece9d8;
-  border: 1px solid #003c9d;
-  border-radius: 8px 8px 3px 3px;
-  box-shadow: 3px 5px 15px rgba(0,0,0,.4);
-  overflow: hidden;
-}
-
-.window.hidden { display: none; }
-
-.titlebar {
-  height: 30px;
-  min-height: 30px;
-  padding: 3px 5px 3px 9px;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  color: white;
-  font-size: 13px;
-  font-weight: bold;
-  background: linear-gradient(90deg,#0058e6,#3b91ff,#0055d8);
-  cursor: move;
-}
-
-.window-title {
-  display: flex;
-  align-items: center;
-  gap: 7px;
-  overflow: hidden;
-  white-space: nowrap;
-  text-overflow: ellipsis;
-}
-
-.window-controls {
-  display: flex;
-  gap: 3px;
-  flex-shrink: 0;
-}
-
-.window-controls button {
-  width: 22px;
-  height: 21px;
-  border: 1px solid white;
-  border-radius: 3px;
-  color: white;
-  font-weight: bold;
-  cursor: pointer;
-  background: linear-gradient(#78baff,#1260d5);
-}
-
-.window-controls button.close {
-  background: linear-gradient(#ff9a86,#d42b16);
-}
-
-.window-body {
-  flex: 1;
-  min-height: 0;
-  overflow: auto;
-  background: white;
-  color: #222;
-}
-
-/* DOCUMENTS */
-
-.explorer-menu {
-  height: 26px;
-  padding: 5px 9px;
-  font-size: 12px;
-  background: #f3f0e5;
-  border-bottom: 1px solid #ddd;
-}
-
-.explorer-toolbar {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  height: 39px;
-  padding: 5px 10px;
-  background: #f7f6ef;
-  border-bottom: 1px solid #ddd;
-}
-
-.explorer-toolbar button {
-  border: 1px solid #c8c8c8;
-  background: #fff;
-  padding: 5px 10px;
-  cursor: pointer;
-}
-
-.explorer-toolbar button:disabled {
-  opacity: .45;
-  cursor: default;
-}
-
-.address-bar {
-  padding: 7px 10px;
-  background: #f3f0e5;
-  border-bottom: 1px solid #ddd;
-  font-size: 12px;
-  overflow: hidden;
-  white-space: nowrap;
-  text-overflow: ellipsis;
-}
-
-.file-area {
-  padding: 15px;
-  display: grid;
-  grid-template-columns: repeat(auto-fill,minmax(95px,1fr));
-  gap: 12px;
-  align-content: start;
-}
-
-.file-item {
-  min-height: 85px;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  gap: 7px;
-  font-size: 12px;
-  text-align: center;
-  cursor: pointer;
-  border: 1px solid transparent;
-  padding: 5px;
-  overflow-wrap: anywhere;
-}
-
-.file-item:hover {
-  background: #e7f2ff;
-  border: 1px solid #9cc8f4;
-}
-
-.file-emoji { font-size: 32px; }
-
-.explorer-status {
-  height: 23px;
-  padding: 4px 10px;
-  background: #f3f0e5;
-  border-top: 1px solid #ddd;
-  font-size: 11px;
-}
-
-/* NOTEPAD */
-
-#textWindow {
-  width: min(650px,calc(100vw - 30px));
-  height: min(500px,calc(100dvh - 65px));
-}
-
-.notepad-menu {
-  height: 27px;
-  padding: 6px 9px;
-  background: #f5f3eb;
-  border-bottom: 1px solid #ccc;
-  font-size: 12px;
-  flex-shrink: 0;
-}
-
-.notepad-content {
-  flex: 1;
-  min-height: 0;
-  background: white;
-  padding: 12px;
-}
-
-.notepad-content textarea {
-  width: 100%;
-  height: 100%;
-  resize: none;
-  border: none;
-  outline: none;
-  background: white;
-  color: #222;
-  font-family: "Courier New", monospace;
-  font-size: 14px;
-  line-height: 1.5;
-  user-select: text;
-  white-space: pre-wrap;
-}
-
-.notepad-status {
-  height: 22px;
-  padding: 4px 8px;
-  background: #f3f0e5;
-  border-top: 1px solid #ccc;
-  font-size: 11px;
-  flex-shrink: 0;
-}
-
-/* TERMINAL */
-
-#terminalWindow .window-body {
-  background: #090909;
-  color: #35ff35;
-  font-family: Consolas,monospace;
-  font-size: 13px;
-  padding: 12px;
-  display: flex;
-  flex-direction: column;
-}
-
-#terminalOutput {
-  flex: 1;
-  overflow-y: auto;
-  white-space: pre-wrap;
-  line-height: 1.5;
-  user-select: text;
-}
-
-.terminal-input-line {
-  display: flex;
-  align-items: center;
-  gap: 6px;
-  margin-top: 8px;
-}
-
-#terminalPrompt { white-space: nowrap; }
-
-#terminalInput {
-  flex: 1;
-  min-width: 0;
-  color: #35ff35;
-  background: transparent;
-  border: none;
-  outline: none;
-  font: inherit;
-}
-
-/* START MENU */
-
-#startMenu {
-  display: none;
-  position: absolute;
-  bottom: 36px;
-  left: 0;
-  width: 290px;
-  background: #e8e8e8;
-  border: 2px solid #1762b8;
-  border-radius: 7px 7px 0 0;
-  box-shadow: 3px -3px 10px rgba(0,0,0,.3);
-  z-index: 10000;
-  overflow: hidden;
-}
-
-.start-header {
-  background: linear-gradient(#4d9be9,#1759b6);
-  color: white;
-  padding: 14px;
-  font-weight: bold;
-  font-size: 16px;
-}
-
-.start-content { padding: 10px; }
-
-.start-item {
-  padding: 10px;
-  cursor: pointer;
-  font-size: 13px;
-}
-
-.start-item:hover { background: #cce5ff; }
-
-.start-footer {
-  background: linear-gradient(#438fe1,#1455ad);
-  padding: 10px;
-  text-align: right;
-  color: white;
-  font-size: 12px;
-}
-
-/* DIALOG */
-
-#dialogOverlay {
-  display: none;
-  position: absolute;
-  inset: 0;
-  z-index: 20000;
-  background: rgba(0,0,0,.48);
-  align-items: center;
-  justify-content: center;
-  padding: 15px;
-}
-
-#dialogBox {
-  width: min(390px,100%);
-  background: #ece9d8;
-  border: 1px solid #003c9d;
-  border-radius: 7px;
-  box-shadow: 3px 5px 18px rgba(0,0,0,.5);
-  overflow: hidden;
-  color: #222;
-}
-
-#dialogTitle {
-  padding: 8px 10px;
-  color: white;
-  font-weight: bold;
-  font-size: 13px;
-  background: linear-gradient(90deg,#0058e6,#3b91ff,#0055d8);
-}
-
-#dialogMessage {
-  padding: 18px 15px;
-  font-size: 13px;
-  line-height: 1.5;
-  user-select: text;
-}
-
-#dialogInput {
-  display: none;
-  width: calc(100% - 30px);
-  margin: 0 15px 12px;
-  padding: 7px;
-  border: 1px solid #888;
-  font-family: Tahoma, Arial, sans-serif;
-}
-
-.dialog-buttons {
-  display: flex;
-  justify-content: flex-end;
-  gap: 8px;
-  padding: 10px 15px 15px;
-}
-
-.dialog-buttons button {
-  min-width: 75px;
-  padding: 6px 13px;
-  background: linear-gradient(#fff,#e4e4e4);
-  border: 1px solid #999;
-  border-radius: 2px;
-  cursor: pointer;
-  font-family: Tahoma, Arial, sans-serif;
-}
-
-.dialog-buttons button:hover { background: #dcecff; }
-
-/* MOBILE */
-
-@media(max-width:500px) {
-  .window {
-    left: 10px !important;
-    top: 45px !important;
-    width: calc(100vw - 20px);
-    height: calc(100dvh - 95px);
-  }
-
-  .desktop-icons { gap: 12px; }
-
-  .tray {
-    min-width: 105px;
-    padding-left: 5px;
-    padding-right: 5px;
-  }
-
-  #textWindow {
-    width: calc(100vw - 20px);
-  }
+*{box-sizing:border-box}
+body{margin:0;overflow:hidden;font-family:Tahoma,Arial,sans-serif;user-select:none;background:#000}
+#desktop{width:100vw;height:100dvh;position:relative;overflow:hidden;background:url("https://r4.wallpaperflare.com/wallpaper/33/394/438/windows-xp-bliss-wallpaper-a2c182d00dc64e8bcae832b55078b942.jpg") center/cover no-repeat}
+.desktop-icons{position:absolute;top:15px;left:12px;display:flex;flex-direction:column;gap:12px;max-height:calc(100% - 55px);flex-wrap:wrap}
+.desktop-icon{width:85px;min-height:80px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:5px;color:white;font-size:12px;text-align:center;text-shadow:1px 1px 3px black;cursor:pointer;border:1px solid transparent;padding:5px}
+.desktop-icon:hover{background:rgba(30,110,210,.35);border:1px dotted white}
+.desktop-icon img{width:42px;height:42px;object-fit:contain;filter:drop-shadow(1px 2px 2px #333)}
+.desktop-emoji{font-size:37px;height:42px;display:grid;place-items:center}
+#taskbar{height:36px;position:absolute;bottom:0;left:0;right:0;z-index:9999;background:linear-gradient(#3989e7,#1764c5 45%,#1455b4);border-top:1px solid #70baff;display:flex;align-items:center;box-shadow:0 -2px 5px #0003}
+#start{height:36px;width:110px;border:0;border-radius:0 15px 15px 0;background:linear-gradient(#62c44b,#278c20);color:white;font-size:17px;font-weight:bold;font-style:italic;text-shadow:1px 2px 2px #174c12;box-shadow:inset 0 1px 3px #a8f58c;cursor:pointer}
+#start:hover{filter:brightness(1.15)}
+.task-buttons{display:flex;gap:4px;padding-left:8px;flex:1;overflow:hidden}
+.task-button{min-width:80px;max-width:180px;height:27px;border:1px solid #1552a1;border-radius:3px;color:white;background:linear-gradient(#4389d7,#2463b4);text-align:left;padding:3px 9px;cursor:pointer;overflow:hidden;white-space:nowrap;text-overflow:ellipsis}
+.task-button.active{background:linear-gradient(#174a9b,#2867b9);box-shadow:inset 1px 1px 3px #103b78}
+.tray{min-height:36px;min-width:112px;padding:3px 10px;background:linear-gradient(#1889e9,#0962bd);border-left:1px solid #5bb6ff;color:white;display:flex;flex-direction:column;align-items:center;justify-content:center;font-size:11px;line-height:14px}
+#clock{font-weight:bold}#clockDate{font-size:10px;opacity:.95}
+.window{position:absolute;top:75px;left:130px;width:min(680px,calc(100vw - 30px));height:min(490px,calc(100dvh - 65px));min-width:280px;min-height:200px;display:flex;flex-direction:column;background:#ece9d8;border:1px solid #003c9d;border-radius:8px 8px 3px 3px;box-shadow:3px 5px 15px #0006;overflow:hidden}
+.window.hidden{display:none}
+.titlebar{height:30px;min-height:30px;padding:3px 5px 3px 9px;display:flex;align-items:center;justify-content:space-between;color:white;font-size:13px;font-weight:bold;background:linear-gradient(90deg,#0058e6,#3b91ff,#0055d8);cursor:move}
+.window-title{display:flex;align-items:center;gap:7px;overflow:hidden;white-space:nowrap;text-overflow:ellipsis}
+.window-controls{display:flex;gap:3px;flex-shrink:0}
+.window-controls button{width:22px;height:21px;border:1px solid white;border-radius:3px;color:white;font-weight:bold;cursor:pointer;background:linear-gradient(#78baff,#1260d5)}
+.window-controls button.close{background:linear-gradient(#ff9a86,#d42b16)}
+.window-body{flex:1;min-height:0;overflow:auto;background:white;color:#222}
+.explorer-menu{height:26px;padding:5px 9px;font-size:12px;background:#f3f0e5;border-bottom:1px solid #ddd}
+.explorer-toolbar{display:flex;align-items:center;gap:8px;min-height:39px;padding:5px 10px;background:#f7f6ef;border-bottom:1px solid #ddd;flex-wrap:wrap}
+.explorer-toolbar button,.app-toolbar button{border:1px solid #c8c8c8;background:linear-gradient(#fff,#eee);padding:5px 10px;cursor:pointer;font-family:Tahoma}
+.explorer-toolbar button:disabled{opacity:.45;cursor:default}
+.address-bar{padding:7px 10px;background:#f3f0e5;border-bottom:1px solid #ddd;font-size:12px;overflow:hidden;white-space:nowrap;text-overflow:ellipsis}
+.file-area{padding:15px;display:grid;grid-template-columns:repeat(auto-fill,minmax(95px,1fr));gap:12px;align-content:start}
+.file-item{min-height:85px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:7px;font-size:12px;text-align:center;cursor:pointer;border:1px solid transparent;padding:5px;overflow-wrap:anywhere}
+.file-item:hover{background:#e7f2ff;border:1px solid #9cc8f4}
+.file-emoji{font-size:32px}
+.explorer-status{min-height:23px;padding:4px 10px;background:#f3f0e5;border-top:1px solid #ddd;font-size:11px}
+#textWindow{width:min(680px,calc(100vw - 30px));height:min(520px,calc(100dvh - 65px))}
+.notepad-menu{height:27px;padding:6px 9px;background:#f5f3eb;border-bottom:1px solid #ccc;font-size:12px;flex-shrink:0}
+.notepad-content{flex:1;min-height:0;background:white;padding:12px}
+.notepad-content textarea{width:100%;height:100%;resize:none;border:none;outline:none;background:white;color:#222;font-family:"Courier New",monospace;font-size:14px;line-height:1.5;user-select:text;white-space:pre-wrap}
+.notepad-status{height:22px;padding:4px 8px;background:#f3f0e5;border-top:1px solid #ccc;font-size:11px;flex-shrink:0}
+#terminalWindow .window-body{background:#090909;color:#35ff35;font-family:Consolas,monospace;font-size:13px;padding:12px;display:flex;flex-direction:column}
+#terminalOutput{flex:1;overflow-y:auto;white-space:pre-wrap;line-height:1.5;user-select:text}
+.terminal-input-line{display:flex;align-items:center;gap:6px;margin-top:8px}
+#terminalPrompt{white-space:nowrap}
+#terminalInput{flex:1;min-width:0;color:#35ff35;background:transparent;border:0;outline:0;font:inherit}
+#startMenu{display:none;position:absolute;bottom:36px;left:0;width:290px;background:#e8e8e8;border:2px solid #1762b8;border-radius:7px 7px 0 0;box-shadow:3px -3px 10px #0005;z-index:10000;overflow:hidden}
+.start-header{background:linear-gradient(#4d9be9,#1759b6);color:white;padding:14px;font-weight:bold;font-size:16px}
+.start-content{padding:10px}
+.start-item{padding:10px;cursor:pointer;font-size:13px}
+.start-item:hover{background:#cce5ff}
+.start-footer{background:linear-gradient(#438fe1,#1455ad);padding:10px;text-align:right;color:white;font-size:12px}
+#dialogOverlay{display:none;position:absolute;inset:0;z-index:20000;background:#0007;align-items:center;justify-content:center;padding:15px}
+#dialogBox{width:min(390px,100%);background:#ece9d8;border:1px solid #003c9d;border-radius:7px;box-shadow:3px 5px 18px #0008;overflow:hidden;color:#222}
+#dialogTitle{padding:8px 10px;color:white;font-weight:bold;font-size:13px;background:linear-gradient(90deg,#0058e6,#3b91ff,#0055d8)}
+#dialogMessage{padding:18px 15px;font-size:13px;line-height:1.5;user-select:text;white-space:pre-wrap}
+#dialogInput{display:none;width:calc(100% - 30px);margin:0 15px 12px;padding:7px;border:1px solid #888;font-family:Tahoma}
+.dialog-buttons{display:flex;justify-content:flex-end;gap:8px;padding:10px 15px 15px}
+.dialog-buttons button{min-width:75px;padding:6px 13px;background:linear-gradient(#fff,#e4e4e4);border:1px solid #999;border-radius:2px;cursor:pointer;font-family:Tahoma}
+.app-toolbar{display:flex;gap:7px;flex-wrap:wrap;padding:8px;background:#f3f0e5;border-bottom:1px solid #ccc}
+.app-content{padding:12px;overflow:auto;flex:1;min-height:0}
+.app-button{padding:7px 12px;border:1px solid #888;border-radius:3px;background:linear-gradient(white,#ddd);cursor:pointer;font-family:Tahoma;font-size:12px}
+.app-button:hover{background:#e1efff}
+.user-file-list{display:flex;flex-direction:column;gap:5px}
+.user-file-row{display:flex;align-items:center;gap:10px;padding:9px;border:1px solid #ddd;background:#fafafa;cursor:pointer}
+.user-file-row:hover{background:#e7f2ff}
+.user-file-row span:nth-child(2){flex:1;overflow-wrap:anywhere}
+.editor-input{width:100%;padding:8px;border:1px solid #999;font:13px Tahoma;margin-bottom:8px}
+#userFileEditor{width:100%;height:calc(100% - 90px);min-height:150px;resize:none;border:1px solid #999;padding:10px;font:14px "Courier New";user-select:text}
+#paintCanvas{display:block;width:100%;height:100%;min-height:230px;background:white;touch-action:none;cursor:crosshair}
+.paint-layout{height:100%;display:flex;flex-direction:column}
+.paint-tools{display:flex;gap:7px;align-items:center;flex-wrap:wrap;padding:8px;background:#eee}
+.paint-tools input[type=color]{width:35px;height:30px;padding:0;border:0}
+#mineGrid{display:grid;gap:3px;justify-content:center;margin:15px auto}
+.mine-cell{width:30px;height:30px;border:2px outset #eee;background:#c0c0c0;font-weight:bold;font-size:14px;cursor:pointer;padding:0}
+.mine-cell.revealed{border:1px solid #aaa;background:#e5e5e5;cursor:default}
+.mine-cell.flagged{color:red}
+.mine-info{text-align:center;padding:10px;font-weight:bold}
+.mine-controls{text-align:center;padding:10px}
+.changelog-entry{border-bottom:1px solid #ddd;padding:10px 4px;font-size:13px;line-height:1.5}
+.changelog-entry strong{color:#174f9a}
+@media(max-width:500px){
+.window{left:10px!important;top:42px!important;width:calc(100vw - 20px);height:calc(100dvh - 95px)}
+.desktop-icons{gap:8px}
+.tray{min-width:90px;padding-left:4px;padding-right:4px}
+#textWindow{width:calc(100vw - 20px)}
+.mine-cell{width:27px;height:27px}
 }
 </style>
 </head>
-
 <body>
-
 <div id="desktop">
 
-  <!-- DESKTOP ICONS -->
+<div class="desktop-icons">
+ <div class="desktop-icon" onclick="openWindow('documentsWindow')"><img src="https://thatwolfyblake.github.io/lirons-museum/assets/desktop/files-icon.png" alt=""><span>Documents</span></div>
+ <div class="desktop-icon" onclick="openWindow('userFilesWindow')"><img src="https://thatwolfyblake.github.io/lirons-museum/assets/desktop/files-icon.png" alt=""><span>User files</span></div>
+ <div class="desktop-icon" onclick="openWindow('terminalWindow')"><img src="https://thatwolfyblake.github.io/lirons-museum/assets/desktop/terminal-icon.png" alt=""><span>Terminal</span></div>
+ <div class="desktop-icon" onclick="openWindow('minesWindow')"><span class="desktop-emoji" style="background:#050505;width:42px;color:white">💣</span><span>Minesweeper</span></div>
+ <div class="desktop-icon" onclick="openWindow('paintWindow')"><span class="desktop-emoji">🎨</span><span>Paint</span></div>
+ <div class="desktop-icon" onclick="openWindow('changelogWindow')"><span class="desktop-emoji">📋</span><span>Changelog</span></div>
+</div>
 
-  <div class="desktop-icons">
+<!-- DOCUMENTS -->
+<div class="window hidden" id="documentsWindow">
+ <div class="titlebar"><div class="window-title">📁 Documents</div><div class="window-controls"><button onclick="minimizeWindow('documentsWindow')">_</button><button onclick="maximizeWindow('documentsWindow')">□</button><button class="close" onclick="closeWindow('documentsWindow')">X</button></div></div>
+ <div class="window-body" style="display:flex;flex-direction:column">
+  <div class="explorer-menu">File &nbsp;&nbsp; Edit &nbsp;&nbsp; View &nbsp;&nbsp; Favorites &nbsp;&nbsp; Tools &nbsp;&nbsp; Help</div>
+  <div class="explorer-toolbar"><button id="backButton" onclick="historyBack()">← Back</button><button onclick="goUp()">↑ Up</button><button onclick="showDocuments()">Folders</button></div>
+  <div class="address-bar">Address: <span id="currentPath"></span></div>
+  <div class="file-area" id="fileArea" style="flex:1;overflow:auto"></div>
+  <div class="explorer-status" id="explorerStatus">2 folders</div>
+ </div>
+</div>
 
-    <div class="desktop-icon" onclick="openWindow('documentsWindow')">
-      <img src="https://thatwolfyblake.github.io/lirons-museum/assets/desktop/files-icon.png" alt="Documents">
-      <span>Documents</span>
-    </div>
+<!-- USER FILES -->
+<div class="window hidden" id="userFilesWindow">
+ <div class="titlebar"><div class="window-title">📁 User files</div><div class="window-controls"><button onclick="minimizeWindow('userFilesWindow')">_</button><button onclick="maximizeWindow('userFilesWindow')">□</button><button class="close" onclick="closeWindow('userFilesWindow')">X</button></div></div>
+ <div class="window-body" style="display:flex;flex-direction:column">
+  <div class="explorer-menu">File &nbsp;&nbsp; Edit &nbsp;&nbsp; View &nbsp;&nbsp; Help</div>
+  <div class="explorer-toolbar"><button onclick="newUserFile()">＋ New text file</button><button onclick="refreshUserFiles()">↻ Refresh</button></div>
+  <div class="address-bar">Address: C:\Investigator\User files</div>
+  <div class="app-content" id="userFilesList"></div>
+  <div class="explorer-status" id="userFilesStatus">Your files are saved in this browser.</div>
+ </div>
+</div>
 
-    <div class="desktop-icon" onclick="openWindow('terminalWindow')">
-      <img src="https://thatwolfyblake.github.io/lirons-museum/assets/desktop/terminal-icon.png" alt="Terminal">
-      <span>Terminal</span>
-    </div>
+<!-- NOTEPAD -->
+<div class="window hidden" id="textWindow">
+ <div class="titlebar"><div class="window-title" id="notepadTitle">📄 Notepad</div><div class="window-controls"><button onclick="minimizeWindow('textWindow')">_</button><button onclick="maximizeWindow('textWindow')">□</button><button class="close" onclick="closeWindow('textWindow')">X</button></div></div>
+ <div class="window-body" style="display:flex;flex-direction:column">
+  <div class="notepad-menu">File &nbsp;&nbsp; Edit &nbsp;&nbsp; Format &nbsp;&nbsp; View &nbsp;&nbsp; Help</div>
+  <div class="notepad-content"><textarea id="textContent" spellcheck="false" readonly></textarea></div>
+  <div class="notepad-status" id="notepadStatus">Windows Notepad</div>
+ </div>
+</div>
 
-  </div>
-
-  <!-- DOCUMENTS WINDOW -->
-
-  <div class="window hidden" id="documentsWindow">
-
-    <div class="titlebar">
-      <div class="window-title">📁 Documents</div>
-
-      <div class="window-controls">
-        <button onclick="minimizeWindow('documentsWindow')">_</button>
-        <button onclick="maximizeWindow('documentsWindow')">□</button>
-        <button class="close" onclick="closeWindow('documentsWindow')">X</button>
-      </div>
-    </div>
-
-    <div class="window-body">
-
-      <div class="explorer-menu">
-        File &nbsp;&nbsp; Edit &nbsp;&nbsp; View &nbsp;&nbsp; Favorites &nbsp;&nbsp; Tools &nbsp;&nbsp; Help
-      </div>
-
-      <div class="explorer-toolbar">
-        <button id="backButton" onclick="historyBack()">← Back</button>
-        <button onclick="goUp()">↑ Up</button>
-        <button onclick="showDocuments()">Folders</button>
-      </div>
-
-      <div class="address-bar">
-        Address: <span id="currentPath">C:\Investigator\Documents</span>
-      </div>
-
-      <div class="file-area" id="fileArea"></div>
-
-    </div>
-
-    <div class="explorer-status" id="explorerStatus">
-      2 folders
-    </div>
-
-  </div>
-
-  <!-- NOTEPAD WINDOW -->
-
-  <div class="window hidden" id="textWindow">
-
-    <div class="titlebar">
-      <div class="window-title" id="notepadTitle">📄 Documentation.txt - Notepad</div>
-
-      <div class="window-controls">
-        <button onclick="minimizeWindow('textWindow')">_</button>
-        <button onclick="maximizeWindow('textWindow')">□</button>
-        <button class="close" onclick="closeWindow('textWindow')">X</button>
-      </div>
-    </div>
-
-    <div class="window-body" style="display:flex;flex-direction:column;">
-
-      <div class="notepad-menu">
-        File &nbsp;&nbsp; Edit &nbsp;&nbsp; Format &nbsp;&nbsp; View &nbsp;&nbsp; Help
-      </div>
-
-      <div class="notepad-content">
-        <textarea id="textContent" spellcheck="false" readonly></textarea>
-      </div>
-
-      <div class="notepad-status" id="notepadStatus">
-        Documentation.txt &nbsp; | &nbsp; Windows Notepad
-      </div>
-
-    </div>
-
-  </div>
-
-  <!-- TERMINAL WINDOW -->
-
-  <div class="window hidden" id="terminalWindow">
-
-    <div class="titlebar">
-      <div class="window-title">⌨ Terminal</div>
-
-      <div class="window-controls">
-        <button onclick="minimizeWindow('terminalWindow')">_</button>
-        <button onclick="maximizeWindow('terminalWindow')">□</button>
-        <button class="close" onclick="closeWindow('terminalWindow')">X</button>
-      </div>
-    </div>
-
-    <div class="window-body">
-
-      <div id="terminalOutput">Microsoft Windows XP [Version 5.1.2600]
+<!-- TERMINAL -->
+<div class="window hidden" id="terminalWindow">
+ <div class="titlebar"><div class="window-title">⌨ Terminal</div><div class="window-controls"><button onclick="minimizeWindow('terminalWindow')">_</button><button onclick="maximizeWindow('terminalWindow')">□</button><button class="close" onclick="closeWindow('terminalWindow')">X</button></div></div>
+ <div class="window-body"><div id="terminalOutput">Microsoft Windows XP [Version 5.1.2600]
 
 Investigator Terminal
 Copyright (C) Microsoft Corporation.
 
 Type "help" to see available commands.
 
+</div><div class="terminal-input-line"><span id="terminalPrompt">C:\Investigator&gt;</span><input id="terminalInput" autocomplete="off" spellcheck="false"></div></div>
 </div>
 
-      <div class="terminal-input-line">
-        <span id="terminalPrompt">C:\Investigator&gt;</span>
-        <input id="terminalInput" autocomplete="off" spellcheck="false">
-      </div>
+<!-- MINESWEEPER -->
+<div class="window hidden" id="minesWindow" style="width:min(420px,calc(100vw - 25px));height:min(520px,calc(100dvh - 65px))">
+ <div class="titlebar"><div class="window-title">💣 Minesweeper</div><div class="window-controls"><button onclick="minimizeWindow('minesWindow')">_</button><button onclick="maximizeWindow('minesWindow')">□</button><button class="close" onclick="closeWindow('minesWindow')">X</button></div></div>
+ <div class="window-body" style="background:#c0c0c0;display:flex;flex-direction:column;overflow:auto">
+  <div class="mine-controls"><select id="mineDifficulty" onchange="newMineGame()"><option value="beginner">Beginner (9×9, 10 mines)</option><option value="intermediate">Intermediate (12×12, 25 mines)</option><option value="expert">Expert (16×16, 40 mines)</option></select> <button class="app-button" onclick="newMineGame()">🙂 New Game</button></div>
+  <div class="mine-info" id="mineInfo">Mines: 10 | Good luck!</div>
+  <div id="mineGrid"></div>
+ </div>
+</div>
 
-    </div>
+<!-- PAINT -->
+<div class="window hidden" id="paintWindow" style="width:min(720px,calc(100vw - 25px));height:min(540px,calc(100dvh - 65px))">
+ <div class="titlebar"><div class="window-title">🎨 Paint</div><div class="window-controls"><button onclick="minimizeWindow('paintWindow')">_</button><button onclick="maximizeWindow('paintWindow')">□</button><button class="close" onclick="closeWindow('paintWindow')">X</button></div></div>
+ <div class="window-body paint-layout">
+  <div class="paint-tools"><label>Color <input type="color" id="paintColor" value="#000000"></label><label>Brush <input type="range" id="brushSize" min="1" max="40" value="5"></label><button class="app-button" onclick="setEraser(false)">✏️ Pencil</button><button class="app-button" onclick="setEraser(true)">🧽 Eraser</button><button class="app-button" onclick="clearPaint()">Clear</button><button class="app-button" onclick="downloadPaint()">Save image</button></div>
+  <canvas id="paintCanvas"></canvas>
+ </div>
+</div>
 
+<!-- CHANGELOG -->
+<div class="window hidden" id="changelogWindow" style="width:min(600px,calc(100vw - 25px));height:min(520px,calc(100dvh - 65px))">
+ <div class="titlebar"><div class="window-title">📋 Investigator Desktop — Changelog</div><div class="window-controls"><button onclick="minimizeWindow('changelogWindow')">_</button><button onclick="maximizeWindow('changelogWindow')">□</button><button class="close" onclick="closeWindow('changelogWindow')">X</button></div></div>
+ <div class="window-body">
+  <div class="app-content">
+   <h2 style="margin-top:0">Investigator Desktop</h2>
+   <p><strong>Version 1.1.0</strong> — Feature update</p>
+   <div class="changelog-entry"><strong>Desktop environment</strong><br>Added a Windows XP-inspired desktop, Bliss wallpaper, desktop icons, movable windows, taskbar, Start menu, live clock, and window controls.</div>
+   <div class="changelog-entry"><strong>Documents</strong><br>Added a Documents explorer with Research and Documentation folders. Research files are protected. Added the Not Canon documentation location and its disclaimer before opening.</div>
+   <div class="changelog-entry"><strong>Terminal</strong><br>Added the Investigator Terminal with commands for help, clear, echo, date, time, whoami, dir, cd, ver, and exit.</div>
+   <div class="changelog-entry"><strong>User files — new</strong><br>Create, open, edit, rename, and delete personal text files. Files are stored in this browser using local storage.</div>
+   <div class="changelog-entry"><strong>Minesweeper — new</strong><br>Added Beginner, Intermediate, and Expert game modes, mine flags, a timer-free board, win/loss detection, and restart.</div>
+   <div class="changelog-entry"><strong>Paint — new</strong><br>Added a drawing canvas with selectable colors, adjustable brush size, eraser, clear canvas, and image saving.</div>
+   <div class="changelog-entry"><strong>Changelog — new</strong><br>Added this application to document public desktop features and updates.</div>
+   <div class="changelog-entry"><strong>Start menu</strong><br>Added shortcuts for the desktop apps, Restart Desktop, and Return to Home.</div>
+   <div class="changelog-entry"><strong>Privacy and content</strong><br>Protected research material and secret story content are intentionally not reproduced in this changelog.</div>
+   <p style="font-size:11px;color:#666">The changelog describes public features of this desktop project. It does not disclose protected files or hidden story information.</p>
   </div>
+ </div>
+</div>
 
-  <!-- START MENU -->
+<!-- START MENU -->
+<div id="startMenu">
+ <div class="start-header">🪟 Investigator</div>
+ <div class="start-content">
+  <div class="start-item" onclick="launch('documentsWindow')">📁 Documents</div>
+  <div class="start-item" onclick="launch('userFilesWindow')">📁 User files</div>
+  <div class="start-item" onclick="launch('terminalWindow')">⌨ Terminal</div>
+  <div class="start-item" onclick="launch('minesWindow')">💣 Minesweeper</div>
+  <div class="start-item" onclick="launch('paintWindow')">🎨 Paint</div>
+  <div class="start-item" onclick="launch('changelogWindow')">📋 Changelog</div>
+  <hr>
+  <div class="start-item" onclick="location.href='https://thatwolfyblake.github.io/lirons-museum'">🏠 Return to Home</div>
+  <div class="start-item" onclick="location.reload()">🔄 Restart Desktop</div>
+ </div>
+ <div class="start-footer">Version 1.1.0</div>
+</div>
 
-  <div id="startMenu">
+<!-- DIALOG -->
+<div id="dialogOverlay">
+ <div id="dialogBox">
+  <div id="dialogTitle">System Message</div>
+  <div id="dialogMessage"></div>
+  <input id="dialogInput" type="password" autocomplete="off">
+  <div class="dialog-buttons"><button id="dialogCancel" onclick="closeDialog()">Cancel</button><button id="dialogConfirm" onclick="confirmDialog()">OK</button></div>
+ </div>
+</div>
 
-    <div class="start-header">
-      🪟 Investigator
-    </div>
-
-    <div class="start-content">
-
-      <div class="start-item" onclick="openWindow('documentsWindow'); toggleStart()">
-        📁 Documents
-      </div>
-
-      <div class="start-item" onclick="openWindow('terminalWindow'); toggleStart()">
-        ⌨ Terminal
-      </div>
-
-      <div class="start-item" onclick="location.reload()">
-        🔄 Restart Desktop
-      </div>
-
-    </div>
-
-    <div class="start-footer">
-      Version 1.0.0 &nbsp; | &nbsp; Log Off &nbsp;&nbsp; Turn Off Computer
-    </div>
-
-  </div>
-
-  <!-- DIALOG -->
-
-  <div id="dialogOverlay">
-    <div id="dialogBox">
-      <div id="dialogTitle">System Message</div>
-      <div id="dialogMessage"></div>
-      <input id="dialogInput" type="password" autocomplete="off">
-      <div class="dialog-buttons">
-        <button id="dialogCancel" onclick="closeDialog()">Cancel</button>
-        <button id="dialogConfirm" onclick="confirmDialog()">OK</button>
-      </div>
-    </div>
-  </div>
-
-  <!-- TASKBAR -->
-
-  <div id="taskbar">
-
-    <button id="start" onclick="toggleStart()">
-      🪟 start
-    </button>
-
-    <div class="task-buttons" id="taskButtons"></div>
-
-    <div class="tray">
-      <span id="clock">00:00</span>
-      <span id="clockDate">10/06/2001</span>
-    </div>
-
-  </div>
-
+<div id="taskbar">
+ <button id="start" onclick="toggleStart()">🪟 start</button>
+ <div class="task-buttons" id="taskButtons"></div>
+ <div class="tray"><span id="clock">00:00</span><span id="clockDate">10/06/2001</span></div>
+</div>
 </div>
 
 <script>
-let highestZ = 10;
-let activeWindow = null;
-let currentFolder = "";
-let folderHistory = [];
-let pendingDialogAction = null;
-
-const SYSTEM_VERSION = "1.0.0";
-const SYSTEM_DATE = "10/06/2001";
-const TERMINAL_DIRECTORY = "C:\\Investigator";
-const DISCLAIMER = "Not canon, this is only for viewing purposes.";
-
-const windowNames = {
-  documentsWindow: "Documents",
-  textWindow: "Notepad",
-  terminalWindow: "Terminal"
+let highestZ=10,activeWindow=null,currentFolder="",folderHistory=[],pendingDialogAction=null;
+const SYSTEM_VERSION="1.1.0",SYSTEM_DATE="10/06/2001",TERMINAL_DIRECTORY="C:\\Investigator";
+const DISCLAIMER="Not canon, this is only for viewing purposes.";
+const windowNames={
+ documentsWindow:"Documents",userFilesWindow:"User files",textWindow:"Notepad",
+ terminalWindow:"Terminal",minesWindow:"Minesweeper",paintWindow:"Paint",changelogWindow:"Changelog"
 };
 
-/* DOCUMENT CONTENTS */
-
-const fileContents = {
-
-"lirons-museum.txt": `DISCLAIMER:
+const fileContents={
+"lirons-museum.txt":`DISCLAIMER:
 ${DISCLAIMER}
 
 ========================================
-
 LORE
 
-• Lore:
-Liron's Museum is an AU of the Dandy's World universe, where my characters are Toons from a location affiliated with "Gardenview", known as "LIFEMUSEUM" or, more commonly, "Liron's Museum".
+Liron's Museum is an alternate universe of Dandy's World. My characters are Toons from a location affiliated with Gardenview, known as "LIFEMUSEUM" or, more commonly, "Liron's Museum".
 
-• Toon Classes:
+TOON CLASSES
+Class EX: Disposable Toons
+Class A: Common Toons
+Class B: Uncommon Toons
+Class C: Rare Toons
+Class D: Main Toons
+Class E: Holiday Toons
+Sub-Class F: Sector Leads
+Class F: Leads
+Sub-Class H: Primary Lead
 
-• Class EX: Disposable Toons
-• Class A: Common Toons
-• Class B: Uncommon Toons
-• Class C: Rare Toons
-• Class D: Main Toons
-• Class E: Holiday Toons
-• Sub-Class F: Sector Leads
-• Class F: Leads
+HUMAN CLASSES
+Class 0: Visitors
+Class G: Toon Handlers
+Class H: Founders
 
-• Sub-Class H: Primary Lead
-
-• Human Classes:
-
-• Class 0: Visitors
-• Class G: Toon Handlers
-• Class H: Founders
-
-• What is the difference between Sector Leads and Leads?
-
-• Sector Leads are Toons from any of the classes "A, B, C, or D" who are assigned to be the Lead of a specific area.
+SECTOR LEADS AND LEADS
+Sector Leads are Toons from classes A, B, C, or D who are assigned to lead a specific area.
 
 ========================================
+GENERAL CONTEXT
 
-• GENERAL CONTEXT
+The game and almost all tapes take place after Liron's Show goes bankrupt.
+The Founders abandoned the Museum, fired the Toon Handlers, and left the Toons alone.
+The Toons cannot leave or communicate with the outside world.
+Only Liron and Class F Toons (Leads) can operate the Train. They do not allow others to leave because they fear the Founders.
 
-• The game and almost all tapes take place after Liron's Show goes bankrupt.
+TRAIN AND TRACKS
+The Train has class sensors.
+Toons below Class F are blocked from operating the Train to other Museum sections, except for the Leads' offices and locations authorized by access cards.
+The Train only travels between the Lobby and the Leads' offices.
+Attempts to walk along the tracks to escape have been made.
+A Class EX Toon [REDACTED] attempted to escape and died after five days of hunger and exhaustion.
 
-• The Founders abandoned the Museum, fired the Toon Handlers, and left the Toons alone.
-
-• The Toons:
-  - Cannot leave.
-  - Cannot communicate with the outside world.
-
-• Only Liron and Class F Toons (Leads) can operate the Train, but they do not allow others to leave because they fear the Founders.
-
-• TRAIN AND TRACKS:
-
-• The Train has class sensors.
-
-• Toons below Class F are blocked from operating the Train to other sections of the Museum, except for the Leads' offices and locations authorized by access cards.
-
-• The Train only travels between the Lobby and the Leads' offices.
-
-• Walking along the tracks to escape has already been attempted.
-
-• A Class EX Toon [REDACTED] attempted to escape and died after 5 days of starvation and exhaustion.
+CLASS EX — "DISPOSABLE"
+Toons created by mistake or rejected.
+They are used as assistants or test subjects. Most have disappeared.
+The Laboratory (Floor 10) contains rejected concepts.
+The Reactor (Floor -1000) contains discarded Toons in tubes, never awakened.
 
 ========================================
+LOBBY MECHANICS
 
-• CLASS EX — "DISPOSABLE"
+The Lobby is the Museum's entrance and has two shops in the main area.
+It has five wooden elevators leading underground. See the Game section for elevator mechanics.
+A Train station allows travel to another Museum sector, where Countess Lockie's office and Nixxy's office are located.
+Each Lead has a shop. Sector Leads do not, but they can help event Toons run their shops.
+All Lobby shops use Shards.
 
-• Toons created by mistake or rejected.
+SHARDS
+Shards are rare stones that glow with tiny stars.
 
-• Used as assistants or test subjects.
+SHOPS
 
-• Most have disappeared.
+Liron's Shop (Lobby)
+Players buy Toons and Trinkets for use in the game.
+Quote: "Just buy something already."
 
-• In the Laboratory (Floor 10), there are rejected concepts.
+Don's Shop (Lobby)
+Players buy skins, cosmetics, and accessories. These are visual items and do not affect gameplay.
+It also offers GUI themes, such as a Night Theme with dark blue buttons.
+Quote: "Hello, dear Toon. Would you mind paying my shop a visit?"
 
-• In the Reactor (Floor -1000), discarded Toons are kept in tubes, never awakened.
+Countess Lockie's Shop (Lobby)
+Players buy items, skin packs costing Robux, and avatar items.
+Quote: "Welcome. How may I help you?"
 
-========================================
-
-• LOBBY MECHANICS
-
-• The Lobby will be the entrance to the Museum.
-
-• It will have two shops in the main area.
-
-• The Lobby has 5 wooden elevators that lead underground. More about how the elevators work can be found in the Game section.
-
-• There will be a Train station for traveling to another section of the Museum. The offices of Countess Lockie and Nixxy are located there. Each Lead has a shop; Sector Leads do not, but they can help event Toons run their shops.
-
-• All Lobby shops use Shards as their currency.
-
-• What are Shards?
-
-• Shards are rare stones that glow with tiny stars.
-
-========================================
-
-• SHOPS
-
-• Liron's Shop (Lobby version)
-  - Where the player buys Toons and Trinkets to use in the game.
-  - "Just buy something already."
-
-• Don's Shop (Lobby)
-  - Where the player buys skins, cosmetics, and accessories. Nothing affects gameplay; these are visual items only.
-  - It will also have different game GUI modes.
-  - Example: "Night Theme, dark blue buttons."
-  - "Hello, dear Toon. Would you mind paying my shop a visit?"
-
-• Countess Lockie's Shop (Lobby)
-  - Where the player buys items, skin packs that cost Robux, and avatar items.
-  - "Welcome. How may I help you?"
-
-• Nixxy's Shop (Lobby)
-  - Where the player buys different modes and earning boosts.
-  - Examples:
-    - "Twisted Hell Mode: 3000 Shards"
-    - "2x Shard Gain Boost: 2500 Shards"
-    - (Depends on how long the boost lasts.)
-  - "Hello. Could you spare some of your time to shop at my store?"
+Nixxy's Shop (Lobby)
+Players buy different modes and earning boosts.
+Examples: Twisted Hell Mode — 3000 Shards; 2x Shard Gain Boost — 2500 Shards (depending on duration).
+Quote: "Hello. Could you spare some of your time to shop at my store?"
 
 ========================================
+GAME
 
-• GAME
+ELEVATORS
+Unlike the more technological elevators used elsewhere, these are wooden mining elevators.
+They can travel upward on special occasions, such as going to floors containing the Museum's Mains instead of descending into the mining caves below the Museum.
 
-• ELEVATORS:
+FLOOR EVENTS
+Flood
+Blackout
+Exposed
+On Flames
+Fallen
 
-• Instead of more technological elevators like the current ones, these elevators are made of wood. They are mining elevators.
+TAPES
+After secret missions, players can earn tapes: videos containing snippets of moments between Toons.
 
-• They can go upward on special occasions.
-  - Example: The elevator goes up to the Museum's Main floors instead of descending into the mining caves beneath the Museum.
+Each floor may have a different type of machine or mission.
+The number of missions increases with floor depth. Lower floors have more objectives and are more challenging.
 
-• FLOOR EVENTS:
+NORMAL
+Connect cables to power panels and redirect power to the elevator.
 
-• Flood
-• Blackout
-• Exposed
-• OnFlames
-• Fallen
+FLOOD
+Repair five pipes and drain the water.
 
-• TAPES:
+BLACKOUT
+Turn on four generators and restore power.
 
-After secret missions, the player can earn tapes: videos containing moments between the Toons.
+ON FLAMES
+Activate six fire alarms and stop the fire.
 
-• Each floor may have a different type of machine or mission to complete.
-
-• The number of missions per floor increases with depth. Lower floors have more objectives, making the challenge harder.
-
-• Normal:
-  - Connect cables to the power panels.
-  - Redirect power to the elevator.
-
-• Flood:
-  - Repair 5 pipes.
-  - Drain the water.
-
-• Blackout:
-  - Turn on 4 generators.
-  - Restore the power.
-
-• OnFlames:
-  - Activate 6 fire alarms.
-  - Stop the fire.
-
-• Fallen:
-  - No spoilers!
-  - T1BFUkHDh8ODTyBDT1JF
+FALLEN
+No spoilers!
 
 ========================================
+EVENT CALENDAR
 
-📅 EVENT CALENDAR
+Liron's Museum events follow their corresponding real-world holidays and have extended durations.
 
-The events in Liron's Museum follow their corresponding real-world holidays and have extended durations.
+DURATION
+Start: 12 days before the real-world holiday.
+End: 29 days after the real-world holiday.
+Total duration: 42 days.
 
-⏱️ EVENT DURATION
+During this period, the event floor is available, the event shop stays open, and progression is saved between appearances.
 
-• Start: 12 days before the real-world holiday.
-
-• End: 29 days after the real-world holiday.
-
-• Total duration: 42 days.
-
-During this period:
-
-• The event floor is available.
-• The event shop remains open.
-• Progress is saved between appearances.
-
-========================================
-
-🎄 CHRISTMAS — WORKSHOP
-
+CHRISTMAS — WORKSHOP
 Floor: Workshop
 Shop: Fiona Starling
 Currency: Ornaments (tree toppers, baubles, and stockings)
 
-FLOOR OBJECTIVE
-
-• Build 6 toys.
-
-• The amount increases depending on:
-  - The floor's depth.
-  - More than 2 players in the match.
-
-CHRISTMAS TOONS — COSTS AND REQUIREMENTS
+Objective: Build six toys. The quantity increases with floor depth and when more than two players are present.
 
 Henry Gifty 🎁
-
-• 300 Ornaments.
-• Explore the Workshop floor for the first time.
+300 Ornaments; explore the Workshop floor for the first time.
 
 Frostey Snowy ☃️
-
-• 1000 Ornaments.
-• 50% research on Twisted Frostey.
+1000 Ornaments; 50% research on Twisted Frostey.
 
 Cappy WinterWhisper 🎩
-
-• 1700 Ornaments.
-• Build 25 toys.
-• 60% research on Twisted Cappy.
+1700 Ornaments; build 25 toys; 60% research on Twisted Cappy.
 
 Fiona Starling 🌟
-
-• 3500 Ornaments.
-• 2500 Shards.
-• 100% research on Twisted Fiona.
+3500 Ornaments; 2500 Shards; 100% research on Twisted Fiona.
 
 ========================================
-
-🎃 HALLOWEEN — GRAVEYARD
+HALLOWEEN — GRAVEYARD
 
 Floor: Graveyard
 Shop: Candy SugarTooth
-Currency: Candy / Pumpkin-shaped baskets
+Currency: Candy / pumpkin-shaped baskets
 
-FLOOR OBJECTIVE
-
-• Light 4 pumpkins.
-• Help 2 souls find their gravestones.
-
-• The quantities increase depending on:
-  - The floor's depth.
-  - The number of players.
-
-HALLOWEEN TOONS — COSTS AND REQUIREMENTS
+Objective: Light four pumpkins and help two souls find their gravestones. Requirements increase with floor depth and player count.
 
 Batly DeepEcho 🦇
-
-• 300 Candy / Baskets.
-• Explore the Graveyard floor for the first time.
-• Experience 1 Blackout.
+300 Candy/Baskets; explore the Graveyard for the first time; experience one Blackout.
 
 Billy Gourdyard 🎃
-
-• 1000 Candy / Baskets.
-• 50% research on Twisted Billy.
-• Complete Master Missions with Chris Gravey.
+1000 Candy/Baskets; 50% research on Twisted Billy; complete Master quests with Chris Gravey.
 
 Harley 厄运 🐈‍⬛
-
-• 1700 Candy / Baskets.
-• Help 15 souls.
-• 60% research on Twisted Harley.
-• Experience good luck (have someone playing as Bluy in the match).
+1700 Candy/Baskets; help 15 souls; 60% research on Twisted Harley; experience good luck by having someone play as Bluy in the match.
 
 Candy SugarTooth 🍬
-
-• 3500 Candy / Baskets.
-• 2500 Shards.
-• 100% research on Twisted Candy.
-• Find Twisted Harley.
+3500 Candy/Baskets; 2500 Shards; 100% research on Twisted Candy; find Twisted Harley.
 
 ========================================
-
-🥚 EASTER — FOREST
+EASTER — FOREST
 
 Floor: Forest
 Shop: Choccy Vanilloa
 Currency: Eggs
 
-FLOOR OBJECTIVE
-
-• Find 6 eggs.
-• Deposit the eggs into the basket near the elevator.
-
-• The amount increases depending on:
-  - The floor's depth.
-  - The number of players.
-
-EASTER TOONS — COSTS AND REQUIREMENTS
+Objective: Find six eggs and deposit them in the basket near the elevator. Requirements increase with floor depth and player count.
 
 Eggsley Vanilloa 🥚
-
-• 300 Eggs.
-• Explore the Forest floor for the first time.
-• Collect 4 hidden eggs.
+300 Eggs; explore the Forest for the first time; collect four hidden eggs.
 
 Carrol Farmey 🥕
-
-• 1000 Eggs.
-• 50% research on Twisted Carrol.
-• Experience good luck (have someone playing as Bluy in the same match).
+1000 Eggs; 50% research on Twisted Carrol; experience good luck by having someone play as Bluy in the same match.
 
 Basley Egginton 🧺
-
-• 1700 Eggs.
-• Collect 30 eggs.
-• 60% research on Twisted Basley.
-• Find Twisted Eggsley.
+1700 Eggs; collect 30 eggs; 60% research on Twisted Basley; find Twisted Eggsley.
 
 Choccy (Chocolate) Vanilloa 🐇
-
-• 3500 Eggs.
-• 2500 Shards.
-• 100% research on Twisted Choccy.
-• Find Twisted Basley.
+3500 Eggs; 2500 Shards; 100% research on Twisted Choccy; find Twisted Basley.
 
 ========================================
-
-• SPECIAL FLOORS
-
-• FIXED FLOORS:
-
-• Laboratory Floor:
-  - A large laboratory that always appears on Floor 10.
-
-• Theater Floor:
-  - A large theater that always appears on Floor 20.
-
-• Storage Floor:
-  - A large storage area that always appears on Floor 30.
-
-• REACTOR FLOOR:
-  - The main laboratory. The player can access this floor by paying attention to small details in the Theater.
-  - 10 generators. 15 on special occasions.
-
-• Destroyed Floor:
-  - Floor -1001, a destroyed floor. No Twisteds. 4 generators.
-
-• Incinerator Floor:
-  - A huge incinerator, the Museum's dump. Where unwanted things are thrown away. The place where mistakes go.
-  - And never come back...?
-`,
-
-"Tapes.txt": `DISCLAIMER:
-${DISCLAIMER}
-
-========================================
-
-• TAPES:
-
-All tapes can only be collected after the previous tape has been collected.
-
-========================================
-
-TAPE #1 — "Greatest Customer!"
-
-HOW TO OBTAIN:
-
-• Buy something from Liron's Shop 50 times.
-
-TRANSCRIPT:
-
-AUBREY:
-"Liron. Time to open the Museum. If I dream that you're doing that stupid thing of hating Main-002 again... you're going to be in trouble."
-
-Primary-001 (Liron):
-"...Yes, ma'am..."
-
-AUBREY:
-"Good. Get ready. We have 20 minutes before the visitors start arriving."
-
-Primary-001 (Liron):
-"...Yes, ma'am... I'll get ready..."
-
-========================================
-
-TAPE #2 — "Once in a Year"
-
-HOW TO OBTAIN:
-
-• Reach Floor 20 while playing as Bluy.
-
-TRANSCRIPT:
-
-Main-002 (Bluy):
-"It must be so awful... you can only appear during Easter..."
-
-Uncommon-E-CP-003 (Carrol):
-"It's horrible... I wish I could be here for longer... cousin..."
-
-Main-002 (Bluy):
-"I hope that someday we'll get to see each other more often..."
-
-Uncommon-E-CP-003 (Carrol):
-"Me too, cousin."
-
-========================================
-
-TAPE #3 — "Operation CORE"
-
-----------------------------------------
-
-PART 1 — "Going Down"
-
-HOW TO OBTAIN:
-
-• Reach Floor 20 while playing as Solaris.
-
-TRANSCRIPT:
-
-Main-003 (Solaris):
-"Bluy... do you think Liron is going too far? He's always been... bad... but... he tried to hurt Shiro-!"
-
-Main-002 (Bluy):
-"Solaris. He's a devil. He's going to hurt everyone, and our job as Sector Leads is to protect our friends."
-
-Main-003 (Solaris):
-"I just... I'm worried... he's always been..."
-
-Main-002 (Bluy):
-"A jerk."
-
-Main-003 (Solaris):
-"That's true... but... him hurting Shiro...? That's strange... I know he hates us... but... Shiro is his pet!"
-
-Main-002 (Bluy):
-"Even Shiro knows how bad Liron is."
-
-"Why do you think Shiro is always walking around near me?"
-
-Main-003 (Solaris):
-"Yeah... because of Liron..."
-"Wow... that changes a lot..."
-
-----------------------------------------
-
-PART 2 — "N3x0r's Interruption"
-
-HOW TO OBTAIN:
-
-• Survive a floor against Twisted N3x0r.
-
-TRANSCRIPT:
-
-(N3x0r enters the elevator using the backup elevator.)
-
-Main-005 (N3x0r/V1rus):
-"H3ll0 my sw33t fr13nds."
-
-Main-002 (Bluy, jokingly):
-"N3x0r? Do you just show up out of nowhere now?"
-
-Main-005 (N3x0r/V1rus):
-"Th1nk1ng ab0ut th3 1d10t L1r0n? H3 w0n't b3 c0m1ng back s00n. D0n 1s k33p1ng h1m d1stract3d."
-
-Main-002 (Bluy):
-"Good work. We're heading straight to the Museum's CORE."
-"We have some dirty work to do."
-
-(Rose appears a little later, coming from the same backup elevator.)
-
-Main-006 (Rose):
-"Bluy! I heard about the operation. I came running."
-
-(The sound of metallic footsteps. The tape cuts off.)
-
-----------------------------------------
-
-PART 3 — "The CORE"
-
-HOW TO OBTAIN:
-
-• Complete the secret code on Floor 10 (Laboratory).
-
-• The next floor will have Twisted Bluy and Twisted Don. Survive against them.
-
-TRANSCRIPT:
-
-Main-002 (Bluy):
-"Huh? The elevator already opened? Wait... wasn't the CORE further down...?"
-
-Main-003 (Solaris):
-"No... it's right here..."
-
-Main-005 (N3x0r/V1rus):
-"Wow... 1t's s0 b1g... and w31rd..."
-
-(They explore the REACTOR floor.)
-
-Main-003 (Solaris):
-"Wow... it's like... enormous! I've never seen anything so big... it's gigantic!"
-
-Main-002 (Bluy):
-"You could say that, I guess... but focus, Solaris. We need to get the energy crystal and run back to the elevator."
-
-Main-006 (Rose):
-"I think... I found it."
-
-(They steal the energy crystal.)
-
-Main-002 (Bluy):
-"Good work! Let's get back to the elevator, quickly!"
-
-(They run to the elevator...)
-
-(But there is no power...)
-
-(The elevator falls...)
-
-(They die from the impact when the elevator hits the bottom of the shaft. Except for Solaris, who floated before the elevator hit the bottom.)
-
-========================================
-
-TAPE #4 — "After the CORE"
-
-HOW TO OBTAIN:
-
-• While playing as Solaris, find Twisted Bluy.
-
-TRANSCRIPT:
-
-Main-003 (Solaris):
-"They... they... died...? Bluy died...? NO... NO...! I... Donovan can help...! I know he can!"
-
-(Solaris takes his "unconscious" friends to the backup elevator and goes up to Don's office.)
-
-Main-003 (Solaris):
-"Don... you need to help me..."
-
-Lead-001 (Don):
-"What happened, my ray of sunshine?"
-
-Main-003 (Solaris):
-"The operation went wrong... they died..."
-
-Lead-001 (Don):
-"Bring me their bodies... I'll bring them back to life."
-
-========================================
-
-TAPE #5 — "Bring Them Back"
-
-----------------------------------------
-
-PART 1 — "Don's Help"
-
-HOW TO OBTAIN:
-
-• Complete the Theater map mission.
-• Find 3 hidden Liron plushies and burn them.
-
-TRANSCRIPT: rrr4nn4vn4n4bn4
-
-Main-003 (Solaris):
-"Well... take care..."
-
-Lead-001 (Don):
-"U-Oh! Of course I will. Thank you for caring, Sol."
-
-----------------------------------------
-
-PART 2 — "The Countess's Help"
-
-HOW TO OBTAIN:
-
-• Survive a floor against Twisted Countess Lockie.
-
-TRANSCRIPT:
-
-(Solaris steps onto the train platform.)
-
-Main-003 (Solaris):
-"If Don's... instructions are... correct... the next train will take me to Countess..."
-
-(Solaris boards the Train and waits until it reaches Countess Lockie's office.)
-
-(Solaris admires the crystals on the walls of the train tunnels.)
-
-Main-003 (Solaris):
-"Wow...! These crystals are much more beautiful than the ones in the mines..."
-
-(The Train stops.)
-
-(Solaris gets off the Train and reaches the door to Countess Lockie's office.)
-
-(Solaris reaches for the doorknob, but Countess Lockie is already opening the door.)
-
-Lead-002 (Countess Lockie):
-"Solaris? You, here? I thought Liron didn't allow Trains to carry Toons. Come in."
-
-Main-003 (Solaris):
-"Countess... the operation failed... Don needs you to revive... Bluy... N3x0r... and Rose..."
-
-Lead-002 (Countess Lockie):
-"THE OPERATION FAILED?! Ahem-! I'll operate the Train to go back right now. We need to return."
-
-(The Train returns, and they go back to Don's office.)
-
-----------------------------------------
-
-PART 3 — "The Last Resource"
-
-HOW TO OBTAIN:
-
-• Complete the Greenhouse mission.
-• Collect 10 orange flowers and burn them.
-
-TRANSCRIPT:
-
-Lead-002 (Countess Lockie):
-"Donovan. I'm here. How can I help?"
-
-Lead-001 (Don):
-"Help me. With your power. Mine isn't enough to bring them back to life..."
-
-Lead-002 (Countess Lockie):
-"Let's just get this over with, you wannabe pirate."
-
-Lead-001 (Don):
-"Hey-!"
-
-(They join forces and channel their powers to revive the three dead Toons.)
-
-(They revive them, but the Toons are still unconscious. Solaris, Countess, and Donovan take the sleeping Toons to their rooms.)
-
-========================================
-
-TAPE #6 — "More Headache"
-
-HOW TO OBTAIN:
-
-• During the survival mission in the abandoned mansion, go to the kitchen and turn on the stove.
-
-TRANSCRIPT:
-
-Main-002 (Bluy):
-"Ugh... my head hurts..."
-
-Common-001 (Puffin):
-"Bluy!! You're awake!!!"
-
-Main-002 (Bluy):
-"Puffin? Oh, it's you... wait... what's that...? I smell something burning. Did you mess with the stove!?"
-
-Common-001 (Puffin):
-"No, no! This time Creamy was the one who burned down the kitchen..."
-
-Main-002 (Bluy):
-"Oh, good...- WAIT, CREAMY BURNED DOWN THE KITCHEN?? OH MY GOD-!!!"
-
-========================================
-
-TAPE #7 — "Confronting the Fire"
-
-HOW TO OBTAIN:
-
-• Survive a floor with the OnFlames floor event.
-
-TRANSCRIPT:
-
-Lead-003 (Nixxy):
-"Liron."
-
-Primary-001 (Liron):
-"Nixxy."
-
-Lead-003 (Nixxy):
-"Are you happy with the pain you've caused?"
-
-Primary-001 (Liron):
-"...Those idiots used the elevator without my permission."
-
-Lead-003 (Nixxy):
-"Liron. Stop. I've already told you. We're not going to let you hurt them anymore."
-
-Primary-001 (Liron):
-"..."
-
-Lead-003 (Nixxy):
-"Countess Lockie... Donovan and I... we're going to stop you from hurting our friends."
-
-Primary-001 (Liron):
-"..."
-
-Lead-003 (Nixxy):
-"The Founders really failed when they made you. How could they expect you to be the Liron from the show? You're a monster. The Liron from the Show was a friend. Someone who helped others."
-
-Primary-001 (Liron):
-"Lies..."
-
-Lead-003 (Nixxy):
-"You don't deserve to be the face of this Museum. Other Toons here deserved that."
-
-Primary-001 (Liron):
-"NIXXY..."
-
-========================================
-
-TAPE #8 — "Failed Star"
-
-HOW TO OBTAIN:
-
-• Buy 10 items from Nixxy's Shop.
-
-TRANSCRIPT:
-
-Primary-001 (Liron):
-"WHO DO YOU THINK YOU'RE TALKING TO? I'M NOT AN IDIOT LIKE YOU! YOU'RE USELESS!"
-
-Lead-003 (Nixxy):
-"Listen to your own words. There are cameras all over the Museum. Everyone will hear."
-
-Lead-003 (Nixxy):
-"Bluy really was right. You're a jerk."
-
-Primary-001 (Liron):
-"AND YOU think I CARE about what other Toons think?"
-
-Lead-003 (Nixxy):
-"You may not care. But... I know that deep down, we're getting under your skin."
-
-Primary-001 (Liron):
-"You... YOU [CENSORED]!"
-
-Lead-003 (Nixxy):
-"What loving words."
-
-Primary-001 (Liron):
-"Get out of my office. NOW!"
-
-========================================
+SPECIAL FLOORS
+
+FIXED FLOORS
+Laboratory: A large laboratory that always appears on Floor 10.
+Theater: A large theater that always appears on Floor 20.
+Storage: A large storage area that always appears on Floor 30.
+
+REACTOR FLOOR
+The main laboratory. Players can access it by noticing small details in the Theater.
+It contains 10 generators, or 15 on special occasions.
+
+DESTROYED FLOOR
+Floor -1001, a destroyed floor with no Twisteds and four generators.
+
+INCINERATOR FLOOR
+A large incinerator and the Museum's dump, where unwanted things are thrown away. The place where mistakes go.
+And never come back...?
 `
 };
 
-/* RESEARCH FILES */
-
-const researchFiles = [
-  { name: "image-001.jpg", icon: "🖼️", type: "image" },
-  { name: "image-002.png", icon: "🖼️", type: "image" },
-  { name: "image-003.jpg", icon: "🖼️", type: "image" },
-  { name: "research-log.txt", icon: "📄", type: "text" },
-  { name: "incident-report.txt", icon: "📄", type: "text" },
-  { name: "subject-notes.txt", icon: "📄", type: "text" }
+const researchFiles=[
+{name:"image-001.jpg",icon:"🖼️"},{name:"image-002.png",icon:"🖼️"},{name:"image-003.jpg",icon:"🖼️"},
+{name:"research-log.txt",icon:"📄"},{name:"incident-report.txt",icon:"📄"},{name:"subject-notes.txt",icon:"📄"}
 ];
 
-/* WINDOWS */
-
-function openWindow(id) {
-  const win = document.getElementById(id);
-
-  win.classList.remove("hidden");
-  win.style.zIndex = ++highestZ;
-
-  activeWindow = id;
-  updateTaskbar();
-
-  if(id === "terminalWindow") {
-    setTimeout(() => terminalInput.focus(), 50);
+function openWindow(id){
+ const win=document.getElementById(id);if(!win)return;
+ win.classList.remove("hidden");win.style.zIndex=++highestZ;activeWindow=id;updateTaskbar();
+ if(id==="terminalWindow")setTimeout(()=>terminalInput.focus(),50);
+ if(id==="userFilesWindow")refreshUserFiles();
+ if(id==="minesWindow"&&!mineStarted)newMineGame();
+}
+function closeWindow(id){document.getElementById(id).classList.add("hidden");if(activeWindow===id)activeWindow=null;updateTaskbar()}
+function minimizeWindow(id){closeWindow(id)}
+function maximizeWindow(id){
+ const win=document.getElementById(id);
+ if(win.dataset.maximized==="true"){
+  win.style.top=win.dataset.oldTop;win.style.left=win.dataset.oldLeft;win.style.width=win.dataset.oldWidth;win.style.height=win.dataset.oldHeight;win.dataset.maximized="false";
+ }else{
+  win.dataset.oldTop=win.style.top||win.offsetTop+"px";win.dataset.oldLeft=win.style.left||win.offsetLeft+"px";
+  win.dataset.oldWidth=win.style.width||win.offsetWidth+"px";win.dataset.oldHeight=win.style.height||win.offsetHeight+"px";
+  win.style.top="0";win.style.left="0";win.style.width="100vw";win.style.height="calc(100dvh - 36px)";win.dataset.maximized="true";
+ }
+ win.style.zIndex=++highestZ;
+}
+function updateTaskbar(){
+ const container=document.getElementById("taskButtons");container.innerHTML="";
+ Object.keys(windowNames).forEach(id=>{
+  const win=document.getElementById(id);
+  if(win&&!win.classList.contains("hidden")){
+   const btn=document.createElement("button");btn.className="task-button"+(activeWindow===id?" active":"");btn.textContent=windowNames[id];
+   btn.onclick=()=>activeWindow===id?minimizeWindow(id):openWindow(id);container.appendChild(btn);
   }
+ });
 }
-
-function closeWindow(id) {
-  document.getElementById(id).classList.add("hidden");
-
-  if(activeWindow === id) activeWindow = null;
-
-  updateTaskbar();
-}
-
-function minimizeWindow(id) {
-  document.getElementById(id).classList.add("hidden");
-
-  if(activeWindow === id) activeWindow = null;
-
-  updateTaskbar();
-}
-
-function maximizeWindow(id) {
-  const win = document.getElementById(id);
-
-  if(win.dataset.maximized === "true") {
-    win.style.top = win.dataset.oldTop;
-    win.style.left = win.dataset.oldLeft;
-    win.style.width = win.dataset.oldWidth;
-    win.style.height = win.dataset.oldHeight;
-    win.dataset.maximized = "false";
-  } else {
-    win.dataset.oldTop = win.style.top || win.offsetTop + "px";
-    win.dataset.oldLeft = win.style.left || win.offsetLeft + "px";
-    win.dataset.oldWidth = win.style.width || win.offsetWidth + "px";
-    win.dataset.oldHeight = win.style.height || win.offsetHeight + "px";
-
-    win.style.top = "0";
-    win.style.left = "0";
-    win.style.width = "100vw";
-    win.style.height = "calc(100dvh - 36px)";
-    win.dataset.maximized = "true";
-  }
-
-  win.style.zIndex = ++highestZ;
-}
-
-/* TASKBAR */
-
-function updateTaskbar() {
-  const container = document.getElementById("taskButtons");
-  container.innerHTML = "";
-
-  Object.keys(windowNames).forEach(id => {
-    const win = document.getElementById(id);
-
-    if(!win.classList.contains("hidden")) {
-      const btn = document.createElement("button");
-
-      btn.className = "task-button" +
-        (activeWindow === id ? " active" : "");
-
-      btn.textContent = windowNames[id];
-
-      btn.onclick = () => {
-        if(activeWindow === id) {
-          minimizeWindow(id);
-        } else {
-          openWindow(id);
-        }
-      };
-
-      container.appendChild(btn);
-    }
-  });
-}
-
-/* WINDOW DRAGGING */
-
-document.querySelectorAll(".titlebar").forEach(bar => {
-  bar.addEventListener("pointerdown", e => {
-    if(e.target.tagName === "BUTTON") return;
-
-    const win = bar.parentElement;
-
-    if(win.dataset.maximized === "true") return;
-
-    win.style.zIndex = ++highestZ;
-    activeWindow = win.id;
-    updateTaskbar();
-
-    const startX = e.clientX;
-    const startY = e.clientY;
-    const startLeft = win.offsetLeft;
-    const startTop = win.offsetTop;
-
-    function move(ev) {
-      win.style.left = startLeft + ev.clientX - startX + "px";
-      win.style.top = startTop + ev.clientY - startY + "px";
-    }
-
-    function stop() {
-      document.removeEventListener("pointermove", move);
-      document.removeEventListener("pointerup", stop);
-    }
-
-    document.addEventListener("pointermove", move);
-    document.addEventListener("pointerup", stop);
-  });
+document.querySelectorAll(".titlebar").forEach(bar=>{
+ bar.addEventListener("pointerdown",e=>{
+  if(e.target.tagName==="BUTTON")return;
+  const win=bar.parentElement;if(win.dataset.maximized==="true")return;
+  win.style.zIndex=++highestZ;activeWindow=win.id;updateTaskbar();
+  const sx=e.clientX,sy=e.clientY,sl=win.offsetLeft,st=win.offsetTop;
+  function move(ev){win.style.left=sl+ev.clientX-sx+"px";win.style.top=st+ev.clientY-sy+"px"}
+  function stop(){document.removeEventListener("pointermove",move);document.removeEventListener("pointerup",stop)}
+  document.addEventListener("pointermove",move);document.addEventListener("pointerup",stop);
+ });
 });
+function toggleStart(){const m=document.getElementById("startMenu");m.style.display=m.style.display==="block"?"none":"block"}
+function launch(id){toggleStart();openWindow(id)}
 
-/* START MENU */
-
-function toggleStart() {
-  const menu = document.getElementById("startMenu");
-
-  menu.style.display =
-    menu.style.display === "block" ? "none" : "block";
+/* DOCUMENTS */
+function showDocuments(){currentFolder="";folderHistory=[];renderFolder()}
+function openFolder(name){folderHistory.push(currentFolder);currentFolder=name;renderFolder()}
+function historyBack(){if(folderHistory.length){currentFolder=folderHistory.pop();renderFolder()}}
+function goUp(){historyBack()}
+function renderFolder(){
+ const area=document.getElementById("fileArea"),path=document.getElementById("currentPath"),status=document.getElementById("explorerStatus");
+ document.getElementById("backButton").disabled=!folderHistory.length;
+ if(currentFolder===""){
+  path.textContent=TERMINAL_DIRECTORY+"\\Documents";
+  area.innerHTML=`<div class="file-item" onclick="openFolder('Research')"><span class="file-emoji">📁</span>Research</div><div class="file-item" onclick="openFolder('Documentation')"><span class="file-emoji">📁</span>Documentation</div>`;
+  status.textContent="2 folders";return;
+ }
+ if(currentFolder==="Research"){
+  path.textContent=TERMINAL_DIRECTORY+"\\Documents\\Research";
+  area.innerHTML=researchFiles.map((f,i)=>`<div class="file-item" onclick="requestPassword(${i})"><span class="file-emoji">${f.icon}</span>${f.name}<span style="font-size:10px;color:#777">🔒 Protected</span></div>`).join("");
+  status.textContent=researchFiles.length+" protected objects";return;
+ }
+ if(currentFolder==="Documentation"){
+  path.textContent=TERMINAL_DIRECTORY+"\\Documents\\Documentation";
+  area.innerHTML=`<div class="file-item" onclick="openFolder('Not Canon')"><span class="file-emoji">📁</span>Not Canon</div>`;
+  status.textContent="1 folder";return;
+ }
+ if(currentFolder==="Not Canon"){
+  path.textContent=TERMINAL_DIRECTORY+"\\Documents\\Documentation\\Not Canon";
+  area.innerHTML=`<div class="file-item" onclick="openFile('lirons-museum.txt')"><span class="file-emoji">📄</span>lirons-museum.txt</div>`;
+  status.textContent="1 text document";
+ }
 }
 
-/* DOCUMENTS NAVIGATION */
-
-function showDocuments() {
-  currentFolder = "";
-  folderHistory = [];
-  renderFolder();
+/* DIALOGS */
+function showDialog(title,message,inputMode,action){
+ document.getElementById("dialogTitle").textContent=title;document.getElementById("dialogMessage").textContent=message;
+ const input=document.getElementById("dialogInput");input.style.display=inputMode?"block":"none";input.value="";
+ document.getElementById("dialogCancel").style.display=inputMode?"inline-block":"none";
+ pendingDialogAction=action;document.getElementById("dialogOverlay").style.display="flex";
+ if(inputMode)setTimeout(()=>input.focus(),50);
+}
+function closeDialog(){document.getElementById("dialogOverlay").style.display="none";pendingDialogAction=null}
+function confirmDialog(){const action=pendingDialogAction;closeDialog();if(action)action()}
+function requestPassword(index){
+ const f=researchFiles[index];
+ showDialog("Password Required",'The file "'+f.name+'" is protected. Enter the password to access this file:',true,()=>{
+  showDialog("Access Denied","The password is incorrect. Access to this file is restricted.",false,()=>{});
+ });
+}
+function openFile(name){
+ if(!fileContents[name])return;
+ showDialog("Disclaimer",DISCLAIMER,false,()=>{
+  document.getElementById("textContent").value=fileContents[name];
+  document.getElementById("notepadTitle").textContent="📄 "+name+" - Notepad";
+  document.getElementById("notepadStatus").textContent=name+" | Windows Notepad";
+  windowNames.textWindow=name+" - Notepad";openWindow("textWindow");
+ });
 }
 
-function openFolder(name) {
-  folderHistory.push(currentFolder);
-  currentFolder = name;
-  renderFolder();
+/* USER FILES: local browser storage */
+const USER_FILES_KEY="investigator_user_text_files_v1";
+let editingUserFile=null;
+function getUserFiles(){try{return JSON.parse(localStorage.getItem(USER_FILES_KEY)||"{}")}catch(e){return {}}}
+function saveUserFiles(files){localStorage.setItem(USER_FILES_KEY,JSON.stringify(files))}
+function refreshUserFiles(){
+ const files=getUserFiles(),list=document.getElementById("userFilesList");list.innerHTML="";
+ const names=Object.keys(files).sort((a,b)=>a.localeCompare(b));
+ if(!names.length){list.innerHTML='<p style="color:#666;font-size:13px">This folder is empty. Create a text file to get started.</p>'}
+ names.forEach(name=>{
+  const row=document.createElement("div");row.className="user-file-row";
+  const icon=document.createElement("span");icon.textContent="📄";
+  const label=document.createElement("span");label.textContent=name;
+  const edit=document.createElement("button");edit.className="app-button";edit.textContent="Open";edit.onclick=()=>editUserFile(name);
+  const del=document.createElement("button");del.className="app-button";del.textContent="Delete";del.onclick=()=>deleteUserFile(name);
+  row.append(icon,label,edit,del);row.ondblclick=()=>editUserFile(name);list.appendChild(row);
+ });
+ document.getElementById("userFilesStatus").textContent=names.length+" text file(s) · Saved in this browser";
 }
-
-function historyBack() {
-  if(folderHistory.length === 0) return;
-
-  currentFolder = folderHistory.pop();
-  renderFolder();
+function safeTxtName(name){name=name.trim().replace(/[\\/:*?"<>|]/g,"-");if(!name)return "";if(!/\.txt$/i.test(name))name+=".txt";return name}
+function newUserFile(){
+ const name=prompt("Name your new text file:","New document.txt");if(name===null)return;
+ const filename=safeTxtName(name);if(!filename){alert("Please enter a file name.");return}
+ const files=getUserFiles();if(files[filename]!==undefined){alert("A file with that name already exists.");return}
+ files[filename]="";saveUserFiles(files);editUserFile(filename);
 }
-
-function goUp() {
-  historyBack();
+function editUserFile(name){
+ const files=getUserFiles();if(files[name]===undefined)return;
+ editingUserFile=name;
+ const list=document.getElementById("userFilesList");list.innerHTML="";
+ const heading=document.createElement("h3");heading.textContent="Editing: "+name;
+ const rename=document.createElement("input");rename.className="editor-input";rename.id="renameUserFile";rename.value=name;rename.placeholder="File name";
+ const editor=document.createElement("textarea");editor.id="userFileEditor";editor.value=files[name];editor.spellcheck=false;
+ const toolbar=document.createElement("div");toolbar.className="app-toolbar";
+ const save=document.createElement("button");save.className="app-button";save.textContent="💾 Save";save.onclick=saveUserFile;
+ const back=document.createElement("button");back.className="app-button";back.textContent="← Back to files";back.onclick=refreshUserFiles;
+ const remove=document.createElement("button");remove.className="app-button";remove.textContent="Delete";remove.onclick=()=>deleteUserFile(name);
+ toolbar.append(save,back,remove);list.append(heading,rename,editor,toolbar);
 }
-
-function renderFolder() {
-  const area = document.getElementById("fileArea");
-  const path = document.getElementById("currentPath");
-  const status = document.getElementById("explorerStatus");
-  const backButton = document.getElementById("backButton");
-
-  backButton.disabled = folderHistory.length === 0;
-
-  if(currentFolder === "") {
-    path.textContent = TERMINAL_DIRECTORY + "\\Documents";
-
-    area.innerHTML = `
-      <div class="file-item" onclick="openFolder('Research')">
-        <span class="file-emoji">📁</span>
-        Research
-      </div>
-
-      <div class="file-item" onclick="openFolder('Documentation')">
-        <span class="file-emoji">📁</span>
-        Documentation
-      </div>
-    `;
-
-    status.textContent = "2 folders";
-    return;
-  }
-
-  if(currentFolder === "Research") {
-    path.textContent = TERMINAL_DIRECTORY + "\\Documents\\Research";
-
-    area.innerHTML = researchFiles.map((file, index) => `
-      <div class="file-item" onclick="requestPassword(${index})">
-        <span class="file-emoji">${file.icon}</span>
-        ${file.name}
-        <span style="font-size:10px;color:#777;">🔒 Protected</span>
-      </div>
-    `).join("");
-
-    status.textContent = researchFiles.length + " protected objects";
-    return;
-  }
-
-  if(currentFolder === "Documentation") {
-    path.textContent = TERMINAL_DIRECTORY + "\\Documents\\Documentation";
-
-    area.innerHTML = `
-      <div class="file-item" onclick="openFile('lirons-museum.txt')">
-        <span class="file-emoji">📄</span>
-        lirons-museum.txt
-      </div>
-
-      <div class="file-item" onclick="openFile('Tapes.txt')">
-        <span class="file-emoji">📄</span>
-        Tapes.txt
-      </div>
-    `;
-
-    status.textContent = "2 objects";
-  }
+function saveUserFile(){
+ if(!editingUserFile)return;
+ const files=getUserFiles(),newName=safeTxtName(document.getElementById("renameUserFile").value);
+ if(!newName){alert("Please enter a valid file name.");return}
+ if(newName!==editingUserFile&&files[newName]!==undefined){alert("That file name is already in use.");return}
+ const content=document.getElementById("userFileEditor").value;
+ delete files[editingUserFile];files[newName]=content;saveUserFiles(files);editingUserFile=newName;
+ alert("File saved in this browser.");editUserFile(newName);
 }
-
-/* DIALOG SYSTEM */
-
-function showDialog(title, message, inputMode, action) {
-  document.getElementById("dialogTitle").textContent = title;
-  document.getElementById("dialogMessage").textContent = message;
-
-  const input = document.getElementById("dialogInput");
-  input.style.display = inputMode ? "block" : "none";
-  input.value = "";
-
-  document.getElementById("dialogCancel").style.display =
-    inputMode ? "inline-block" : "none";
-
-  pendingDialogAction = action;
-
-  document.getElementById("dialogOverlay").style.display = "flex";
-
-  if(inputMode) {
-    setTimeout(() => input.focus(), 50);
-  }
-}
-
-function closeDialog() {
-  document.getElementById("dialogOverlay").style.display = "none";
-  pendingDialogAction = null;
-}
-
-function confirmDialog() {
-  if(!pendingDialogAction) {
-    closeDialog();
-    return;
-  }
-
-  const action = pendingDialogAction;
-  closeDialog();
-  action();
-}
-
-/* PASSWORD-PROTECTED RESEARCH */
-
-function requestPassword(index) {
-  const file = researchFiles[index];
-
-  showDialog(
-    "Password Required",
-    "The file \"" + file.name + "\" is protected. Enter the password to access this file:",
-    true,
-    () => {
-      showDialog(
-        "Access Denied",
-        "The password is incorrect. Access to this file is restricted.",
-        false,
-        () => {}
-      );
-    }
-  );
-}
-
-/* OPEN DOCUMENTATION FILES */
-
-function openFile(name) {
-  if(!fileContents[name]) return;
-
-  showDialog(
-    "Disclaimer",
-    DISCLAIMER,
-    false,
-    () => {
-      const content = fileContents[name];
-
-      document.getElementById("textContent").value = content;
-      document.getElementById("notepadTitle").textContent =
-        "📄 " + name + " - Notepad";
-      document.getElementById("notepadStatus").textContent =
-        name + " | Windows Notepad";
-
-      windowNames.textWindow = name + " - Notepad";
-
-      openWindow("textWindow");
-    }
-  );
+function deleteUserFile(name){
+ if(!confirm('Delete "'+name+'"? This cannot be undone.'))return;
+ const files=getUserFiles();delete files[name];saveUserFiles(files);editingUserFile=null;refreshUserFiles();
 }
 
 /* TERMINAL */
-
-const terminalOutput = document.getElementById("terminalOutput");
-const terminalInput = document.getElementById("terminalInput");
-
-function printTerminal(text) {
-  terminalOutput.textContent += text + "\n";
-  terminalOutput.scrollTop = terminalOutput.scrollHeight;
-}
-
-function printPrompt(command = "") {
-  printTerminal(TERMINAL_DIRECTORY + "> " + command);
-}
-
-terminalInput.addEventListener("keydown", e => {
-  if(e.key !== "Enter") return;
-
-  const command = terminalInput.value.trim();
-  terminalInput.value = "";
-
-  printPrompt(command);
-
-  const parts = command.split(" ");
-  const cmd = parts[0].toLowerCase();
-  const arg = parts.slice(1).join(" ");
-
-  switch(cmd) {
-
-    case "help":
-      printTerminal(
-`Available commands:
-
+const terminalOutput=document.getElementById("terminalOutput"),terminalInput=document.getElementById("terminalInput");
+function printTerminal(text){terminalOutput.textContent+=text+"\n";terminalOutput.scrollTop=terminalOutput.scrollHeight}
+function printPrompt(command=""){printTerminal(TERMINAL_DIRECTORY+"> "+command)}
+terminalInput.addEventListener("keydown",e=>{
+ if(e.key!=="Enter")return;
+ const command=terminalInput.value.trim();terminalInput.value="";printPrompt(command);
+ const parts=command.split(" "),cmd=(parts[0]||"").toLowerCase(),arg=parts.slice(1).join(" ");
+ switch(cmd){
+ case "help":printTerminal(`Available commands:
 help       - Show available commands
 clear      - Clear terminal
 echo       - Display a message
@@ -1819,92 +624,104 @@ whoami     - Show current user
 dir        - List directory contents
 cd         - Show current directory
 ver        - Show system version
-exit       - Close terminal`
-      );
-      break;
-
-    case "clear":
-      terminalOutput.textContent = "";
-      break;
-
-    case "echo":
-      printTerminal(arg);
-      break;
-
-    case "date":
-      printTerminal(SYSTEM_DATE);
-      break;
-
-    case "time":
-      printTerminal(new Date().toLocaleTimeString());
-      break;
-
-    case "whoami":
-      printTerminal("Investigator");
-      break;
-
-    case "dir":
-      printTerminal(
-`Directory of ${TERMINAL_DIRECTORY}
+exit       - Close terminal`);break;
+ case "clear":terminalOutput.textContent="";break;
+ case "echo":printTerminal(arg);break;
+ case "date":printTerminal(SYSTEM_DATE);break;
+ case "time":printTerminal(new Date().toLocaleTimeString());break;
+ case "whoami":printTerminal("Investigator");break;
+ case "dir":printTerminal(`Directory of ${TERMINAL_DIRECTORY}
 
 <DIR> Documents
+<DIR> User files
        Terminal
-       desktop.html`
-      );
-      break;
-
-    case "cd":
-      printTerminal(TERMINAL_DIRECTORY);
-      break;
-
-    case "ver":
-      printTerminal(
-`Microsoft Windows XP [Version 5.1.2600]
-Investigator Desktop [Version ${SYSTEM_VERSION}]`
-      );
-      break;
-
-    case "exit":
-      closeWindow("terminalWindow");
-      break;
-
-    case "":
-      break;
-
-    default:
-      printTerminal(
-        "'" + cmd + "' is not recognized as an internal or external command."
-      );
-  }
+       Minesweeper
+       Paint
+       Changelog
+       desktop.html`);break;
+ case "cd":printTerminal(TERMINAL_DIRECTORY);break;
+ case "ver":printTerminal(`Microsoft Windows XP [Version 5.1.2600]
+Investigator Desktop [Version ${SYSTEM_VERSION}]`);break;
+ case "exit":closeWindow("terminalWindow");break;
+ case "":break;
+ default:printTerminal("'"+cmd+"' is not recognized as an internal or external command.");
+ }
 });
 
-/* CLOCK */
-
-function updateClock() {
-  document.getElementById("clock").textContent =
-    new Date().toLocaleTimeString([], {
-      hour: "2-digit",
-      minute: "2-digit"
-    });
-
-  document.getElementById("clockDate").textContent = SYSTEM_DATE;
+/* MINESWEEPER */
+let mineStarted=false,mineBoard=[],mineRevealed=0,mineFlags=0,mineOver=false,mineRows=9,mineCols=9,mineCount=10;
+function newMineGame(){
+ const mode=document.getElementById("mineDifficulty").value;
+ ({beginner:[9,9,10],intermediate:[12,12,25],expert:[16,16,40]})[mode].forEach((v,i)=>{if(i===0)mineRows=v;if(i===1)mineCols=v;if(i===2)mineCount=v});
+ mineBoard=Array.from({length:mineRows*mineCols},()=>({mine:false,near:0,open:false,flag:false}));
+ let placed=0;while(placed<mineCount){const i=Math.floor(Math.random()*mineBoard.length);if(!mineBoard[i].mine){mineBoard[i].mine=true;placed++}}
+ mineBoard.forEach((cell,i)=>{if(cell.mine)return;cell.near=neighbors(i).filter(n=>mineBoard[n].mine).length});
+ mineRevealed=0;mineFlags=0;mineOver=false;mineStarted=true;drawMineBoard();updateMineInfo("Good luck!");
+}
+function neighbors(i){
+ const r=Math.floor(i/mineCols),c=i%mineCols,out=[];
+ for(let y=-1;y<=1;y++)for(let x=-1;x<=1;x++){if(!x&&!y)continue;const rr=r+y,cc=c+x;if(rr>=0&&rr<mineRows&&cc>=0&&cc<mineCols)out.push(rr*mineCols+cc)}
+ return out;
+}
+function drawMineBoard(){
+ const grid=document.getElementById("mineGrid");grid.style.gridTemplateColumns=`repeat(${mineCols},30px)`;grid.innerHTML="";
+ mineBoard.forEach((cell,i)=>{
+  const b=document.createElement("button");b.className="mine-cell"+(cell.open?" revealed":"")+(cell.flag?" flagged":"");
+  b.textContent=cell.flag?"🚩":cell.open?(cell.mine?"💣":cell.near||""):"";
+  if(cell.open&&cell.near)b.style.color=["","#1765bd","#16802b","#c22","#7029a1","#9b4c16"][Math.min(cell.near,5)];
+  b.oncontextmenu=e=>{e.preventDefault();toggleMineFlag(i)};
+  b.onclick=()=>revealMine(i);grid.appendChild(b);
+ });
+ updateMineInfo(mineOver?"Game over!": "Find all the safe squares.");
+}
+function updateMineInfo(message){document.getElementById("mineInfo").textContent=`Mines: ${mineCount} | Flags: ${mineFlags} — ${message}`}
+function toggleMineFlag(i){if(mineOver||mineBoard[i].open)return;mineBoard[i].flag=!mineBoard[i].flag;mineFlags+=mineBoard[i].flag?1:-1;drawMineBoard()}
+function revealMine(i){
+ if(mineOver||mineBoard[i].open||mineBoard[i].flag)return;
+ const cell=mineBoard[i];cell.open=true;
+ if(cell.mine){mineOver=true;mineBoard.forEach(c=>{if(c.mine)c.open=true});drawMineBoard();updateMineInfo("Boom! You lost. Start a new game.");return}
+ mineRevealed++;
+ if(cell.near===0)neighbors(i).forEach(n=>{if(!mineBoard[n].open)revealMine(n)});
+ if(mineRevealed===mineBoard.length-mineCount){mineOver=true;drawMineBoard();updateMineInfo("You won! 🎉");return}
+ drawMineBoard();
 }
 
-updateClock();
-setInterval(updateClock, 1000);
+/* PAINT */
+const canvas=document.getElementById("paintCanvas"),ctx=canvas.getContext("2d");
+let painting=false,eraser=false,lastPoint=null;
+function resizeCanvas(){
+ const old=document.createElement("canvas");old.width=canvas.width||600;old.height=canvas.height||350;
+ if(canvas.width&&canvas.height)old.getContext("2d").drawImage(canvas,0,0);
+ const rect=canvas.getBoundingClientRect(),dpr=window.devicePixelRatio||1;
+ canvas.width=Math.max(1,Math.floor(rect.width*dpr));canvas.height=Math.max(1,Math.floor(rect.height*dpr));
+ ctx.setTransform(dpr,0,0,dpr,0,0);ctx.fillStyle="#fff";ctx.fillRect(0,0,rect.width,rect.height);
+ if(old.width>0&&old.height>0)ctx.drawImage(old,0,0,old.width,old.height,0,0,rect.width,rect.height);
+}
+function paintPoint(e){
+ const r=canvas.getBoundingClientRect();return{x:e.clientX-r.left,y:e.clientY-r.top};
+}
+function startPaint(e){painting=true;lastPoint=paintPoint(e);canvas.setPointerCapture(e.pointerId);drawPaint(e)}
+function drawPaint(e){
+ if(!painting)return;const p=paintPoint(e);ctx.beginPath();ctx.moveTo(lastPoint.x,lastPoint.y);ctx.lineTo(p.x,p.y);
+ ctx.lineCap="round";ctx.lineJoin="round";ctx.lineWidth=Number(document.getElementById("brushSize").value);
+ ctx.strokeStyle=eraser?"#ffffff":document.getElementById("paintColor").value;ctx.stroke();lastPoint=p;
+}
+function stopPaint(){painting=false;lastPoint=null}
+canvas.addEventListener("pointerdown",startPaint);canvas.addEventListener("pointermove",drawPaint);canvas.addEventListener("pointerup",stopPaint);canvas.addEventListener("pointercancel",stopPaint);
+function setEraser(value){eraser=value}
+function clearPaint(){if(confirm("Clear the entire canvas?")){const r=canvas.getBoundingClientRect();ctx.fillStyle="#fff";ctx.fillRect(0,0,r.width,r.height)}}
+function downloadPaint(){const a=document.createElement("a");a.download="my-painting.png";a.href=canvas.toDataURL("image/png");a.click()}
+setTimeout(resizeCanvas,100);
+window.addEventListener("resize",()=>{if(!document.getElementById("paintWindow").classList.contains("hidden"))resizeCanvas()});
 
-/* INITIALIZE DOCUMENTS */
-
+/* CLOCK */
+function updateClock(){
+ document.getElementById("clock").textContent=new Date().toLocaleTimeString([],{hour:"2-digit",minute:"2-digit"});
+ document.getElementById("clockDate").textContent=SYSTEM_DATE;
+}
+updateClock();setInterval(updateClock,1000);
 showDocuments();
-
-/* ENTER KEY IN PASSWORD DIALOG */
-
-document.getElementById("dialogInput").addEventListener("keydown", e => {
-  if(e.key === "Enter") {
-    confirmDialog();
-  }
-});
+document.getElementById("dialogInput").addEventListener("keydown",e=>{if(e.key==="Enter")confirmDialog()});
 </script>
-
 </body>
 </html>
