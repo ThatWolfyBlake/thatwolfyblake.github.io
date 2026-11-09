@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta name="theme-color" content="#245edb">
-<meta name="application-version" content="1.2.0">
+<meta name="application-version" content="1.2.1">
 <title>Investigator Desktop</title>
 <style>
 *{box-sizing:border-box}
@@ -75,7 +75,7 @@ body{margin:0;overflow:hidden;font-family:Tahoma,Arial,sans-serif;user-select:no
 .editor-input{width:100%;padding:8px;border:1px solid #999;font:13px Tahoma;margin-bottom:8px}
 #userFileEditor{width:100%;height:calc(100% - 90px);min-height:150px;resize:none;border:1px solid #999;padding:10px;font:14px "Courier New";user-select:text}
 
-/* PAINT FIX */
+/* PAINT */
 #paintCanvas{display:block;width:100%;height:100%;min-height:230px;flex:1;background:white;touch-action:none;cursor:crosshair}
 .paint-layout{height:100%;display:flex;flex-direction:column;overflow:hidden}
 .paint-tools{display:flex;gap:7px;align-items:center;flex-wrap:wrap;padding:8px;background:#eee;flex-shrink:0}
@@ -92,30 +92,63 @@ body{margin:0;overflow:hidden;font-family:Tahoma,Arial,sans-serif;user-select:no
 .changelog-entry strong{color:#174f9a}
 
 /* TOONCHAT */
-#toonChatWindow{width:min(760px,calc(100vw - 25px));height:min(540px,calc(100dvh - 65px));background:#202127;border-color:#111}
+#toonChatWindow{width:min(820px,calc(100vw - 25px));height:min(570px,calc(100dvh - 65px));background:#202127;border-color:#111}
 #toonChatWindow .titlebar{background:linear-gradient(90deg,#33343d,#50515d,#33343d)}
 #toonChatWindow .window-body{background:#24252b;color:#eee;display:flex;min-height:0;overflow:hidden}
-.chat-sidebar{width:210px;min-width:135px;background:#1c1d22;border-right:1px solid #111;display:flex;flex-direction:column}
-.chat-sidebar-heading{padding:17px 13px;font-weight:bold;font-size:14px;border-bottom:1px solid #111}
+.chat-sidebar{width:215px;min-width:145px;background:#1c1d22;border-right:1px solid #111;display:flex;flex-direction:column}
+.chat-sidebar-heading{padding:17px 13px;font-weight:bold;font-size:15px;border-bottom:1px solid #111}
 .chat-section-label{padding:16px 12px 7px;font-size:10px;color:#999;font-weight:bold;letter-spacing:1px}
 .chat-contact{padding:10px 12px;display:flex;align-items:center;gap:9px;cursor:pointer;color:#ccc;font-size:12px}
 .chat-contact:hover,.chat-contact.selected{background:#353741;color:white}
-.chat-avatar{width:34px;height:34px;min-width:34px;border-radius:50%;background:#090909;display:grid;place-items:center;color:white;font-size:11px;font-weight:bold}
+.chat-contact-info{min-width:0;flex:1}
+.chat-contact-name{font-weight:bold;overflow:hidden;text-overflow:ellipsis}
+.chat-contact-status{font-size:10px;color:#999;margin-top:4px}
+.chat-avatar{width:36px;height:36px;min-width:36px;border-radius:50%;background:#444957;display:grid;place-items:center;color:white;font-size:12px;font-weight:bold;position:relative}
 .chat-avatar.investigator{background:#000;border:1px solid #555}
-.chat-main{flex:1;min-width:0;display:flex;flex-direction:column;background:#292a31}
-.chat-topbar{height:55px;min-height:55px;border-bottom:1px solid #17181d;display:flex;align-items:center;gap:10px;padding:0 15px;font-size:14px;font-weight:bold}
-.chat-messages{flex:1;min-height:0;overflow-y:auto;padding:15px 12px;display:flex;flex-direction:column;gap:15px}
-.chat-message{display:flex;gap:10px;align-items:flex-start}
-.chat-message-content{min-width:0}
-.chat-message-name{font-size:12px;font-weight:bold;color:#fff;margin-bottom:5px}
-.chat-message-name small{font-weight:normal;color:#999;margin-left:6px}
-.chat-message-text{font-size:13px;color:#ddd;line-height:1.5;white-space:pre-wrap;overflow-wrap:anywhere}
-.chat-deleted{font-size:11px;color:#888;font-style:italic;border-left:3px solid #555;padding:5px 9px;margin-bottom:4px}
+.online-dot{width:11px;height:11px;border-radius:50%;background:#3ba55d;border:2px solid #1c1d22;position:absolute;right:-1px;bottom:-1px}
 .chat-account{border-top:1px solid #111;background:#17181d;padding:10px;display:flex;align-items:center;gap:9px}
 .chat-account-name{font-size:12px;font-weight:bold}
-.chat-account-status{font-size:10px;color:#999;margin-top:3px}
+.chat-account-status{font-size:10px;color:#3ba55d;margin-top:3px}
+.chat-main{flex:1;min-width:0;display:flex;flex-direction:column;background:#292a31;position:relative}
+.chat-topbar{height:58px;min-height:58px;border-bottom:1px solid #17181d;display:flex;align-items:center;gap:10px;padding:0 14px}
+.chat-header-info{flex:1;min-width:0}
+.chat-header-name{font-size:14px;font-weight:bold;cursor:pointer;color:#fff}
+.chat-header-name:hover{text-decoration:underline}
+.chat-header-status{font-size:10px;color:#3ba55d;margin-top:4px}
+.chat-header-actions{display:flex;gap:7px}
+.chat-action{height:32px;width:34px;border:0;border-radius:5px;background:#383a43;color:#ddd;font-size:17px;cursor:pointer}
+.chat-action:hover{background:#454853}
+.chat-action.call{opacity:.45;cursor:not-allowed}
+.chat-messages{flex:1;min-height:0;overflow-y:auto;padding:17px 14px;display:flex;flex-direction:column;gap:16px}
+.chat-message{display:flex;gap:10px;align-items:flex-start}
+.chat-message-content{min-width:0;flex:1}
+.chat-message-name{font-size:12px;font-weight:bold;color:#fff;margin-bottom:5px}
+.chat-message-name small{font-weight:normal;color:#999;margin-left:7px;font-size:10px}
+.chat-message-text{font-size:13px;color:#ddd;line-height:1.5;white-space:pre-wrap;overflow-wrap:anywhere}
+.chat-deleted{font-size:11px;color:#888;font-style:italic;border-left:3px solid #555;padding:5px 9px;margin-bottom:4px}
+.chat-composer-wrap{padding:10px 13px 13px;background:#292a31}
+.chat-composer{display:flex;align-items:flex-end;gap:8px;background:#383a43;border-radius:8px;padding:7px}
+.chat-composer textarea{flex:1;min-width:0;max-height:100px;min-height:36px;resize:none;border:0;outline:0;background:transparent;color:#eee;font:13px Tahoma;padding:10px 7px;user-select:text}
+.chat-composer textarea::placeholder{color:#999}
+.chat-send{height:34px;min-width:55px;border:0;border-radius:5px;background:#5865f2;color:white;font-weight:bold;cursor:pointer}
+.chat-send:hover{background:#4752c4}
+.chat-delivery-error{font-size:10px;color:#ed5555;margin-top:5px;font-weight:bold}
+.chat-profile{flex:1;min-height:0;overflow-y:auto;display:none;background:#292a31}
+.chat-profile-banner{height:115px;background:linear-gradient(135deg,#454b63,#252733)}
+.chat-profile-card{padding:0 22px 22px}
+.chat-profile-avatar{width:90px;height:90px;border-radius:50%;border:7px solid #292a31;background:#444957;color:white;display:grid;place-items:center;font-size:30px;font-weight:bold;margin-top:-45px;position:relative}
+.chat-profile-avatar .online-dot{width:19px;height:19px;border:4px solid #292a31}
+.chat-profile-name{font-size:20px;font-weight:bold;margin-top:10px;color:white;overflow-wrap:anywhere}
+.chat-profile-handle{font-size:12px;color:#aaa;margin-top:4px}
+.chat-profile-status{display:inline-flex;align-items:center;gap:7px;font-size:11px;color:#3ba55d;margin-top:13px;background:#202127;padding:7px 10px;border-radius:5px}
+.chat-profile-section{margin-top:20px;padding:15px;background:#202127;border-radius:7px}
+.chat-profile-section h3{font-size:10px;letter-spacing:1px;color:#aaa;margin:0 0 12px}
+.chat-profile-section p{font-size:12px;color:#ddd;margin:0;line-height:1.6}
+.chat-profile-back{margin:15px 0 0;padding:7px 12px;border:0;border-radius:4px;background:#444957;color:white;cursor:pointer;font-family:Tahoma;font-size:12px}
+.chat-profile-back:hover{background:#555d70}
+.chat-profile-meta{font-size:11px;color:#888;margin-top:17px}
 .chat-empty{margin:auto;text-align:center;color:#999;font-size:13px;padding:20px}
-@media(max-width:500px){
+@media(max-width:550px){
 .window{left:10px!important;top:42px!important;width:calc(100vw - 20px);height:calc(100dvh - 95px)}
 .desktop-icons{gap:8px}
 .tray{min-width:90px;padding-left:4px;padding-right:4px}
@@ -125,6 +158,9 @@ body{margin:0;overflow:hidden;font-family:Tahoma,Arial,sans-serif;user-select:no
 .chat-contact{padding:9px 6px;gap:6px;font-size:11px}
 .chat-avatar{width:29px;height:29px;min-width:29px}
 .chat-messages{padding:10px 7px}
+.chat-topbar{padding:0 8px;gap:7px}
+.chat-action{width:30px}
+.chat-profile-card{padding-left:13px;padding-right:13px}
 }
 </style>
 </head>
@@ -212,9 +248,8 @@ Type "help" to see available commands.
  <div class="window-body">
   <div class="app-content">
    <h2 style="margin-top:0">Investigator Desktop</h2>
-   <p><strong>Version 1.2.0</strong> — Feature update</p>
-   <div class="changelog-entry"><strong>Paint</strong><br>Fixed the drawing canvas sizing issue. Paint now initializes when opened, supports touch and mouse drawing, and preserves artwork when the window is resized.</div>
-   <div class="changelog-entry"><strong>ToonChat™ — secret app</strong><br>Added a hidden direct-message application accessible through the Terminal command <code>execute toonchat</code>. Includes DMs with LunarisTheTV and BluyBlerry01.</div>
+   <p><strong>Version 1.2.1</strong> — ToonChat improvements</p>
+   <div class="changelog-entry"><strong>Paint</strong><br>Fixed the drawing canvas sizing issue. Paint initializes when opened, supports touch and mouse drawing, and preserves artwork when resized.</div>
    <div class="changelog-entry"><strong>Desktop environment</strong><br>Windows XP-inspired desktop, Bliss wallpaper, desktop icons, movable windows, taskbar, Start menu, live clock, and window controls.</div>
    <div class="changelog-entry"><strong>Documents</strong><br>Added a Documents explorer with Research and Documentation folders. Research files are protected. Added the Not Canon documentation location and its disclaimer before opening.</div>
    <div class="changelog-entry"><strong>Terminal</strong><br>Investigator Terminal with help, clear, echo, date, time, whoami, dir, cd, ver, exit, and execute commands.</div>
@@ -233,21 +268,74 @@ Type "help" to see available commands.
   <aside class="chat-sidebar">
    <div class="chat-sidebar-heading">ToonChat™</div>
    <div class="chat-section-label">DIRECT MESSAGES</div>
+
    <div class="chat-contact selected" id="contact-lunaris" onclick="showChat('lunaris')">
-    <div class="chat-avatar">L</div><span>LunarisTheTV</span>
+    <div class="chat-avatar">L<div class="online-dot"></div></div>
+    <div class="chat-contact-info">
+     <div class="chat-contact-name">LunarisTheTV</div>
+     <div class="chat-contact-status">Online</div>
+    </div>
    </div>
+
    <div class="chat-contact" id="contact-bluy" onclick="showChat('bluy')">
-    <div class="chat-avatar">B</div><span>BluyBlerry01</span>
+    <div class="chat-avatar">B<div class="online-dot"></div></div>
+    <div class="chat-contact-info">
+     <div class="chat-contact-name">BluyBlerry01</div>
+     <div class="chat-contact-status">Online</div>
+    </div>
    </div>
+
    <div style="flex:1"></div>
    <div class="chat-account">
     <div class="chat-avatar investigator"></div>
-    <div><div class="chat-account-name">Investigator</div><div class="chat-account-status">Online</div></div>
+    <div><div class="chat-account-name">Investigator</div><div class="chat-account-status">● Online</div></div>
    </div>
   </aside>
+
   <main class="chat-main">
-   <div class="chat-topbar"><div class="chat-avatar" id="chatHeaderAvatar">L</div><span id="chatHeaderName">LunarisTheTV</span></div>
+   <div class="chat-topbar">
+    <div class="chat-avatar" id="chatHeaderAvatar">L<div class="online-dot"></div></div>
+    <div class="chat-header-info">
+     <div class="chat-header-name" id="chatHeaderName" onclick="showChatProfile()">LunarisTheTV</div>
+     <div class="chat-header-status">● Online</div>
+    </div>
+    <div class="chat-header-actions">
+     <button class="chat-action call" title="Calls unavailable" disabled>☎</button>
+     <button class="chat-action" title="View profile" onclick="showChatProfile()">ⓘ</button>
+    </div>
+   </div>
+
    <div class="chat-messages" id="chatMessages"></div>
+
+   <div class="chat-profile" id="chatProfile">
+    <div class="chat-profile-banner"></div>
+    <div class="chat-profile-card">
+     <div class="chat-profile-avatar" id="profileAvatar">L<div class="online-dot"></div></div>
+     <div class="chat-profile-name" id="profileName">LunarisTheTV</div>
+     <div class="chat-profile-handle" id="profileHandle">@LunarisTheTV</div>
+     <div class="chat-profile-status">● Online</div>
+
+     <div class="chat-profile-section">
+      <h3>ABOUT ME</h3>
+      <p id="profileAbout">ToonChat user.</p>
+     </div>
+
+     <div class="chat-profile-section">
+      <h3>ACCOUNT INFORMATION</h3>
+      <p id="profileAccount">Username: LunarisTheTV<br>Platform: ToonChat™</p>
+     </div>
+
+     <button class="chat-profile-back" onclick="hideChatProfile()">← Back to messages</button>
+     <div class="chat-profile-meta">ToonChat™ member</div>
+    </div>
+   </div>
+
+   <div class="chat-composer-wrap" id="chatComposerWrap">
+    <div class="chat-composer">
+     <textarea id="chatMessageInput" rows="1" placeholder="Message..." autocomplete="off"></textarea>
+     <button class="chat-send" onclick="sendChatMessage()">Send</button>
+    </div>
+   </div>
   </main>
  </div>
 </div>
@@ -266,7 +354,7 @@ Type "help" to see available commands.
   <div class="start-item" onclick="location.href='https://thatwolfyblake.github.io/lirons-museum'">🏠 Return to Home</div>
   <div class="start-item" onclick="location.reload()">🔄 Restart Desktop</div>
  </div>
- <div class="start-footer">Version 1.2.0</div>
+ <div class="start-footer">Version 1.2.1</div>
 </div>
 
 <!-- DIALOG -->
@@ -288,8 +376,9 @@ Type "help" to see available commands.
 
 <script>
 let highestZ=10,activeWindow=null,currentFolder="",folderHistory=[],pendingDialogAction=null;
-const SYSTEM_VERSION="1.2.0",SYSTEM_DATE="10/06/2001",TERMINAL_DIRECTORY="C:\\Investigator";
+const SYSTEM_VERSION="1.2.1",SYSTEM_DATE="10/06/2001",TERMINAL_DIRECTORY="C:\\Investigator";
 const DISCLAIMER="Not canon, this is only for viewing purposes.";
+
 const windowNames={
  documentsWindow:"Documents",userFilesWindow:"User files",textWindow:"Notepad",
  terminalWindow:"Terminal",minesWindow:"Minesweeper",paintWindow:"Paint",
@@ -729,61 +818,153 @@ const chatData={
  lunaris:{
   name:"LunarisTheTV",
   avatar:"L",
+  about:"ToonChat user.",
   messages:[
-   {sender:"LunarisTheTV",initial:"L",text:"Who is this?"},
-   {sender:"Investigator",initial:"",text:"You know."},
-   {sender:"LunarisTheTV",initial:"L",text:"Oh, its you!"},
-   {sender:"Investigator",initial:"",text:"Yes. Did you get the materials i asked for?"},
-   {sender:"LunarisTheTV",initial:"L",text:"Yep, where do I do meet you to deliver them?"},
-   {sender:"Investigator",initial:"",text:"In the art studio in 1 hour, don't let Randy see me."},
-   {sender:"LunarisTheTV",initial:"L",text:"Okay."}
+   {sender:"LunarisTheTV",initial:"L",text:"Who is this?",time:"10:41 AM"},
+   {sender:"Investigator",initial:"",text:"You know.",time:"10:42 AM"},
+   {sender:"LunarisTheTV",initial:"L",text:"Oh, its you!",time:"10:42 AM"},
+   {sender:"Investigator",initial:"",text:"Yes. Did you get the materials i asked for?",time:"10:43 AM"},
+   {sender:"LunarisTheTV",initial:"L",text:"Yep, where do I do meet you to deliver them?",time:"10:44 AM"},
+   {sender:"Investigator",initial:"",text:"In the art studio in 1 hour, don't let Randy see me.",time:"10:45 AM"},
+   {sender:"LunarisTheTV",initial:"L",text:"Okay.",time:"10:46 AM"}
   ]
  },
  bluy:{
   name:"BluyBlerry01",
   avatar:"B",
+  about:"ToonChat user.",
   deleted:true,
   messages:[
-   {sender:"BluyBlerry01",initial:"B",text:"alright, what is it?"},
-   {sender:"Investigator",initial:"",text:"Blyenn, got the files i asked for?"},
-   {sender:"BluyBlerry01",initial:"B",text:"yeah i did."},
-   {sender:"Investigator",initial:"",text:"Where are you?"},
-   {sender:"BluyBlerry01",initial:"B",text:"im at my café, i left the files under the box in the lobby, like you asked."},
-   {sender:"Investigator",initial:"",text:"Thank your for your contribuition, Blyenn."},
-   {sender:"BluyBlerry01",initial:"B",text:"no problem"}
+   {sender:"BluyBlerry01",initial:"B",text:"alright, what is it?",time:"9:12 AM"},
+   {sender:"Investigator",initial:"",text:"Blyenn, got the files i asked for?",time:"9:13 AM"},
+   {sender:"BluyBlerry01",initial:"B",text:"yeah i did.",time:"9:13 AM"},
+   {sender:"Investigator",initial:"",text:"Where are you?",time:"9:14 AM"},
+   {sender:"BluyBlerry01",initial:"B",text:"im at my café, i left the files under the box in the lobby, like you asked.",time:"9:15 AM"},
+   {sender:"Investigator",initial:"",text:"Thank your for your contribuition, Blyenn.",time:"9:16 AM"},
+   {sender:"BluyBlerry01",initial:"B",text:"no problem",time:"9:17 AM"}
   ]
  }
 };
+
+function makeChatMessage(message){
+ const row=document.createElement("div");row.className="chat-message";
+ const avatar=document.createElement("div");
+ avatar.className="chat-avatar"+(message.sender==="Investigator"?" investigator":"");
+ avatar.textContent=message.initial;
+ if(message.sender!=="Investigator"){
+  const dot=document.createElement("div");dot.className="online-dot";avatar.appendChild(dot);
+ }
+ const content=document.createElement("div");content.className="chat-message-content";
+ const name=document.createElement("div");name.className="chat-message-name";
+ name.textContent=message.sender;
+ const time=document.createElement("small");time.textContent=message.time||"Just now";
+ name.appendChild(time);
+ const text=document.createElement("div");text.className="chat-message-text";text.textContent=message.text;
+ content.append(name,text);
+ if(message.failed){
+  const error=document.createElement("div");
+  error.className="chat-delivery-error";
+  error.textContent="Could not be delivered!";
+  content.appendChild(error);
+ }
+ row.append(avatar,content);
+ return row;
+}
+
 function showChat(id){
  if(!chatData[id])return;
  activeChat=id;
  const chat=chatData[id];
+
  document.getElementById("chatHeaderName").textContent=chat.name;
  document.getElementById("chatHeaderAvatar").textContent=chat.avatar;
+ document.getElementById("chatHeaderAvatar").innerHTML=chat.avatar+'<div class="online-dot"></div>';
+
  document.getElementById("contact-lunaris").classList.toggle("selected",id==="lunaris");
  document.getElementById("contact-bluy").classList.toggle("selected",id==="bluy");
+
+ document.getElementById("chatMessages").style.display="flex";
+ document.getElementById("chatComposerWrap").style.display="block";
+ document.getElementById("chatProfile").style.display="none";
+
  const messages=document.getElementById("chatMessages");
  messages.innerHTML="";
+
  if(chat.deleted){
   const deleted=document.createElement("div");
   deleted.className="chat-deleted";
   deleted.textContent="[History deleted]";
   messages.appendChild(deleted);
  }
- chat.messages.forEach(message=>{
-  const row=document.createElement("div");row.className="chat-message";
-  const avatar=document.createElement("div");avatar.className="chat-avatar"+(message.sender==="Investigator"?" investigator":"");
-  avatar.textContent=message.initial;
-  const content=document.createElement("div");content.className="chat-message-content";
-  const name=document.createElement("div");name.className="chat-message-name";
-  name.textContent=message.sender;
-  const time=document.createElement("small");time.textContent="Direct Message";
-  name.appendChild(time);
-  const text=document.createElement("div");text.className="chat-message-text";text.textContent=message.text;
-  content.append(name,text);row.append(avatar,content);messages.appendChild(row);
- });
+
+ chat.messages.forEach(message=>messages.appendChild(makeChatMessage(message)));
+ messages.scrollTop=messages.scrollHeight;
+
+ document.getElementById("chatMessageInput").placeholder="Message "+chat.name;
+}
+
+function showChatProfile(){
+ const chat=chatData[activeChat];
+ if(!chat)return;
+
+ document.getElementById("chatMessages").style.display="none";
+ document.getElementById("chatComposerWrap").style.display="none";
+ document.getElementById("chatProfile").style.display="block";
+
+ document.getElementById("profileAvatar").innerHTML=chat.avatar+'<div class="online-dot"></div>';
+ document.getElementById("profileName").textContent=chat.name;
+ document.getElementById("profileHandle").textContent="@"+chat.name;
+ document.getElementById("profileAbout").textContent=chat.about;
+ document.getElementById("profileAccount").innerHTML=
+  "Username: "+chat.name+"<br>Platform: ToonChat™";
+}
+
+function hideChatProfile(){
+ document.getElementById("chatProfile").style.display="none";
+ document.getElementById("chatMessages").style.display="flex";
+ document.getElementById("chatComposerWrap").style.display="block";
+}
+
+function sendChatMessage(){
+ const input=document.getElementById("chatMessageInput");
+ const value=input.value.trim();
+ if(!value)return;
+
+ const chat=chatData[activeChat];
+ if(!chat)return;
+
+ const now=new Date();
+ const timestamp=now.toLocaleTimeString([],{hour:"2-digit",minute:"2-digit"});
+
+ const message={
+  sender:"Investigator",
+  initial:"",
+  text:value,
+  time:timestamp,
+  failed:true
+ };
+
+ chat.messages.push(message);
+ document.getElementById("chatMessages").appendChild(makeChatMessage(message));
+
+ input.value="";
+ input.style.height="36px";
+
+ const messages=document.getElementById("chatMessages");
  messages.scrollTop=messages.scrollHeight;
 }
+
+document.getElementById("chatMessageInput").addEventListener("keydown",e=>{
+ if(e.key==="Enter"&&!e.shiftKey){
+  e.preventDefault();
+  sendChatMessage();
+ }
+});
+
+document.getElementById("chatMessageInput").addEventListener("input",function(){
+ this.style.height="36px";
+ this.style.height=Math.min(this.scrollHeight,100)+"px";
+});
 
 /* MINESWEEPER */
 let mineStarted=false,mineBoard=[],mineRevealed=0,mineFlags=0,mineOver=false,mineRows=9,mineCols=9,mineCount=10;
@@ -823,7 +1004,7 @@ function revealMine(i){
  drawMineBoard();
 }
 
-/* PAINT — corrected canvas initialization and pointer drawing */
+/* PAINT */
 const canvas=document.getElementById("paintCanvas"),ctx=canvas.getContext("2d");
 let painting=false,eraser=false,lastPoint=null,canvasInitialized=false;
 function resizeCanvas(){
