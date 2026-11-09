@@ -3,54 +3,33 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#245edb">
 <title>Windows XP Desktop</title>
 
 <style>
-* {
-  box-sizing: border-box;
-}
+* { box-sizing: border-box; }
 
 body {
   margin: 0;
   overflow: hidden;
   font-family: Tahoma, Arial, sans-serif;
   user-select: none;
-  background: #5da9e8;
+  background: #000;
 }
 
 /* DESKTOP */
 
 #desktop {
   width: 100vw;
-  height: 100vh;
+  height: 100dvh;
   position: relative;
   overflow: hidden;
 
-  /* Bliss-inspired wallpaper */
-  background:
-    radial-gradient(ellipse at 75% 13%, #fff 0%, transparent 20%),
-    linear-gradient(#1687d0 0%, #73c5f5 48%, #b7e5f5 62%, #7dbd35 63%);
-}
-
-/* Rolling green hills */
-.hill {
-  position: absolute;
-  width: 150%;
-  height: 55%;
-  bottom: 28px;
-  left: -20%;
-  border-radius: 50% 50% 0 0;
-  transform: rotate(-7deg);
-  background: linear-gradient(160deg, #a6d94b, #4f9b20 65%, #26731a);
-}
-
-.hill.second {
-  width: 130%;
-  height: 45%;
-  left: 35%;
-  bottom: 25px;
-  transform: rotate(12deg);
-  background: linear-gradient(160deg, #8fcf39, #3f8d20);
+  /* ACTUAL WINDOWS XP BLISS WALLPAPER */
+  background-image: url("https://r4.wallpaperflare.com/wallpaper/33/394/438/windows-xp-bliss-wallpaper-a2c182d00dc64e8bcae832b55078b942.jpg");
+  background-size: cover;
+  background-position: center center;
+  background-repeat: no-repeat;
 }
 
 /* DESKTOP ICONS */
@@ -61,7 +40,8 @@ body {
   left: 12px;
   display: flex;
   flex-direction: column;
-  gap: 22px;
+  gap: 15px;
+  z-index: 1;
 }
 
 .desktop-icon {
@@ -81,9 +61,11 @@ body {
   padding: 5px;
 }
 
-.desktop-icon:hover {
-  background: rgba(30, 110, 210, .3);
+.desktop-icon:hover,
+.desktop-icon:focus {
+  background: rgba(30,110,210,.35);
   border: 1px dotted white;
+  outline: none;
 }
 
 .desktop-icon img {
@@ -130,9 +112,7 @@ body {
   cursor: pointer;
 }
 
-#start:hover {
-  filter: brightness(1.15);
-}
+#start:hover { filter: brightness(1.15); }
 
 .task-buttons {
   display: flex;
@@ -183,7 +163,7 @@ body {
   top: 100px;
   left: 150px;
   width: min(650px, calc(100vw - 30px));
-  height: min(440px, calc(100vh - 65px));
+  height: min(440px, calc(100dvh - 65px));
   min-width: 280px;
   min-height: 200px;
   display: flex;
@@ -195,9 +175,7 @@ body {
   overflow: hidden;
 }
 
-.window.hidden {
-  display: none;
-}
+.window.hidden { display: none; }
 
 .titlebar {
   height: 30px;
@@ -209,7 +187,7 @@ body {
   color: white;
   font-size: 13px;
   font-weight: bold;
-  background: linear-gradient(90deg, #0058e6, #3b91ff, #0055d8);
+  background: linear-gradient(90deg,#0058e6,#3b91ff,#0055d8);
   cursor: move;
 }
 
@@ -232,11 +210,11 @@ body {
   color: white;
   font-weight: bold;
   cursor: pointer;
-  background: linear-gradient(#78baff, #1260d5);
+  background: linear-gradient(#78baff,#1260d5);
 }
 
 .window-controls button.close {
-  background: linear-gradient(#ff9a86, #d42b16);
+  background: linear-gradient(#ff9a86,#d42b16);
 }
 
 .window-body {
@@ -284,7 +262,7 @@ body {
 .file-area {
   padding: 15px;
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(95px, 1fr));
+  grid-template-columns: repeat(auto-fill,minmax(95px,1fr));
   gap: 12px;
 }
 
@@ -306,9 +284,7 @@ body {
   border: 1px solid #9cc8f4;
 }
 
-.file-item .file-emoji {
-  font-size: 32px;
-}
+.file-item .file-emoji { font-size: 32px; }
 
 .explorer-status {
   height: 23px;
@@ -371,16 +347,14 @@ body {
 }
 
 .start-header {
-  background: linear-gradient(#4d9be9, #1759b6);
+  background: linear-gradient(#4d9be9,#1759b6);
   color: white;
   padding: 14px;
   font-weight: bold;
   font-size: 16px;
 }
 
-.start-content {
-  padding: 10px;
-}
+.start-content { padding: 10px; }
 
 .start-item {
   padding: 10px;
@@ -388,12 +362,10 @@ body {
   font-size: 13px;
 }
 
-.start-item:hover {
-  background: #cce5ff;
-}
+.start-item:hover { background: #cce5ff; }
 
 .start-footer {
-  background: linear-gradient(#438fe1, #1455ad);
+  background: linear-gradient(#438fe1,#1455ad);
   padding: 10px;
   text-align: right;
   color: white;
@@ -402,17 +374,15 @@ body {
 
 /* RESPONSIVE */
 
-@media(max-width: 500px) {
+@media(max-width:500px) {
   .window {
     left: 10px !important;
     top: 45px !important;
     width: calc(100vw - 20px);
-    height: calc(100vh - 95px);
+    height: calc(100dvh - 95px);
   }
 
-  .desktop-icons {
-    gap: 12px;
-  }
+  .desktop-icons { gap: 12px; }
 }
 </style>
 </head>
@@ -420,9 +390,6 @@ body {
 <body>
 
 <div id="desktop">
-
-  <div class="hill"></div>
-  <div class="hill second"></div>
 
   <!-- DESKTOP SHORTCUTS -->
 
@@ -445,9 +412,7 @@ body {
   <div class="window hidden" id="documentsWindow">
 
     <div class="titlebar">
-      <div class="window-title">
-        📁 Documents
-      </div>
+      <div class="window-title">📁 Documents</div>
 
       <div class="window-controls">
         <button onclick="minimizeWindow('documentsWindow')">_</button>
@@ -509,9 +474,7 @@ body {
   <div class="window hidden" id="terminalWindow">
 
     <div class="titlebar">
-      <div class="window-title">
-        ⌨ Terminal
-      </div>
+      <div class="window-title">⌨ Terminal</div>
 
       <div class="window-controls">
         <button onclick="minimizeWindow('terminalWindow')">_</button>
@@ -645,7 +608,7 @@ function maximizeWindow(id) {
     win.style.top = "0";
     win.style.left = "0";
     win.style.width = "100vw";
-    win.style.height = "calc(100vh - 36px)";
+    win.style.height = "calc(100dvh - 36px)";
     win.dataset.maximized = "true";
   }
 
