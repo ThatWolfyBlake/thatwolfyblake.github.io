@@ -142,6 +142,42 @@ nav button.active {
   margin: -6px 0 22px;
 }
 
+/* HOLIDAY EVENT BUTTON */
+
+.event-button-wrap {
+  display: flex;
+  justify-content: center;
+  margin: 0 0 24px;
+}
+
+.event-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 11px 24px;
+  border: 1px solid var(--orange);
+  border-radius: 10px;
+  background: linear-gradient(135deg, var(--orange), var(--gold));
+  color: #281006;
+  font-size: .9rem;
+  font-weight: 850;
+  text-decoration: none;
+  transition: .2s;
+  box-shadow: 0 0 18px #ff9b3222;
+}
+
+.event-button:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 5px 22px #ff9b3244;
+}
+
+.event-button:focus-visible {
+  outline: 2px solid var(--cream);
+  outline-offset: 4px;
+}
+
+/* TOON GRID */
+
 .grid {
   display: grid;
   grid-template-columns: repeat(3, minmax(0, 1fr));
@@ -533,6 +569,14 @@ const descriptions = {
 
 };
 
+/* HOLIDAY EVENT LINKS */
+
+const eventLinks = {
+  Hallow: "Hallow",
+  EggHunter: "EggHunt",
+  Gifter: "Gifting"
+};
+
 const grid = document.getElementById("toonGrid");
 const title = document.getElementById("categoryTitle");
 const description = document.getElementById("categoryDescription");
@@ -542,6 +586,30 @@ function slugify(name) {
   return name.toLowerCase()
     .replace(/[^a-z0-9]+/g, "-")
     .replace(/^-|-$/g, "");
+}
+
+/* CREATE HOLIDAY EVENT BUTTON */
+
+function createEventButton(category) {
+
+  const eventName = eventLinks[category];
+
+  if (!eventName) return null;
+
+  const wrapper = document.createElement("div");
+  wrapper.className = "event-button-wrap";
+
+  const button = document.createElement("a");
+  button.className = "event-button";
+  button.textContent = "Check Event";
+
+  button.href =
+    "https://thatwolfyblake.github.io/lirons-museum/event-page.html?="
+    + encodeURIComponent(eventName);
+
+  wrapper.appendChild(button);
+
+  return wrapper;
 }
 
 function getCharacterClasses(name, category) {
@@ -644,6 +712,22 @@ function render(category) {
   description.textContent = descriptions[category] || "";
 
   grid.innerHTML = "";
+
+  /* REMOVE PREVIOUS EVENT BUTTON */
+
+  const oldEventButton = document.querySelector(".event-button-wrap");
+
+  if (oldEventButton) {
+    oldEventButton.remove();
+  }
+
+  /* ADD EVENT BUTTON WHEN A HOLIDAY CATEGORY IS SELECTED */
+
+  const eventButton = createEventButton(category);
+
+  if (eventButton) {
+    grid.before(eventButton);
+  }
 
   if (category === "Humans") {
 
