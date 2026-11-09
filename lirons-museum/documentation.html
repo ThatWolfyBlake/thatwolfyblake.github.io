@@ -1,0 +1,878 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Windows XP Desktop</title>
+
+<style>
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  overflow: hidden;
+  font-family: Tahoma, Arial, sans-serif;
+  user-select: none;
+  background: #5da9e8;
+}
+
+/* DESKTOP */
+
+#desktop {
+  width: 100vw;
+  height: 100vh;
+  position: relative;
+  overflow: hidden;
+
+  /* Bliss-inspired wallpaper */
+  background:
+    radial-gradient(ellipse at 75% 13%, #fff 0%, transparent 20%),
+    linear-gradient(#1687d0 0%, #73c5f5 48%, #b7e5f5 62%, #7dbd35 63%);
+}
+
+/* Rolling green hills */
+.hill {
+  position: absolute;
+  width: 150%;
+  height: 55%;
+  bottom: 28px;
+  left: -20%;
+  border-radius: 50% 50% 0 0;
+  transform: rotate(-7deg);
+  background: linear-gradient(160deg, #a6d94b, #4f9b20 65%, #26731a);
+}
+
+.hill.second {
+  width: 130%;
+  height: 45%;
+  left: 35%;
+  bottom: 25px;
+  transform: rotate(12deg);
+  background: linear-gradient(160deg, #8fcf39, #3f8d20);
+}
+
+/* DESKTOP ICONS */
+
+.desktop-icons {
+  position: absolute;
+  top: 15px;
+  left: 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 22px;
+}
+
+.desktop-icon {
+  width: 85px;
+  min-height: 85px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 5px;
+  color: white;
+  font-size: 12px;
+  text-align: center;
+  text-shadow: 1px 1px 3px black;
+  cursor: pointer;
+  border: 1px solid transparent;
+  padding: 5px;
+}
+
+.desktop-icon:hover {
+  background: rgba(30, 110, 210, .3);
+  border: 1px dotted white;
+}
+
+.desktop-icon img {
+  width: 42px;
+  height: 42px;
+  object-fit: contain;
+  filter: drop-shadow(1px 2px 2px #333);
+}
+
+/* TASKBAR */
+
+#taskbar {
+  height: 36px;
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  z-index: 9999;
+
+  background: linear-gradient(
+    #3989e7,
+    #1764c5 45%,
+    #1455b4
+  );
+
+  border-top: 1px solid #70baff;
+  display: flex;
+  align-items: center;
+  box-shadow: 0 -2px 5px rgba(0,0,0,.2);
+}
+
+#start {
+  height: 36px;
+  width: 110px;
+  border: none;
+  border-radius: 0 15px 15px 0;
+  background: linear-gradient(#62c44b, #278c20);
+  color: white;
+  font-size: 17px;
+  font-weight: bold;
+  font-style: italic;
+  text-shadow: 1px 2px 2px #174c12;
+  box-shadow: inset 0 1px 3px #a8f58c;
+  cursor: pointer;
+}
+
+#start:hover {
+  filter: brightness(1.15);
+}
+
+.task-buttons {
+  display: flex;
+  gap: 4px;
+  padding-left: 8px;
+  flex: 1;
+  overflow: hidden;
+}
+
+.task-button {
+  min-width: 120px;
+  max-width: 180px;
+  height: 27px;
+  border: 1px solid #1552a1;
+  border-radius: 3px;
+  color: white;
+  background: linear-gradient(#4389d7, #2463b4);
+  text-align: left;
+  padding: 3px 9px;
+  cursor: pointer;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+.task-button.active {
+  background: linear-gradient(#174a9b, #2867b9);
+  box-shadow: inset 1px 1px 3px #103b78;
+}
+
+.tray {
+  height: 36px;
+  min-width: 85px;
+  padding: 0 12px;
+  background: linear-gradient(#1889e9, #0962bd);
+  border-left: 1px solid #5bb6ff;
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 12px;
+}
+
+/* WINDOWS */
+
+.window {
+  position: absolute;
+  top: 100px;
+  left: 150px;
+  width: min(650px, calc(100vw - 30px));
+  height: min(440px, calc(100vh - 65px));
+  min-width: 280px;
+  min-height: 200px;
+  display: flex;
+  flex-direction: column;
+  background: #ece9d8;
+  border: 1px solid #003c9d;
+  border-radius: 8px 8px 3px 3px;
+  box-shadow: 3px 5px 15px rgba(0,0,0,.4);
+  overflow: hidden;
+}
+
+.window.hidden {
+  display: none;
+}
+
+.titlebar {
+  height: 30px;
+  min-height: 30px;
+  padding: 3px 5px 3px 9px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  color: white;
+  font-size: 13px;
+  font-weight: bold;
+  background: linear-gradient(90deg, #0058e6, #3b91ff, #0055d8);
+  cursor: move;
+}
+
+.window-title {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+}
+
+.window-controls {
+  display: flex;
+  gap: 3px;
+}
+
+.window-controls button {
+  width: 22px;
+  height: 21px;
+  border: 1px solid white;
+  border-radius: 3px;
+  color: white;
+  font-weight: bold;
+  cursor: pointer;
+  background: linear-gradient(#78baff, #1260d5);
+}
+
+.window-controls button.close {
+  background: linear-gradient(#ff9a86, #d42b16);
+}
+
+.window-body {
+  flex: 1;
+  min-height: 0;
+  overflow: auto;
+  background: white;
+  color: #222;
+}
+
+/* DOCUMENTS */
+
+.explorer-menu {
+  height: 26px;
+  padding: 5px 9px;
+  font-size: 12px;
+  background: #f3f0e5;
+  border-bottom: 1px solid #ddd;
+}
+
+.explorer-toolbar {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  height: 39px;
+  padding: 5px 10px;
+  background: #f7f6ef;
+  border-bottom: 1px solid #ddd;
+}
+
+.explorer-toolbar button {
+  border: 1px solid #c8c8c8;
+  background: #fff;
+  padding: 5px 10px;
+  cursor: pointer;
+}
+
+.address-bar {
+  padding: 7px 10px;
+  background: #f3f0e5;
+  border-bottom: 1px solid #ddd;
+  font-size: 12px;
+}
+
+.file-area {
+  padding: 15px;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(95px, 1fr));
+  gap: 12px;
+}
+
+.file-item {
+  min-height: 85px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 7px;
+  font-size: 12px;
+  text-align: center;
+  cursor: pointer;
+  border: 1px solid transparent;
+}
+
+.file-item:hover {
+  background: #e7f2ff;
+  border: 1px solid #9cc8f4;
+}
+
+.file-item .file-emoji {
+  font-size: 32px;
+}
+
+.explorer-status {
+  height: 23px;
+  padding: 4px 10px;
+  background: #f3f0e5;
+  border-top: 1px solid #ddd;
+  font-size: 11px;
+}
+
+/* TERMINAL */
+
+#terminalWindow .window-body {
+  background: #090909;
+  color: #35ff35;
+  font-family: Consolas, monospace;
+  font-size: 13px;
+  padding: 12px;
+  display: flex;
+  flex-direction: column;
+}
+
+#terminalOutput {
+  flex: 1;
+  overflow-y: auto;
+  white-space: pre-wrap;
+  line-height: 1.5;
+}
+
+.terminal-input-line {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin-top: 8px;
+}
+
+#terminalInput {
+  flex: 1;
+  min-width: 0;
+  color: #35ff35;
+  background: transparent;
+  border: none;
+  outline: none;
+  font: inherit;
+}
+
+/* START MENU */
+
+#startMenu {
+  display: none;
+  position: absolute;
+  bottom: 36px;
+  left: 0;
+  width: 290px;
+  background: #e8e8e8;
+  border: 2px solid #1762b8;
+  border-radius: 7px 7px 0 0;
+  box-shadow: 3px -3px 10px rgba(0,0,0,.3);
+  z-index: 10000;
+  overflow: hidden;
+}
+
+.start-header {
+  background: linear-gradient(#4d9be9, #1759b6);
+  color: white;
+  padding: 14px;
+  font-weight: bold;
+  font-size: 16px;
+}
+
+.start-content {
+  padding: 10px;
+}
+
+.start-item {
+  padding: 10px;
+  cursor: pointer;
+  font-size: 13px;
+}
+
+.start-item:hover {
+  background: #cce5ff;
+}
+
+.start-footer {
+  background: linear-gradient(#438fe1, #1455ad);
+  padding: 10px;
+  text-align: right;
+  color: white;
+  font-size: 12px;
+}
+
+/* RESPONSIVE */
+
+@media(max-width: 500px) {
+  .window {
+    left: 10px !important;
+    top: 45px !important;
+    width: calc(100vw - 20px);
+    height: calc(100vh - 95px);
+  }
+
+  .desktop-icons {
+    gap: 12px;
+  }
+}
+</style>
+</head>
+
+<body>
+
+<div id="desktop">
+
+  <div class="hill"></div>
+  <div class="hill second"></div>
+
+  <!-- DESKTOP SHORTCUTS -->
+
+  <div class="desktop-icons">
+
+    <div class="desktop-icon" onclick="openWindow('documentsWindow')">
+      <img src="https://thatwolfyblake.github.io/lirons-museum/assets/desktop/file-icon.png">
+      <span>Documents</span>
+    </div>
+
+    <div class="desktop-icon" onclick="openWindow('terminalWindow')">
+      <img src="https://thatwolfyblake.github.io/lirons-museum/assets/desktop/terminal-icon.png">
+      <span>Terminal</span>
+    </div>
+
+  </div>
+
+  <!-- DOCUMENTS WINDOW -->
+
+  <div class="window hidden" id="documentsWindow">
+
+    <div class="titlebar">
+      <div class="window-title">
+        📁 Documents
+      </div>
+
+      <div class="window-controls">
+        <button onclick="minimizeWindow('documentsWindow')">_</button>
+        <button onclick="maximizeWindow('documentsWindow')">□</button>
+        <button class="close" onclick="closeWindow('documentsWindow')">X</button>
+      </div>
+    </div>
+
+    <div class="window-body">
+
+      <div class="explorer-menu">
+        File &nbsp;&nbsp; Edit &nbsp;&nbsp; View &nbsp;&nbsp; Favorites &nbsp;&nbsp; Tools &nbsp;&nbsp; Help
+      </div>
+
+      <div class="explorer-toolbar">
+        <button onclick="historyBack()">← Back</button>
+        <button onclick="showDocuments()">↑ Up</button>
+        <button onclick="showDocuments()">Folders</button>
+      </div>
+
+      <div class="address-bar">
+        Address: <span id="currentPath">C:\Documents</span>
+      </div>
+
+      <div class="file-area" id="fileArea">
+
+        <div class="file-item" onclick="openFolder('My Pictures')">
+          <span class="file-emoji">📁</span>
+          My Pictures
+        </div>
+
+        <div class="file-item" onclick="openFolder('My Music')">
+          <span class="file-emoji">📁</span>
+          My Music
+        </div>
+
+        <div class="file-item" onclick="openFolder('My Projects')">
+          <span class="file-emoji">📁</span>
+          My Projects
+        </div>
+
+        <div class="file-item" onclick="openFile('Welcome.txt')">
+          <span class="file-emoji">📄</span>
+          Welcome.txt
+        </div>
+
+      </div>
+
+    </div>
+
+    <div class="explorer-status" id="explorerStatus">
+      4 objects
+    </div>
+
+  </div>
+
+  <!-- TERMINAL WINDOW -->
+
+  <div class="window hidden" id="terminalWindow">
+
+    <div class="titlebar">
+      <div class="window-title">
+        ⌨ Terminal
+      </div>
+
+      <div class="window-controls">
+        <button onclick="minimizeWindow('terminalWindow')">_</button>
+        <button onclick="maximizeWindow('terminalWindow')">□</button>
+        <button class="close" onclick="closeWindow('terminalWindow')">X</button>
+      </div>
+    </div>
+
+    <div class="window-body">
+
+      <div id="terminalOutput">Microsoft Windows XP [Version 5.1.2600]
+
+Liron's Museum Terminal
+Copyright (C) Liron's Museum.
+
+Type "help" to see available commands.
+
+</div>
+
+      <div class="terminal-input-line">
+        <span>C:\Museum&gt;</span>
+        <input id="terminalInput" autocomplete="off" spellcheck="false">
+      </div>
+
+    </div>
+
+  </div>
+
+  <!-- START MENU -->
+
+  <div id="startMenu">
+
+    <div class="start-header">
+      🪟 Liron's Museum
+    </div>
+
+    <div class="start-content">
+
+      <div class="start-item" onclick="openWindow('documentsWindow'); toggleStart()">
+        📁 Documents
+      </div>
+
+      <div class="start-item" onclick="openWindow('terminalWindow'); toggleStart()">
+        ⌨ Terminal
+      </div>
+
+      <div class="start-item" onclick="location.reload()">
+        🔄 Restart Desktop
+      </div>
+
+    </div>
+
+    <div class="start-footer">
+      Log Off &nbsp;&nbsp; Turn Off Computer
+    </div>
+
+  </div>
+
+  <!-- TASKBAR -->
+
+  <div id="taskbar">
+
+    <button id="start" onclick="toggleStart()">
+      🪟 start
+    </button>
+
+    <div class="task-buttons" id="taskButtons"></div>
+
+    <div class="tray">
+      <span id="clock">00:00</span>
+    </div>
+
+  </div>
+
+</div>
+
+<script>
+let highestZ = 10;
+let activeWindow = null;
+
+const windowNames = {
+  documentsWindow: "Documents",
+  terminalWindow: "Terminal"
+};
+
+function openWindow(id) {
+  const win = document.getElementById(id);
+
+  win.classList.remove("hidden");
+  win.style.zIndex = ++highestZ;
+
+  activeWindow = id;
+  updateTaskbar();
+
+  if(id === "terminalWindow") {
+    setTimeout(() => document.getElementById("terminalInput").focus(), 50);
+  }
+}
+
+function closeWindow(id) {
+  document.getElementById(id).classList.add("hidden");
+
+  if(activeWindow === id) activeWindow = null;
+
+  updateTaskbar();
+}
+
+function minimizeWindow(id) {
+  document.getElementById(id).classList.add("hidden");
+
+  if(activeWindow === id) activeWindow = null;
+
+  updateTaskbar();
+}
+
+function maximizeWindow(id) {
+  const win = document.getElementById(id);
+
+  if(win.dataset.maximized === "true") {
+    win.style.top = win.dataset.oldTop;
+    win.style.left = win.dataset.oldLeft;
+    win.style.width = win.dataset.oldWidth;
+    win.style.height = win.dataset.oldHeight;
+    win.dataset.maximized = "false";
+  } else {
+    win.dataset.oldTop = win.style.top || win.offsetTop + "px";
+    win.dataset.oldLeft = win.style.left || win.offsetLeft + "px";
+    win.dataset.oldWidth = win.style.width || win.offsetWidth + "px";
+    win.dataset.oldHeight = win.style.height || win.offsetHeight + "px";
+
+    win.style.top = "0";
+    win.style.left = "0";
+    win.style.width = "100vw";
+    win.style.height = "calc(100vh - 36px)";
+    win.dataset.maximized = "true";
+  }
+
+  win.style.zIndex = ++highestZ;
+}
+
+function updateTaskbar() {
+  const container = document.getElementById("taskButtons");
+  container.innerHTML = "";
+
+  Object.keys(windowNames).forEach(id => {
+    const win = document.getElementById(id);
+
+    if(!win.classList.contains("hidden")) {
+      const btn = document.createElement("button");
+
+      btn.className = "task-button" +
+        (activeWindow === id ? " active" : "");
+
+      btn.textContent = windowNames[id];
+
+      btn.onclick = () => {
+        if(activeWindow === id) {
+          minimizeWindow(id);
+        } else {
+          openWindow(id);
+        }
+      };
+
+      container.appendChild(btn);
+    }
+  });
+}
+
+/* WINDOW DRAGGING */
+
+document.querySelectorAll(".titlebar").forEach(bar => {
+  bar.addEventListener("pointerdown", e => {
+    if(e.target.tagName === "BUTTON") return;
+
+    const win = bar.parentElement;
+
+    if(win.dataset.maximized === "true") return;
+
+    win.style.zIndex = ++highestZ;
+    activeWindow = win.id;
+    updateTaskbar();
+
+    const startX = e.clientX;
+    const startY = e.clientY;
+    const startLeft = win.offsetLeft;
+    const startTop = win.offsetTop;
+
+    function move(ev) {
+      win.style.left = startLeft + ev.clientX - startX + "px";
+      win.style.top = startTop + ev.clientY - startY + "px";
+    }
+
+    function stop() {
+      document.removeEventListener("pointermove", move);
+      document.removeEventListener("pointerup", stop);
+    }
+
+    document.addEventListener("pointermove", move);
+    document.addEventListener("pointerup", stop);
+  });
+});
+
+/* START MENU */
+
+function toggleStart() {
+  const menu = document.getElementById("startMenu");
+
+  menu.style.display =
+    menu.style.display === "block" ? "none" : "block";
+}
+
+/* DOCUMENTS */
+
+function showDocuments() {
+  document.getElementById("currentPath").textContent =
+    "C:\\Documents";
+
+  document.getElementById("fileArea").innerHTML = `
+    <div class="file-item" onclick="openFolder('My Pictures')">
+      <span class="file-emoji">📁</span>My Pictures
+    </div>
+    <div class="file-item" onclick="openFolder('My Music')">
+      <span class="file-emoji">📁</span>My Music
+    </div>
+    <div class="file-item" onclick="openFolder('My Projects')">
+      <span class="file-emoji">📁</span>My Projects
+    </div>
+    <div class="file-item" onclick="openFile('Welcome.txt')">
+      <span class="file-emoji">📄</span>Welcome.txt
+    </div>
+  `;
+
+  document.getElementById("explorerStatus").textContent =
+    "4 objects";
+}
+
+function openFolder(name) {
+  document.getElementById("currentPath").textContent =
+    "C:\\Documents\\" + name;
+
+  document.getElementById("fileArea").innerHTML = `
+    <div class="file-item" onclick="showDocuments()">
+      <span class="file-emoji">📁</span>Back to Documents
+    </div>
+  `;
+
+  document.getElementById("explorerStatus").textContent =
+    "This folder is empty";
+}
+
+function historyBack() {
+  showDocuments();
+}
+
+function openFile(name) {
+  alert(
+    name + "\n\nWelcome to Liron's Museum!\n\nThis is a sample desktop file."
+  );
+}
+
+/* TERMINAL */
+
+const terminalOutput = document.getElementById("terminalOutput");
+const terminalInput = document.getElementById("terminalInput");
+
+function printTerminal(text) {
+  terminalOutput.textContent += text + "\n";
+  terminalOutput.scrollTop = terminalOutput.scrollHeight;
+}
+
+terminalInput.addEventListener("keydown", e => {
+  if(e.key !== "Enter") return;
+
+  const command = terminalInput.value.trim();
+  terminalInput.value = "";
+
+  printTerminal("C:\\Museum> " + command);
+
+  const parts = command.split(" ");
+  const cmd = parts[0].toLowerCase();
+  const arg = parts.slice(1).join(" ");
+
+  switch(cmd) {
+
+    case "help":
+      printTerminal(
+`Available commands:
+
+help       - Show commands
+clear      - Clear terminal
+echo       - Display a message
+date       - Show current date
+time       - Show current time
+whoami     - Show current user
+dir        - List desktop applications
+ver        - Show system version
+exit       - Close terminal`
+      );
+      break;
+
+    case "clear":
+      terminalOutput.textContent = "";
+      break;
+
+    case "echo":
+      printTerminal(arg);
+      break;
+
+    case "date":
+      printTerminal(new Date().toLocaleDateString());
+      break;
+
+    case "time":
+      printTerminal(new Date().toLocaleTimeString());
+      break;
+
+    case "whoami":
+      printTerminal("LironsMuseum\\Guest");
+      break;
+
+    case "dir":
+      printTerminal(
+`Directory of C:\\Museum
+
+<DIR> Documents
+<DIR> Terminal
+       desktop.html`
+      );
+      break;
+
+    case "ver":
+      printTerminal("Microsoft Windows XP [Version 5.1.2600]");
+      break;
+
+    case "exit":
+      closeWindow("terminalWindow");
+      break;
+
+    case "":
+      break;
+
+    default:
+      printTerminal(
+        "'" + cmd + "' is not recognized as an internal or external command."
+      );
+  }
+});
+
+/* CLOCK */
+
+function updateClock() {
+  document.getElementById("clock").textContent =
+    new Date().toLocaleTimeString([], {
+      hour: "2-digit",
+      minute: "2-digit"
+    });
+}
+
+updateClock();
+setInterval(updateClock, 1000);
+</script>
+
+</body>
+</html>
