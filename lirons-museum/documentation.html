@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta name="theme-color" content="#245edb">
-<meta name="application-version" content="1.1.0">
+<meta name="application-version" content="1.2.0">
 <title>Investigator Desktop</title>
 <style>
 *{box-sizing:border-box}
@@ -74,10 +74,14 @@ body{margin:0;overflow:hidden;font-family:Tahoma,Arial,sans-serif;user-select:no
 .user-file-row span:nth-child(2){flex:1;overflow-wrap:anywhere}
 .editor-input{width:100%;padding:8px;border:1px solid #999;font:13px Tahoma;margin-bottom:8px}
 #userFileEditor{width:100%;height:calc(100% - 90px);min-height:150px;resize:none;border:1px solid #999;padding:10px;font:14px "Courier New";user-select:text}
-#paintCanvas{display:block;width:100%;height:100%;min-height:230px;background:white;touch-action:none;cursor:crosshair}
-.paint-layout{height:100%;display:flex;flex-direction:column}
-.paint-tools{display:flex;gap:7px;align-items:center;flex-wrap:wrap;padding:8px;background:#eee}
+
+/* PAINT FIX */
+#paintCanvas{display:block;width:100%;height:100%;min-height:230px;flex:1;background:white;touch-action:none;cursor:crosshair}
+.paint-layout{height:100%;display:flex;flex-direction:column;overflow:hidden}
+.paint-tools{display:flex;gap:7px;align-items:center;flex-wrap:wrap;padding:8px;background:#eee;flex-shrink:0}
 .paint-tools input[type=color]{width:35px;height:30px;padding:0;border:0}
+
+/* MINESWEEPER */
 #mineGrid{display:grid;gap:3px;justify-content:center;margin:15px auto}
 .mine-cell{width:30px;height:30px;border:2px outset #eee;background:#c0c0c0;font-weight:bold;font-size:14px;cursor:pointer;padding:0}
 .mine-cell.revealed{border:1px solid #aaa;background:#e5e5e5;cursor:default}
@@ -86,12 +90,41 @@ body{margin:0;overflow:hidden;font-family:Tahoma,Arial,sans-serif;user-select:no
 .mine-controls{text-align:center;padding:10px}
 .changelog-entry{border-bottom:1px solid #ddd;padding:10px 4px;font-size:13px;line-height:1.5}
 .changelog-entry strong{color:#174f9a}
+
+/* TOONCHAT */
+#toonChatWindow{width:min(760px,calc(100vw - 25px));height:min(540px,calc(100dvh - 65px));background:#202127;border-color:#111}
+#toonChatWindow .titlebar{background:linear-gradient(90deg,#33343d,#50515d,#33343d)}
+#toonChatWindow .window-body{background:#24252b;color:#eee;display:flex;min-height:0;overflow:hidden}
+.chat-sidebar{width:210px;min-width:135px;background:#1c1d22;border-right:1px solid #111;display:flex;flex-direction:column}
+.chat-sidebar-heading{padding:17px 13px;font-weight:bold;font-size:14px;border-bottom:1px solid #111}
+.chat-section-label{padding:16px 12px 7px;font-size:10px;color:#999;font-weight:bold;letter-spacing:1px}
+.chat-contact{padding:10px 12px;display:flex;align-items:center;gap:9px;cursor:pointer;color:#ccc;font-size:12px}
+.chat-contact:hover,.chat-contact.selected{background:#353741;color:white}
+.chat-avatar{width:34px;height:34px;min-width:34px;border-radius:50%;background:#090909;display:grid;place-items:center;color:white;font-size:11px;font-weight:bold}
+.chat-avatar.investigator{background:#000;border:1px solid #555}
+.chat-main{flex:1;min-width:0;display:flex;flex-direction:column;background:#292a31}
+.chat-topbar{height:55px;min-height:55px;border-bottom:1px solid #17181d;display:flex;align-items:center;gap:10px;padding:0 15px;font-size:14px;font-weight:bold}
+.chat-messages{flex:1;min-height:0;overflow-y:auto;padding:15px 12px;display:flex;flex-direction:column;gap:15px}
+.chat-message{display:flex;gap:10px;align-items:flex-start}
+.chat-message-content{min-width:0}
+.chat-message-name{font-size:12px;font-weight:bold;color:#fff;margin-bottom:5px}
+.chat-message-name small{font-weight:normal;color:#999;margin-left:6px}
+.chat-message-text{font-size:13px;color:#ddd;line-height:1.5;white-space:pre-wrap;overflow-wrap:anywhere}
+.chat-deleted{font-size:11px;color:#888;font-style:italic;border-left:3px solid #555;padding:5px 9px;margin-bottom:4px}
+.chat-account{border-top:1px solid #111;background:#17181d;padding:10px;display:flex;align-items:center;gap:9px}
+.chat-account-name{font-size:12px;font-weight:bold}
+.chat-account-status{font-size:10px;color:#999;margin-top:3px}
+.chat-empty{margin:auto;text-align:center;color:#999;font-size:13px;padding:20px}
 @media(max-width:500px){
 .window{left:10px!important;top:42px!important;width:calc(100vw - 20px);height:calc(100dvh - 95px)}
 .desktop-icons{gap:8px}
 .tray{min-width:90px;padding-left:4px;padding-right:4px}
 #textWindow{width:calc(100vw - 20px)}
 .mine-cell{width:27px;height:27px}
+.chat-sidebar{width:125px;min-width:115px}
+.chat-contact{padding:9px 6px;gap:6px;font-size:11px}
+.chat-avatar{width:29px;height:29px;min-width:29px}
+.chat-messages{padding:10px 7px}
 }
 </style>
 </head>
@@ -179,18 +212,43 @@ Type "help" to see available commands.
  <div class="window-body">
   <div class="app-content">
    <h2 style="margin-top:0">Investigator Desktop</h2>
-   <p><strong>Version 1.1.0</strong> — Feature update</p>
-   <div class="changelog-entry"><strong>Desktop environment</strong><br>Added a Windows XP-inspired desktop, Bliss wallpaper, desktop icons, movable windows, taskbar, Start menu, live clock, and window controls.</div>
+   <p><strong>Version 1.2.0</strong> — Feature update</p>
+   <div class="changelog-entry"><strong>Paint</strong><br>Fixed the drawing canvas sizing issue. Paint now initializes when opened, supports touch and mouse drawing, and preserves artwork when the window is resized.</div>
+   <div class="changelog-entry"><strong>ToonChat™ — secret app</strong><br>Added a hidden direct-message application accessible through the Terminal command <code>execute toonchat</code>. Includes DMs with LunarisTheTV and BluyBlerry01.</div>
+   <div class="changelog-entry"><strong>Desktop environment</strong><br>Windows XP-inspired desktop, Bliss wallpaper, desktop icons, movable windows, taskbar, Start menu, live clock, and window controls.</div>
    <div class="changelog-entry"><strong>Documents</strong><br>Added a Documents explorer with Research and Documentation folders. Research files are protected. Added the Not Canon documentation location and its disclaimer before opening.</div>
-   <div class="changelog-entry"><strong>Terminal</strong><br>Added the Investigator Terminal with commands for help, clear, echo, date, time, whoami, dir, cd, ver, and exit.</div>
-   <div class="changelog-entry"><strong>User files — new</strong><br>Create, open, edit, rename, and delete personal text files. Files are stored in this browser using local storage.</div>
-   <div class="changelog-entry"><strong>Minesweeper — new</strong><br>Added Beginner, Intermediate, and Expert game modes, mine flags, a timer-free board, win/loss detection, and restart.</div>
-   <div class="changelog-entry"><strong>Paint — new</strong><br>Added a drawing canvas with selectable colors, adjustable brush size, eraser, clear canvas, and image saving.</div>
-   <div class="changelog-entry"><strong>Changelog — new</strong><br>Added this application to document public desktop features and updates.</div>
-   <div class="changelog-entry"><strong>Start menu</strong><br>Added shortcuts for the desktop apps, Restart Desktop, and Return to Home.</div>
+   <div class="changelog-entry"><strong>Terminal</strong><br>Investigator Terminal with help, clear, echo, date, time, whoami, dir, cd, ver, exit, and execute commands.</div>
+   <div class="changelog-entry"><strong>User files</strong><br>Create, open, edit, rename, and delete personal text files. Files are stored in this browser using local storage.</div>
+   <div class="changelog-entry"><strong>Minesweeper</strong><br>Beginner, Intermediate, and Expert game modes, mine flags, win/loss detection, and restart.</div>
    <div class="changelog-entry"><strong>Privacy and content</strong><br>Protected research material and secret story content are intentionally not reproduced in this changelog.</div>
    <p style="font-size:11px;color:#666">The changelog describes public features of this desktop project. It does not disclose protected files or hidden story information.</p>
   </div>
+ </div>
+</div>
+
+<!-- SECRET APP: TOONCHAT -->
+<div class="window hidden" id="toonChatWindow">
+ <div class="titlebar"><div class="window-title">💬 ToonChat™</div><div class="window-controls"><button onclick="minimizeWindow('toonChatWindow')">_</button><button onclick="maximizeWindow('toonChatWindow')">□</button><button class="close" onclick="closeWindow('toonChatWindow')">X</button></div></div>
+ <div class="window-body">
+  <aside class="chat-sidebar">
+   <div class="chat-sidebar-heading">ToonChat™</div>
+   <div class="chat-section-label">DIRECT MESSAGES</div>
+   <div class="chat-contact selected" id="contact-lunaris" onclick="showChat('lunaris')">
+    <div class="chat-avatar">L</div><span>LunarisTheTV</span>
+   </div>
+   <div class="chat-contact" id="contact-bluy" onclick="showChat('bluy')">
+    <div class="chat-avatar">B</div><span>BluyBlerry01</span>
+   </div>
+   <div style="flex:1"></div>
+   <div class="chat-account">
+    <div class="chat-avatar investigator"></div>
+    <div><div class="chat-account-name">Investigator</div><div class="chat-account-status">Online</div></div>
+   </div>
+  </aside>
+  <main class="chat-main">
+   <div class="chat-topbar"><div class="chat-avatar" id="chatHeaderAvatar">L</div><span id="chatHeaderName">LunarisTheTV</span></div>
+   <div class="chat-messages" id="chatMessages"></div>
+  </main>
  </div>
 </div>
 
@@ -208,7 +266,7 @@ Type "help" to see available commands.
   <div class="start-item" onclick="location.href='https://thatwolfyblake.github.io/lirons-museum'">🏠 Return to Home</div>
   <div class="start-item" onclick="location.reload()">🔄 Restart Desktop</div>
  </div>
- <div class="start-footer">Version 1.1.0</div>
+ <div class="start-footer">Version 1.2.0</div>
 </div>
 
 <!-- DIALOG -->
@@ -230,11 +288,12 @@ Type "help" to see available commands.
 
 <script>
 let highestZ=10,activeWindow=null,currentFolder="",folderHistory=[],pendingDialogAction=null;
-const SYSTEM_VERSION="1.1.0",SYSTEM_DATE="10/06/2001",TERMINAL_DIRECTORY="C:\\Investigator";
+const SYSTEM_VERSION="1.2.0",SYSTEM_DATE="10/06/2001",TERMINAL_DIRECTORY="C:\\Investigator";
 const DISCLAIMER="Not canon, this is only for viewing purposes.";
 const windowNames={
  documentsWindow:"Documents",userFilesWindow:"User files",textWindow:"Notepad",
- terminalWindow:"Terminal",minesWindow:"Minesweeper",paintWindow:"Paint",changelogWindow:"Changelog"
+ terminalWindow:"Terminal",minesWindow:"Minesweeper",paintWindow:"Paint",
+ changelogWindow:"Changelog",toonChatWindow:"ToonChat™"
 };
 
 const fileContents={
@@ -458,6 +517,8 @@ function openWindow(id){
  if(id==="terminalWindow")setTimeout(()=>terminalInput.focus(),50);
  if(id==="userFilesWindow")refreshUserFiles();
  if(id==="minesWindow"&&!mineStarted)newMineGame();
+ if(id==="paintWindow")requestAnimationFrame(()=>resizeCanvas());
+ if(id==="toonChatWindow"&&!activeChat)showChat("lunaris");
 }
 function closeWindow(id){document.getElementById(id).classList.add("hidden");if(activeWindow===id)activeWindow=null;updateTaskbar()}
 function minimizeWindow(id){closeWindow(id)}
@@ -471,6 +532,7 @@ function maximizeWindow(id){
   win.style.top="0";win.style.left="0";win.style.width="100vw";win.style.height="calc(100dvh - 36px)";win.dataset.maximized="true";
  }
  win.style.zIndex=++highestZ;
+ if(win.id==="paintWindow")requestAnimationFrame(resizeCanvas);
 }
 function updateTaskbar(){
  const container=document.getElementById("taskButtons");container.innerHTML="";
@@ -552,7 +614,7 @@ function openFile(name){
  });
 }
 
-/* USER FILES: local browser storage */
+/* USER FILES */
 const USER_FILES_KEY="investigator_user_text_files_v1";
 let editingUserFile=null;
 function getUserFiles(){try{return JSON.parse(localStorage.getItem(USER_FILES_KEY)||"{}")}catch(e){return {}}}
@@ -624,7 +686,10 @@ whoami     - Show current user
 dir        - List directory contents
 cd         - Show current directory
 ver        - Show system version
-exit       - Close terminal`);break;
+execute    - Launch an installed application
+exit       - Close terminal
+
+Example: execute toonchat`);break;
  case "clear":terminalOutput.textContent="";break;
  case "echo":printTerminal(arg);break;
  case "date":printTerminal(SYSTEM_DATE);break;
@@ -642,11 +707,83 @@ exit       - Close terminal`);break;
  case "cd":printTerminal(TERMINAL_DIRECTORY);break;
  case "ver":printTerminal(`Microsoft Windows XP [Version 5.1.2600]
 Investigator Desktop [Version ${SYSTEM_VERSION}]`);break;
+ case "execute":
+  if(arg.toLowerCase()==="toonchat"||arg.toLowerCase()==="toonchat.exe"){
+   printTerminal("Launching ToonChat™...");
+   openWindow("toonChatWindow");
+  }else if(arg===""){
+   printTerminal("Usage: execute (appname)");
+  }else{
+   printTerminal("Application not found: "+arg);
+  }
+  break;
  case "exit":closeWindow("terminalWindow");break;
  case "":break;
  default:printTerminal("'"+cmd+"' is not recognized as an internal or external command.");
  }
 });
+
+/* TOONCHAT */
+let activeChat="lunaris";
+const chatData={
+ lunaris:{
+  name:"LunarisTheTV",
+  avatar:"L",
+  messages:[
+   {sender:"LunarisTheTV",initial:"L",text:"Who is this?"},
+   {sender:"Investigator",initial:"",text:"You know."},
+   {sender:"LunarisTheTV",initial:"L",text:"Oh, its you!"},
+   {sender:"Investigator",initial:"",text:"Yes. Did you get the materials i asked for?"},
+   {sender:"LunarisTheTV",initial:"L",text:"Yep, where do I do meet you to deliver them?"},
+   {sender:"Investigator",initial:"",text:"In the art studio in 1 hour, don't let Randy see me."},
+   {sender:"LunarisTheTV",initial:"L",text:"Okay."}
+  ]
+ },
+ bluy:{
+  name:"BluyBlerry01",
+  avatar:"B",
+  deleted:true,
+  messages:[
+   {sender:"BluyBlerry01",initial:"B",text:"alright, what is it?"},
+   {sender:"Investigator",initial:"",text:"Blyenn, got the files i asked for?"},
+   {sender:"BluyBlerry01",initial:"B",text:"yeah i did."},
+   {sender:"Investigator",initial:"",text:"Where are you?"},
+   {sender:"BluyBlerry01",initial:"B",text:"im at my café, i left the files under the box in the lobby, like you asked."},
+   {sender:"Investigator",initial:"",text:"Thank your for your contribuition, Blyenn."},
+   {sender:"BluyBlerry01",initial:"B",text:"no problem"}
+  ]
+ }
+};
+function showChat(id){
+ if(!chatData[id])return;
+ activeChat=id;
+ const chat=chatData[id];
+ document.getElementById("chatHeaderName").textContent=chat.name;
+ document.getElementById("chatHeaderAvatar").textContent=chat.avatar;
+ document.getElementById("contact-lunaris").classList.toggle("selected",id==="lunaris");
+ document.getElementById("contact-bluy").classList.toggle("selected",id==="bluy");
+ const messages=document.getElementById("chatMessages");
+ messages.innerHTML="";
+ if(chat.deleted){
+  const deleted=document.createElement("div");
+  deleted.className="chat-deleted";
+  deleted.textContent="[History deleted]";
+  messages.appendChild(deleted);
+ }
+ chat.messages.forEach(message=>{
+  const row=document.createElement("div");row.className="chat-message";
+  const avatar=document.createElement("div");avatar.className="chat-avatar"+(message.sender==="Investigator"?" investigator":"");
+  avatar.textContent=message.initial;
+  const content=document.createElement("div");content.className="chat-message-content";
+  const name=document.createElement("div");name.className="chat-message-name";
+  name.textContent=message.sender;
+  const time=document.createElement("small");time.textContent="Direct Message";
+  name.appendChild(time);
+  const text=document.createElement("div");text.className="chat-message-text";text.textContent=message.text;
+  content.append(name,text);row.append(avatar,content);messages.appendChild(row);
+ });
+ messages.scrollTop=messages.scrollHeight;
+}
 
 /* MINESWEEPER */
 let mineStarted=false,mineBoard=[],mineRevealed=0,mineFlags=0,mineOver=false,mineRows=9,mineCols=9,mineCount=10;
@@ -686,33 +823,72 @@ function revealMine(i){
  drawMineBoard();
 }
 
-/* PAINT */
+/* PAINT — corrected canvas initialization and pointer drawing */
 const canvas=document.getElementById("paintCanvas"),ctx=canvas.getContext("2d");
-let painting=false,eraser=false,lastPoint=null;
+let painting=false,eraser=false,lastPoint=null,canvasInitialized=false;
 function resizeCanvas(){
- const old=document.createElement("canvas");old.width=canvas.width||600;old.height=canvas.height||350;
- if(canvas.width&&canvas.height)old.getContext("2d").drawImage(canvas,0,0);
- const rect=canvas.getBoundingClientRect(),dpr=window.devicePixelRatio||1;
- canvas.width=Math.max(1,Math.floor(rect.width*dpr));canvas.height=Math.max(1,Math.floor(rect.height*dpr));
- ctx.setTransform(dpr,0,0,dpr,0,0);ctx.fillStyle="#fff";ctx.fillRect(0,0,rect.width,rect.height);
- if(old.width>0&&old.height>0)ctx.drawImage(old,0,0,old.width,old.height,0,0,rect.width,rect.height);
+ const rect=canvas.getBoundingClientRect();
+ if(rect.width<2||rect.height<2)return;
+ const dpr=window.devicePixelRatio||1;
+ const old=document.createElement("canvas");
+ if(canvas.width>0&&canvas.height>0){
+  old.width=canvas.width;old.height=canvas.height;
+  old.getContext("2d").drawImage(canvas,0,0);
+ }
+ canvas.width=Math.round(rect.width*dpr);
+ canvas.height=Math.round(rect.height*dpr);
+ ctx.setTransform(dpr,0,0,dpr,0,0);
+ ctx.fillStyle="#fff";ctx.fillRect(0,0,rect.width,rect.height);
+ if(old.width>0&&old.height>0){
+  ctx.drawImage(old,0,0,old.width,old.height,0,0,rect.width,rect.height);
+ }
+ canvasInitialized=true;
 }
 function paintPoint(e){
- const r=canvas.getBoundingClientRect();return{x:e.clientX-r.left,y:e.clientY-r.top};
+ const r=canvas.getBoundingClientRect();
+ return{x:e.clientX-r.left,y:e.clientY-r.top};
 }
-function startPaint(e){painting=true;lastPoint=paintPoint(e);canvas.setPointerCapture(e.pointerId);drawPaint(e)}
+function startPaint(e){
+ if(!canvasInitialized)resizeCanvas();
+ painting=true;
+ lastPoint=paintPoint(e);
+ canvas.setPointerCapture(e.pointerId);
+ ctx.beginPath();
+ ctx.arc(lastPoint.x,lastPoint.y,Math.max(1,Number(document.getElementById("brushSize").value)/2),0,Math.PI*2);
+ ctx.fillStyle=eraser?"#ffffff":document.getElementById("paintColor").value;
+ ctx.fill();
+}
 function drawPaint(e){
- if(!painting)return;const p=paintPoint(e);ctx.beginPath();ctx.moveTo(lastPoint.x,lastPoint.y);ctx.lineTo(p.x,p.y);
- ctx.lineCap="round";ctx.lineJoin="round";ctx.lineWidth=Number(document.getElementById("brushSize").value);
- ctx.strokeStyle=eraser?"#ffffff":document.getElementById("paintColor").value;ctx.stroke();lastPoint=p;
+ if(!painting)return;
+ const p=paintPoint(e);
+ ctx.beginPath();
+ ctx.moveTo(lastPoint.x,lastPoint.y);
+ ctx.lineTo(p.x,p.y);
+ ctx.lineCap="round";ctx.lineJoin="round";
+ ctx.lineWidth=Number(document.getElementById("brushSize").value);
+ ctx.strokeStyle=eraser?"#ffffff":document.getElementById("paintColor").value;
+ ctx.stroke();
+ lastPoint=p;
 }
 function stopPaint(){painting=false;lastPoint=null}
-canvas.addEventListener("pointerdown",startPaint);canvas.addEventListener("pointermove",drawPaint);canvas.addEventListener("pointerup",stopPaint);canvas.addEventListener("pointercancel",stopPaint);
+canvas.addEventListener("pointerdown",startPaint);
+canvas.addEventListener("pointermove",drawPaint);
+canvas.addEventListener("pointerup",stopPaint);
+canvas.addEventListener("pointercancel",stopPaint);
+canvas.addEventListener("lostpointercapture",stopPaint);
 function setEraser(value){eraser=value}
-function clearPaint(){if(confirm("Clear the entire canvas?")){const r=canvas.getBoundingClientRect();ctx.fillStyle="#fff";ctx.fillRect(0,0,r.width,r.height)}}
-function downloadPaint(){const a=document.createElement("a");a.download="my-painting.png";a.href=canvas.toDataURL("image/png");a.click()}
-setTimeout(resizeCanvas,100);
-window.addEventListener("resize",()=>{if(!document.getElementById("paintWindow").classList.contains("hidden"))resizeCanvas()});
+function clearPaint(){
+ if(confirm("Clear the entire canvas?")){
+  const r=canvas.getBoundingClientRect();
+  ctx.fillStyle="#fff";ctx.fillRect(0,0,r.width,r.height);
+ }
+}
+function downloadPaint(){
+ const a=document.createElement("a");a.download="my-painting.png";a.href=canvas.toDataURL("image/png");a.click();
+}
+window.addEventListener("resize",()=>{
+ if(!document.getElementById("paintWindow").classList.contains("hidden"))requestAnimationFrame(resizeCanvas);
+});
 
 /* CLOCK */
 function updateClock(){
