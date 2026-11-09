@@ -27,7 +27,6 @@ body {
   min-height: 100vh;
   color: var(--cream);
   font-family: system-ui, "Segoe UI", sans-serif;
-
   background:
     radial-gradient(ellipse at 50% 0%, #54270f 0%, transparent 48%),
     radial-gradient(ellipse at 100% 45%, #351509 0%, transparent 40%),
@@ -364,6 +363,12 @@ footer {
       <button data-category="Uncommons">Uncommons</button>
       <button data-category="Commons">Commons</button>
       <button data-category="EX">EX</button>
+
+      <button data-category="Hallow">Hallow</button>
+      <button data-category="EggHunter">EggHunter</button>
+      <button data-category="Gifter">Gifter</button>
+
+      <button data-category="All">All</button>
       <button data-category="Humans">Humans</button>
 
     </nav>
@@ -378,8 +383,7 @@ footer {
 
     <p class="description" id="categoryDescription"></p>
 
-    <section class="grid" id="toonGrid" aria-live="polite">
-    </section>
+    <section class="grid" id="toonGrid" aria-live="polite"></section>
 
   </main>
 
@@ -487,7 +491,7 @@ const categories = {
 
 /*
   Each toon can have up to three classes.
-  Holiday toons receive their regular rarity AND their holiday class.
+  Holiday toons have their regular rarity and holiday class.
 */
 
 const characterClasses = {
@@ -518,6 +522,13 @@ const descriptions = {
   Uncommons: "Discover the uncommon members of the collection.",
   Commons: "Meet the museum's common toons.",
   EX: "Extraordinary exhibits. Coming soon.",
+
+  Hallow: "Meet the toons of the Halloween season.",
+  EggHunter: "Meet the toons of the Easter season.",
+  Gifter: "Meet the toons of the Christmas season.",
+
+  All: "Every toon in Liron's Museum, all in one place.",
+
   Humans: "Meet the humans who founded and help run the museum."
 
 };
@@ -613,10 +624,24 @@ function createCard(name, category, role = "") {
   return card;
 }
 
+function getAllToons() {
+
+  return [
+    ...categories.Primary,
+    ...categories.Leads,
+    ...categories.Mains,
+    ...categories.Rares,
+    ...categories.Uncommons,
+    ...categories.Commons,
+    ...categories.EX
+  ];
+
+}
+
 function render(category) {
 
   title.textContent = category;
-  description.textContent = descriptions[category];
+  description.textContent = descriptions[category] || "";
 
   grid.innerHTML = "";
 
@@ -646,7 +671,27 @@ function render(category) {
     return;
   }
 
-  const toons = categories[category];
+  let toons = [];
+
+  if (category === "All") {
+
+    toons = getAllToons();
+
+  } else if (
+    category === "Hallow" ||
+    category === "EggHunter" ||
+    category === "Gifter"
+  ) {
+
+    toons = getAllToons().filter(name =>
+      characterClasses[name]?.includes(category)
+    );
+
+  } else {
+
+    toons = categories[category] || [];
+
+  }
 
   if (!toons.length) {
 
@@ -661,7 +706,14 @@ function render(category) {
   }
 
   toons.forEach(name => {
-    grid.appendChild(createCard(name, category));
+
+    const originalCategory = Object.keys(categories).find(key =>
+      Array.isArray(categories[key]) &&
+      categories[key].includes(name)
+    );
+
+    grid.appendChild(createCard(name, originalCategory || category));
+
   });
 
 }
