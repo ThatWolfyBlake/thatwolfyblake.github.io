@@ -16,9 +16,9 @@
 window.WOLFY_POSTS = [
 
     {
-        title: "Welcome to my profile!",
+        title: "Welcome to my website",
         images: [],
-        text: "Hey! Welcome to my little corner of the internet. Feel free to explore my projects!",
+        text: "Hey! Welcome to my site! explore!",
         buttons: [
             {
                 label: "Visit Liron's Museum",
@@ -30,7 +30,13 @@ window.WOLFY_POSTS = [
             }
         ]
     }
-
+    ,
+{
+        title: "My new post!",
+        images: [],
+        text: "this is a text post!",
+        buttons: []
+                }
     /*
     COPY THIS TEMPLATE TO MAKE ANOTHER POST:
 
