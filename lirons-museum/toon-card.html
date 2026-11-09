@@ -184,9 +184,17 @@ header {
   line-height: 1.7;
 }
 
+/* MULTIPLE RARITY / CLASS LABELS */
+
+.rarity-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 12px;
+}
+
 .rarity {
   display: inline-block;
-  margin-top: 12px;
   padding: 6px 13px;
   border-radius: 20px;
   border: 1px solid var(--border);
@@ -395,7 +403,12 @@ const categories = {
     "Solaris",
     "N3x0r",
     "Rose",
-    "Shiro"
+    "Shiro",
+
+    // Christmas / Easter / Halloween
+    "Candy SugarTooth",
+    "Choccy Vanilloa",
+    "Fiona Starling"
   ],
 
   Rares: [
@@ -412,7 +425,12 @@ const categories = {
     "Randy",
     "Leon",
     "Balley",
-    "Ashy"
+    "Ashy",
+
+    // Holiday toons
+    "Harley",
+    "Basley",
+    "Cappy"
   ],
 
   Uncommons: [
@@ -425,14 +443,24 @@ const categories = {
     "Luki",
     "Violet-Lizzy",
     "Cardog",
-    "Marshy"
+    "Marshy",
+
+    // Holiday toons
+    "Billy",
+    "Carrol Bluefield",
+    "Frostey"
   ],
 
   Commons: [
     "Puffin",
     "Spike",
     "Straps",
-    "Gummy"
+    "Gummy",
+
+    // Holiday toons
+    "Batly",
+    "Eggsley",
+    "Henry"
   ],
 
   EX: [],
@@ -447,6 +475,89 @@ const categories = {
     "Eliza",
     "Charlie",
     "Aubrey"
+  ]
+
+};
+
+/* =====================================
+   CHARACTER CLASSES
+
+   Each character can have up to THREE
+   rarity/class labels.
+
+   Example:
+   ["Common", "Hallow", "Special"]
+
+   Holiday toons have their normal rarity
+   PLUS their holiday class.
+===================================== */
+
+const characterClasses = {
+
+  /* HALLOWEEN */
+
+  "Batly": [
+    "Common",
+    "Hallow"
+  ],
+
+  "Billy": [
+    "Uncommon",
+    "Hallow"
+  ],
+
+  "Harley": [
+    "Rare",
+    "Hallow"
+  ],
+
+  "Candy SugarTooth": [
+    "Main",
+    "Hallow"
+  ],
+
+  /* EASTER */
+
+  "Eggsley": [
+    "Common",
+    "EggHunter"
+  ],
+
+  "Carrol Bluefield": [
+    "Uncommon",
+    "EggHunter"
+  ],
+
+  "Basley": [
+    "Rare",
+    "EggHunter"
+  ],
+
+  "Choccy Vanilloa": [
+    "Main",
+    "EggHunter"
+  ],
+
+  /* CHRISTMAS */
+
+  "Henry": [
+    "Common",
+    "Gifter"
+  ],
+
+  "Frostey": [
+    "Uncommon",
+    "Gifter"
+  ],
+
+  "Cappy": [
+    "Rare",
+    "Gifter"
+  ],
+
+  "Fiona Starling": [
+    "Main",
+    "Gifter"
   ]
 
 };
@@ -622,6 +733,56 @@ const toonData = {
     trinket: "Prized Possession"
   },
 
+  /* HOLIDAY TOONS */
+
+  "Batly": {
+    displayName: "Batly"
+  },
+
+  "Billy": {
+    displayName: "Billy"
+  },
+
+  "Harley": {
+    displayName: "Harley"
+  },
+
+  "Candy SugarTooth": {
+    displayName: "Candy SugarTooth"
+  },
+
+  "Eggsley": {
+    displayName: "Eggsley"
+  },
+
+  "Carrol Bluefield": {
+    displayName: "Carrol Bluefield"
+  },
+
+  "Basley": {
+    displayName: "Basley"
+  },
+
+  "Choccy Vanilloa": {
+    displayName: "Choccy Vanilloa"
+  },
+
+  "Henry": {
+    displayName: "Henry"
+  },
+
+  "Frostey": {
+    displayName: "Frostey"
+  },
+
+  "Cappy": {
+    displayName: "Cappy"
+  },
+
+  "Fiona Starling": {
+    displayName: "Fiona Starling"
+  },
+
   /* RARES */
 
   "Lunaris": {
@@ -728,7 +889,6 @@ const toonData = {
 /* =====================================
    GET CHARACTER FROM URL
 
-   The blank parameter is intentional.
    Existing URLs use ?=CharacterName
 ===================================== */
 
@@ -773,1150 +933,57 @@ function formatDescription(text) {
   }).join("");
 }
 
-function getRarity(name) {
+/* =====================================
+   CHARACTER CLASS SYSTEM
+
+   Custom classes take priority.
+   Characters without custom classes
+   receive their normal category.
+
+   Maximum: THREE labels per character.
+===================================== */
+
+function getCharacterClasses(name) {
+
+  if (characterClasses[name]) {
+    return characterClasses[name].slice(0, 3);
+  }
 
   for (const [rarity, characters] of Object.entries(categories)) {
-    if (characters.includes(name)) {
-      return rarity;
+
+    if (!characters.includes(name)) {
+      continue;
     }
+
+    const rarityLabels = {
+      Primary: "Primary",
+      Leads: "Lead",
+      Mains: "Main",
+      Rares: "Rare",
+      Uncommons: "Uncommon",
+      Commons: "Common",
+      EX: "EX"
+    };
+
+    return [
+      rarityLabels[rarity] || rarity
+    ];
   }
 
-  return "Unknown";
+  return [];
 }
 
-/* =====================================
-   IMAGE SYSTEM
-===================================== */
-
-function changeImage(type) {
-
-  const slug = slugify(toonName);
-
-  const image = document.getElementById("toonImage");
-  const placeholder = document.getElementById("imagePlaceholder");
-
-  const regularButton = document.getElementById("regularButton");
-  const drawingButton = document.getElementById("drawingButton");
-  const label = document.getElementById("imageLabel");
-
-  const path = type === "drawing"
-    ? `/lirons-museum/assets/drawings/d_${slug}.png`
-    : `/lirons-museum/assets/${slug}.png`;
-
-  regularButton.classList.toggle("active", type === "regular");
-  drawingButton.classList.toggle("active", type === "drawing");
-
-  label.textContent = type === "drawing"
-    ? "Individual Design"
-    : "Regular Toon Card";
-
-  image.style.display = "block";
-  placeholder.style.display = "none";
-
-  image.onerror = function() {
-    image.style.display = "none";
-    placeholder.style.display = "block";
-  };
-
-  image.src = path;
-}
-
-/* =====================================
-   HUMAN IMAGE SYSTEM
-===================================== */
-
-function loadHumanDrawing() {
-
-  const slug = slugify(toonName);
-
-  const image = document.getElementById("toonImage");
-  const placeholder = document.getElementById("imagePlaceholder");
-
-  image.onerror = function() {
-    image.style.display = "none";
-    placeholder.style.display = "block";
-  };
-
-  image.src = `/lirons-museum/assets/drawings/d_${slug}.png`;
-}
-
-/* =====================================
-   HANDLER BUTTONS
-===================================== */
-
-function renderTraceButtons(handlerName) {
-
-  const assignedToons = handlerToons[handlerName];
-
-  if (!assignedToons || assignedToons.length === 0) {
-    return "";
-  }
-
-  const buttons = assignedToons.map(toon => {
-
-    const label = assignedToons.length > 1
-      ? `Trace Toon: ${toon === "Liron FireBloom" ? "Liron" : toon}`
-      : "Trace Toon";
-
-    // Keep the existing blank URL parameter.
-    const url = `toon-card.html?=${encodeURIComponent(toon)}`;
-
-    return `
-      <a
-        class="trace-button"
-        href="${url}"
-      >
-        ${escapeHTML(label)}
-      </a>
-    `;
-
-  }).join("");
+function renderClassLabels(classes) {
 
   return `
-    <section class="trace-section">
-
-      <h2>Assigned Toons</h2>
-
-      <div class="trace-buttons">
-        ${buttons}
-      </div>
-
-    </section>
-  `;
-}
-
-/* =====================================
-   PROFILE RENDERING
-===================================== */
-
-function renderProfile() {
-
-  if (!toonName) {
-    showNotFound("No character was specified.");
-    return;
-  }
-
-  const allCharacters = Object.values(categories).flat();
-
-  // Investigator is deliberately outside the regular categories.
-  const isInvestigator = toonName === "Investigator";
-
-  if (!allCharacters.includes(toonName) && !isInvestigator) {
-    showNotFound("This character does not exist in the museum's collection.");
-    return;
-  }
-
-  /*
-    K, M, and J are not ready for profile pages yet.
-  */
-
-  const unavailableProfiles = ["K", "M", "J"];
-
-  if (unavailableProfiles.includes(toonName)) {
-    showNotFound("This toon does not have a profile yet.");
-    return;
-  }
-
-  const data = toonData[toonName] || {};
-
-  const isHuman = Object.prototype.hasOwnProperty.call(humanRoles, toonName);
-  const humanRole = humanRoles[toonName];
-
-  const isHandler = humanRole === "Handler";
-  const isDrawingOnly = isHuman || isInvestigator;
-
-  const displayName = data.displayName ||
-    (data.surname ? `${toonName} ${data.surname}` : toonName);
-
-  const rarity = getRarity(toonName);
-
-  const description = data.description || "Information coming soon.";
-  const appearance = data.appearance || "Appearance information coming soon.";
-  const trinket = data.trinket || "Not added yet.";
-
-  const isPuffin = toonName === "Puffin";
-  const isBluy = toonName === "Bluy";
-
-  // Investigator has a special category, not a regular rarity.
-  const categoryLabel = isInvestigator
-    ? "Researcher"
-    : isHuman
-      ? humanRole
-      : rarity;
-
-  container.innerHTML = `
-
-    <div class="profile">
-
-      <section class="image-section">
-
-        <div class="main-image">
-
-          ${isInvestigator ? `
-
-            <div class="image-placeholder text-placeholder">
-              Image not provided
-            </div>
-
-          ` : `
-
-            <img
-              id="toonImage"
-              alt="${escapeHTML(displayName)}"
-            >
-
-            <div
-              class="image-placeholder"
-              id="imagePlaceholder"
-              style="display:none"
-            >
-              ?
-            </div>
-
-          `}
-
-        </div>
-
-        ${!isDrawingOnly ? `
-
-          <div class="image-buttons">
-
-            <button
-              id="regularButton"
-              class="active"
-              onclick="changeImage('regular')"
-            >
-              Regular Image
-            </button>
-
-            <button
-              id="drawingButton"
-              onclick="changeImage('drawing')"
-            >
-              Drawing
-            </button>
-
-          </div>
-
-          <div class="image-label" id="imageLabel">
-            Regular Toon Card
-          </div>
-
-        ` : ""}
-
-      </section>
-
-      <section class="info-panel">
-
-        <h1 class="toon-name">
-          ${escapeHTML(displayName)}
-        </h1>
-
-        ${data.quote ? `
-          <p class="toon-quote">
-            "${escapeHTML(data.quote)}"
-          </p>
-        ` : ""}
-
+    <div class="rarity-list">
+      ${classes.map(className => `
         <span class="rarity">
-          ${escapeHTML(categoryLabel)}
+          ${escapeHTML(className)}
         </span>
-
-        <div class="divider"></div>
-
-        <h2 class="section-title">
-          Description
-        </h2>
-
-        <p class="description">${formatDescription(description)}</p>
-
-        ${!isHandler ? `
-
-          <div class="divider"></div>
-
-          <h2 class="section-title">
-            Appearance
-          </h2>
-
-          <p class="description">${escapeHTML(appearance)}</p>
-
-          <div class="divider"></div>
-
-          <h2 class="section-title">
-            Trinket
-          </h2>
-
-          <p class="trinket">
-            ${escapeHTML(trinket)}
-          </p>
-
-        ` : ""}
-
-      </section>
-
-      ${isHandler ? renderTraceButtons(toonName) : ""}
-
-      ${isPuffin ? `
-
-        <section class="special-card">
-
-          <h2>Introduction Card</h2>
-
-          <img
-            src="/lirons-museum/assets/puffin-card.png"
-            alt="Puffin's Introduction Card"
-            onerror="this.style.display='none'"
-          >
-
-        </section>
-
-      ` : ""}
-
-      ${isBluy ? `
-
-        <a
-          class="toon-page-link"
-          href="/lirons-museum/bluy.html"
-        >
-          Visit Bluy's Toon Page →
-        </a>
-
-      ` : ""}
-
+      `).join("")}
     </div>
-
   `;
-
-  if (isHuman) {
-    loadHumanDrawing();
-  } else if (!isInvestigator) {
-    changeImage("regular");
-  }
-
-}
-
-/* =====================================
-   NOT FOUND
-===================================== */
-
-function showNotFound(message) {
-
-  container.innerHTML = `
-
-    <section class="not-found">
-
-      <h1>Character Not Found</h1>
-
-      <p>${escapeHTML(message)}</p>
-
-      <a
-        class="toon-page-link"
-        href="/lirons-museum/see-toons.html"
-      >
-        Return to See Toons
-      </a>
-
-    </section>
-
-  `;
-
-}
-
-/* =====================================
-   START
-===================================== */
-
-renderProfile();
-
-</script>
-
-</body>
-</html>
-
-<!DOCTYPE html>
-<html lang="en">
-<head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-<title>Character Profile — Liron's Museum</title>
-
-<style>
-:root {
-  --bg: #160A05;
-  --chocolate: #241006;
-  --panel: #2B1408;
-  --orange: #FF9B32;
-  --gold: #FFB65B;
-  --cream: #FFE5C5;
-  --beige: #D9BDA5;
-  --muted: #987B68;
-  --border: #FF8C42;
-}
-
-* { box-sizing: border-box; }
-
-body {
-  margin: 0;
-  min-height: 100vh;
-  color: var(--cream);
-  font-family: system-ui, "Segoe UI", sans-serif;
-  background:
-    radial-gradient(ellipse at 50% 0%, #54270f 0%, transparent 48%),
-    radial-gradient(ellipse at 100% 45%, #351509 0%, transparent 40%),
-    linear-gradient(145deg, var(--chocolate), var(--bg) 65%);
-}
-
-.page {
-  width: min(100% - 32px, 760px);
-  margin: auto;
-  padding: 30px 0 55px;
-}
-
-/* HEADER */
-
-header {
-  text-align: center;
-  margin-bottom: 30px;
-}
-
-.brand {
-  display: inline-block;
-  color: var(--orange);
-  font-size: clamp(2rem, 7vw, 3.3rem);
-  font-weight: 850;
-  letter-spacing: -.045em;
-  text-decoration: none;
-  text-shadow: 0 0 22px #ff8c4238;
-}
-
-.brand:hover { color: var(--gold); }
-
-.subtitle {
-  color: var(--beige);
-  margin-top: 8px;
-}
-
-/* PROFILE */
-
-.profile {
-  animation: appear .4s ease;
-}
-
-@keyframes appear {
-  from {
-    opacity: 0;
-    transform: translateY(12px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
-
-.image-section {
-  width: 100%;
-  max-width: 430px;
-  margin: 0 auto 25px;
-}
-
-.main-image {
-  width: 100%;
-  aspect-ratio: 1 / 1;
-  border-radius: 15px;
-  overflow: hidden;
-  border: 2px solid var(--border);
-  background: radial-gradient(circle, #6c3518, #2b1408 75%);
-  box-shadow: 0 0 25px #ff8c4225;
-  display: grid;
-  place-items: center;
-  position: relative;
-}
-
-.main-image img {
-  width: 100%;
-  height: 100%;
-  object-fit: contain;
-}
-
-.image-placeholder {
-  color: var(--gold);
-  font-size: 5rem;
-  font-weight: 850;
-  text-shadow: 0 0 25px #ff9b3255;
-}
-
-.text-placeholder {
-  padding: 20px;
-  color: var(--beige);
-  font-size: 1rem;
-  font-weight: 750;
-  text-align: center;
-  text-shadow: none;
-}
-
-.image-buttons {
-  display: flex;
-  gap: 10px;
-  margin-top: 13px;
-}
-
-.image-buttons button {
-  flex: 1;
-  padding: 11px 8px;
-  border-radius: 10px;
-  border: 1px solid #70401f;
-  background: #2b1408;
-  color: var(--beige);
-  font: 750 .9rem system-ui;
-  cursor: pointer;
-  transition: .2s;
-}
-
-.image-buttons button:hover {
-  border-color: var(--orange);
-  color: var(--cream);
-}
-
-.image-buttons button.active {
-  background: linear-gradient(135deg, var(--orange), var(--gold));
-  border-color: var(--gold);
-  color: #281006;
-  box-shadow: 0 0 15px #ff9b3233;
-}
-
-.image-label {
-  color: var(--muted);
-  font-size: .8rem;
-  text-align: center;
-  margin-top: 9px;
-}
-
-/* INFORMATION */
-
-.info-panel {
-  padding: 22px;
-  border: 1px solid #87431f;
-  border-radius: 15px;
-  background: linear-gradient(160deg, #3b1d0d99, #241006d9);
-  box-shadow: 0 8px 24px #00000020;
-}
-
-.toon-name {
-  margin: 0;
-  color: var(--orange);
-  font-size: clamp(2rem, 7vw, 2.7rem);
-  font-weight: 850;
-  letter-spacing: -.035em;
-  text-shadow: 0 0 15px #ff9b3224;
-}
-
-.toon-quote {
-  color: var(--gold);
-  font-style: italic;
-  margin: 9px 0 0;
-  font-size: .95rem;
-  line-height: 1.7;
-}
-
-.rarity {
-  display: inline-block;
-  margin-top: 12px;
-  padding: 6px 13px;
-  border-radius: 20px;
-  border: 1px solid var(--border);
-  background: #ff9b3215;
-  color: var(--gold);
-  font-size: .85rem;
-  font-weight: 800;
-}
-
-.divider {
-  height: 1px;
-  margin: 23px 0;
-  background: linear-gradient(90deg, #9b542a, #482312 75%, transparent);
-}
-
-.section-title {
-  color: var(--orange);
-  font-size: 1.15rem;
-  font-weight: 850;
-  margin: 0 0 10px;
-}
-
-.description {
-  color: var(--beige);
-  line-height: 1.7;
-  white-space: pre-line;
-  margin: 0;
-}
-
-.description s { color: var(--muted); }
-
-.trinket {
-  color: var(--cream);
-  font-size: 1.05rem;
-  font-weight: 750;
-}
-
-/* HANDLER TRACE BUTTONS */
-
-.trace-section {
-  margin-top: 23px;
-  padding: 18px;
-  border: 1px solid var(--border);
-  border-radius: 15px;
-  background: linear-gradient(145deg, #49200d, #241006);
-  box-shadow: 0 0 22px #ff9b3215;
-}
-
-.trace-section h2 {
-  color: var(--gold);
-  font-size: 1.1rem;
-  margin: 0 0 13px;
-}
-
-.trace-buttons {
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
-}
-
-.trace-button {
-  display: block;
-  padding: 13px 15px;
-  text-align: center;
-  text-decoration: none;
-  border-radius: 10px;
-  border: 1px solid var(--border);
-  background: linear-gradient(135deg, var(--orange), var(--gold));
-  color: #281006;
-  font-weight: 850;
-  transition: .2s;
-}
-
-.trace-button:hover {
-  transform: translateY(-3px);
-  box-shadow: 0 0 18px #ff9b3244;
-}
-
-/* PUFFIN EXCLUSIVE */
-
-.special-card {
-  margin-top: 23px;
-  padding: 16px;
-  border: 1px solid var(--border);
-  border-radius: 15px;
-  background: linear-gradient(145deg, #49200d, #241006);
-  box-shadow: 0 0 22px #ff9b3215;
-}
-
-.special-card h2 {
-  color: var(--gold);
-  font-size: 1.1rem;
-  margin: 0 0 13px;
-}
-
-.special-card img {
-  display: block;
-  width: 100%;
-  height: auto;
-  border-radius: 10px;
-  border: 1px solid #ff8c4266;
-}
-
-/* BLUY EXCLUSIVE */
-
-.toon-page-link {
-  display: block;
-  margin-top: 23px;
-  padding: 14px;
-  text-align: center;
-  text-decoration: none;
-  border-radius: 12px;
-  border: 1px solid var(--border);
-  background: linear-gradient(135deg, var(--orange), var(--gold));
-  color: #281006;
-  font-weight: 850;
-  transition: .2s;
-}
-
-.toon-page-link:hover {
-  transform: translateY(-3px);
-  box-shadow: 0 0 20px #ff9b3244;
-}
-
-/* NOT FOUND */
-
-.not-found {
-  text-align: center;
-  padding: 55px 20px;
-  border: 1px dashed #87502d;
-  border-radius: 15px;
-  background: #2b140866;
-}
-
-.not-found h1 { color: var(--orange); }
-
-/* FOOTER */
-
-footer {
-  text-align: center;
-  color: var(--muted);
-  font-size: .8rem;
-  margin-top: 40px;
-}
-
-/* MOBILE */
-
-@media(max-width:520px) {
-  .page {
-    width: min(100% - 22px, 760px);
-    padding-top: 22px;
-  }
-
-  .info-panel { padding: 17px; }
-  .image-section { max-width: 100%; }
-}
-</style>
-</head>
-
-<body>
-
-<div class="page">
-
-<header>
-  <a class="brand" href="/lirons-museum/">
-    Liron's Museum
-  </a>
-
-  <p class="subtitle">
-    Discover the museum's extraordinary characters.
-  </p>
-</header>
-
-<main id="profileContainer"></main>
-
-<footer>
-  © Liron's Museum · Every character has a story.
-</footer>
-
-</div>
-
-<script>
-
-/* =====================================
-   CHARACTER DATABASE
-===================================== */
-
-const categories = {
-
-  Primary: [
-    "Liron FireBloom"
-  ],
-
-  Leads: [
-    "Don",
-    "Countess Lockie",
-    "Nixxy",
-    "K",
-    "M",
-    "J"
-  ],
-
-  Mains: [
-    "Bluy",
-    "Hazel",
-    "Solaris",
-    "N3x0r",
-    "Rose",
-    "Shiro"
-  ],
-
-  Rares: [
-    "Jesse",
-    "Vexel",
-    "Chris",
-    "Dylan",
-    "Lunaris",
-    "Mike",
-    "Maris",
-    "Sarah",
-    "Milly",
-    "Creamy",
-    "Randy",
-    "Leon",
-    "Balley",
-    "Ashy"
-  ],
-
-  Uncommons: [
-    "Lily",
-    "Willy",
-    "Lurian",
-    "Matt",
-    "Sleeper",
-    "Garret",
-    "Luki",
-    "Violet-Lizzy",
-    "Cardog",
-    "Marshy"
-  ],
-
-  Commons: [
-    "Puffin",
-    "Spike",
-    "Straps",
-    "Gummy"
-  ],
-
-  EX: [],
-
-  Humans: [
-    "Kevin",
-    "Mary",
-    "John",
-    "Noah",
-    "Stella",
-    "Alan",
-    "Eliza",
-    "Charlie",
-    "Aubrey"
-  ]
-
-};
-
-/* =====================================
-   HUMAN ROLES
-===================================== */
-
-const humanRoles = {
-
-  Kevin: "Founder",
-  Mary: "Founder",
-  John: "Founder",
-
-  Noah: "Handler",
-  Stella: "Handler",
-  Alan: "Handler",
-  Eliza: "Handler",
-  Charlie: "Handler",
-  Aubrey: "Handler"
-
-};
-
-/* =====================================
-   HANDLER ASSIGNMENTS
-===================================== */
-
-const handlerToons = {
-
-  Noah: ["Bluy"],
-  Stella: ["Solaris"],
-  Alan: ["N3x0r"],
-  Eliza: ["Rose"],
-  Charlie: ["Hazel"],
-  Aubrey: ["Liron FireBloom", "Shiro"]
-
-};
-
-/* =====================================
-   CUSTOM CHARACTER INFORMATION
-===================================== */
-
-const toonData = {
-
-  /* PRIMARY */
-
-  "Liron FireBloom": {
-    displayName: "Liron FireBloom",
-
-    description:
-      "#The lovely mascot of the museum, he is kind, and always looks out for his friends and the visitors, he is star of the show, always getting into adventures with his friends! Help him expand his world!#\n\nLiar, everything he does is to hurt the other toons, he doesn't deserve to be the star, he isn't like the Liron of the show, hes done too much damage to his own life. Its all his fault.",
-
-    appearance:
-      "Liron is an orange flower toon.",
-
-    trinket: "Liron Plush"
-  },
-
-  /* LEADS */
-
-  "Don": {
-    displayName: "Donovan",
-
-    description:
-      "Donovan is the one who's always here for the other toons.\n\nThough he was kept a secret just like other Leads, hidden from the visitors, not a character in the show.\n\nBut he is here to help whatever toon needs it. He likes pirates.",
-
-    appearance:
-      "You can see, you know.",
-
-    trinket: "TreasureMap"
-  },
-
-  "Countess Lockie": {
-    displayName: "Countess Lockie",
-
-    description:
-      "The countess, she runs the train system, she enjoys having activities, such like fancy meals with toons whom she trusts.\n\nAs a lead, she was also hidden from the public, not a character in the show, not seen by visitors.",
-
-    appearance:
-      "Look.",
-
-    trinket: "MasterKey"
-  },
-
-  "Nixxy": {
-    displayName: "Nixxy Timely",
-
-    description:
-      "Nixxy makes sure the elevators are working, he has a strange way of talking, always putting time related words in his speech...\n\nAs a Lead, he was too, hidden from the public eye, not seen by visitors, not a character in the show.",
-
-    appearance:
-      "If you can read, you can see.",
-
-    trinket: "StopWatch",
-
-    quote:
-      "I remember the past, memories of a long lost time, the children's laughter, even if i couldn't be part of the reason they were laughing, always made my time happier."
-  },
-
-  /* MAINS */
-
-  "Bluy": {
-    displayName: "Blyenn Bluefield",
-
-    description:
-      "#Liron's Best friend!# ... Bluy is a gentle toon! He owns the Garden Café, the perfect place to stop at while on a morning tour of the museum. Enjoy the fresh goods and the plants! He is Puffin's bestest of friends!",
-
-    appearance:
-      "Blueberry toon, wears his Lucky Charm, Black sweater.",
-
-    trinket: "Luck Charm"
-  },
-
-  "Solaris": {
-    displayName: "Solaris Novartis",
-
-    description:
-      "Solaris is the brightest of toons! Quite literally, since he is the sun! This fella loves the Wild West and stars. He said they could be as bright as he is! Stop at Solaris's Wild West Experience and help him catch those villains!",
-
-    appearance:
-      "He is the Sun as a toon, wearing his sheriff jacket with a black shirt beneath it. He has four arms.",
-
-    trinket: "Sheriff's Hat"
-  },
-
-  "Hazel": {
-    displayName: "Hazel Icedcream",
-
-    description:
-      "Hazel loves making sweets! She is a wonderful caretaker. Stop at Hazel's Pastry Shop and take a bite of a sweet treat! She looks after all children and other toons. Lily Foldery is her best friend!",
-
-    appearance:
-      "She is a strawberry ice cream toon. She wears a sweater that resembles an ice cream cone's texture.",
-
-    trinket: "Ice Cream Scooper"
-  },
-
-  "N3x0r": {
-    displayName: "N3x0r / V1rus",
-
-    quote: "31th3r n4m3 w0rks",
-
-    description:
-      "N3x0r... or V1rus is the ringmaster of the museum's Game Shows! Step up and walk onto the stage. If all questions are correct, you win a prize!\n\nFeeling down? Walk to N3x0r's arcade and spend your extra time winning tickets and buying exclusive merch with them!",
-
-    appearance:
-      "Black cloud as a head, top hat, always in his suit, star stickers in his suit!",
-
-    trinket: "Lost Code"
-  },
-
-  "Rose": {
-    displayName: "Rose Sanghwaje",
-
-    description:
-      "Rose is like a mother. She has a caring heart. Got lost? Call Rose, and she will help you find your parent as quickly as she can!\n\nJoin her in her sector and learn about how nature really works!",
-
-    appearance:
-      "Just like her name, Rose is a rose. She wears a flowery dress.",
-
-    trinket: "Watering Can"
-  },
-
-  "Shiro": {
-    displayName: "Shiro the Shard!",
-
-    description:
-      "#Shiro is Liron's pet shard!# He resembles a cat, always up for some fun! Energetic, and most of all, he loves to play with children!\n\nJoin him in his play area and play until you get tired!",
-
-    appearance:
-      "Shiro is a big shard. He has cat ears and a cat tail.",
-
-    trinket: "Prized Possession"
-  },
-
-  /* RARES */
-
-  "Lunaris": {
-    displayName: "Lunaris Aurelyn",
-
-    quote: "Sometimes, i see and feel things that i shouldn't...",
-
-    description:
-      "Lunaris helps with any tech-related issue, even if it's not an issue. Want help finishing a school project? Ask Lunaris and he will show you how to do it the better way!\n\nJoin him in the computer lab or in the technology sector and learn about technology and its evolution through time!\n\nBut he also gets sleepy very easily!",
-
-    appearance:
-      "Lunaris has a purple TV head, purple stars at the ends of his antennas, and wears his pajamas.",
-
-    trinket: "LunarRemote"
-  },
-
-  /* COMMONS */
-
-  "Puffin": {
-    displayName: "Puffin Cloudtail",
-
-    description:
-      "Puffin is a very kind and silly toon. He loves to hang out with his friends; most guests say he is cute!\n\nHe gets excited over small things!\n\nBluy's bestest of friends!\n\nJoin him in the weekly art club and draw as you wish!",
-
-    appearance:
-      "Puffin is a yellow cushion toon. He wears an orangish-yellow hoodie, brown shorts, and yellow slippers.",
-
-    trinket: "CloudCushion"
-  },
-
-  /* HUMANS */
-
-  "Kevin": {
-    displayName: "Kevin"
-  },
-
-  "Mary": {
-    displayName: "Mary"
-  },
-
-  "John": {
-    displayName: "John"
-  },
-
-  /* HANDLERS */
-
-  "Noah": {
-    displayName: "Noah",
-
-    description:
-      "Noah was Bluy's toon handler.\n\nEven with Bluy's issues, he stayed alongside him. Well... he was like a parental figure for Bluy.\n\nEver since the shutdown, he misses Bluy. He feels alone.\n\nHe wishes he could have taken Bluy to live with him after the shutdown.\n\nThose two were really close."
-  },
-
-  "Stella": {
-    displayName: "Stella",
-
-    description:
-      "She was Solaris's toon handler. As a child, she loved his character in the animated show...\n\nShe said in a post-shutdown interview:\n\n“it was like a dream coming true, its sad it ended, i wonder what happend to him...”\n\nDespite this, she believes the toons are being gently taken care of. But that's not the truth, is it?"
-  },
-
-  "Alan": {
-    displayName: "Alan",
-
-    description:
-      "Alan was N3x0r's toon handler.\n\nA mysterious one. N3x0r said:\n\n“H3 w4sn't g00d, 4ll h3 d1d w4s m4k3 m3 4nx10us, 4 J3rk.”\n\nMakes me believe Alan wasn't gentle, probably just doing it for the payment... not caring about N3x0r, seeing him only as an object.\n\nJohn should have chosen a better handler for N3x0r."
-  },
-
-  "Eliza": {
-    displayName: "Eliza",
-
-    description:
-      "Eliza was Rose's toon handler.\n\nI was told Rose's motherly behavior has some aspects taken from Eliza herself. Why?\n\nWell, Eliza used to take her children to the Museum. When she had to stay later, she would bring them along so she could keep track of feeding them. Rose must have seen it closely... it should have inspired her to become what she is now.\n\nEliza was really sweet. She helped parents looking for lost children. As she was a parent herself, she knew how to calm them down easily."
-  },
-
-  "Charlie": {
-    displayName: "Charlie",
-
-    description:
-      "Charlie was Hazel's toon handler.\n\nCharlie was like a father to Hazel. He helped her prepare the sweets...\n\nEven when she messed up a recipe, he would find a way to fix it.\n\nTruly a very kind man.\n\nHazel gets... sad when anytoon mentions him. She probably misses him..."
-  },
-
-  "Aubrey": {
-    displayName: "Aubrey",
-
-    description:
-      "She was Liron's and Shiro's toon handler.\n\nThe founders used to keep saying...\n\n“She’s almost as perfect as Liron.”\n\n“She is our best employee.”\n\nShe seems to be what put Liron in his place, the reason he acted like the animated show's Liron, why he put up his kind facade.\n\nWeirdly, she was almost never with Liron or Shiro. I believe she was working in the background... doing special work for the founders.\n\nAfter the shutdown, she left without any questions, as if she already knew this would happen."
-  },
-
-  /* SPECIAL TOON */
-
-  "Investigator": {
-    displayName: "Investigator",
-
-    description:
-      "Oh? You wish to know about me?\n\nWell then, just know i won't tell you much, reader.\n\nI am the Investigator, searching and keeping track on what happens inside and outside of the Museum.\n\nAlmost all of my personal research will be either here, in toon-cards, or in the documentation.",
-
-    appearance: "As i said, i won't tell you.",
-
-    trinket: "Also no."
-  }
-
-};
-
-/* =====================================
-   GET CHARACTER FROM URL
-
-   The blank parameter is intentional.
-   Existing URLs use ?=CharacterName
-===================================== */
-
-const params = new URLSearchParams(window.location.search);
-const toonName = params.get("");
-
-const container = document.getElementById("profileContainer");
-
-/* =====================================
-   HELPERS
-===================================== */
-
-function slugify(name) {
-  return name.toLowerCase()
-    .replace(/[^a-z0-9]+/g, "-")
-    .replace(/^-|-$/g, "");
-}
-
-function escapeHTML(value) {
-  return String(value).replace(/[&<>"']/g, char => ({
-    "&": "&amp;",
-    "<": "&lt;",
-    ">": "&gt;",
-    '"': "&quot;",
-    "'": "&#39;"
-  })[char]);
-}
-
-/*
-  Text between # symbols becomes crossed out.
-*/
-
-function formatDescription(text) {
-  const parts = String(text).split("#");
-
-  return parts.map((part, index) => {
-    const safeText = escapeHTML(part);
-
-    return index % 2 === 1
-      ? `<s>${safeText}</s>`
-      : safeText;
-  }).join("");
-}
-
-function getRarity(name) {
-
-  for (const [rarity, characters] of Object.entries(categories)) {
-    if (characters.includes(name)) {
-      return rarity;
-    }
-  }
-
-  return "Unknown";
 }
 
 /* =====================================
@@ -1993,7 +1060,6 @@ function renderTraceButtons(handlerName) {
       ? `Trace Toon: ${toon === "Liron FireBloom" ? "Liron" : toon}`
       : "Trace Toon";
 
-    // Keep the existing blank URL parameter.
     const url = `toon-card.html?=${encodeURIComponent(toon)}`;
 
     return `
@@ -2033,7 +1099,7 @@ function renderProfile() {
 
   const allCharacters = Object.values(categories).flat();
 
-  // Investigator is deliberately outside the regular categories.
+  // Investigator is deliberately outside regular categories.
   const isInvestigator = toonName === "Investigator";
 
   if (!allCharacters.includes(toonName) && !isInvestigator) {
@@ -2063,7 +1129,11 @@ function renderProfile() {
   const displayName = data.displayName ||
     (data.surname ? `${toonName} ${data.surname}` : toonName);
 
-  const rarity = getRarity(toonName);
+  const classes = isInvestigator
+    ? ["Researcher"]
+    : isHuman
+      ? [humanRole]
+      : getCharacterClasses(toonName);
 
   const description = data.description || "Information coming soon.";
   const appearance = data.appearance || "Appearance information coming soon.";
@@ -2071,13 +1141,6 @@ function renderProfile() {
 
   const isPuffin = toonName === "Puffin";
   const isBluy = toonName === "Bluy";
-
-  // Investigator has a special category, not a regular rarity.
-  const categoryLabel = isInvestigator
-    ? "Researcher"
-    : isHuman
-      ? humanRole
-      : rarity;
 
   container.innerHTML = `
 
@@ -2153,9 +1216,7 @@ function renderProfile() {
           </p>
         ` : ""}
 
-        <span class="rarity">
-          ${escapeHTML(categoryLabel)}
-        </span>
+        ${renderClassLabels(classes)}
 
         <div class="divider"></div>
 
