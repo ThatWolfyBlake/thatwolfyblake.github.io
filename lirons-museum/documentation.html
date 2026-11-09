@@ -4,7 +4,8 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta name="theme-color" content="#245edb">
-<title>Windows XP Desktop</title>
+<meta name="application-version" content="1.0.0">
+<title>Documentation</title>
 
 <style>
 * { box-sizing: border-box; }
@@ -17,18 +18,14 @@ body {
   background: #000;
 }
 
-/* DESKTOP */
-
 #desktop {
   width: 100vw;
   height: 100dvh;
   position: relative;
   overflow: hidden;
-
-  /* ACTUAL WINDOWS XP BLISS WALLPAPER */
   background-image: url("https://r4.wallpaperflare.com/wallpaper/33/394/438/windows-xp-bliss-wallpaper-a2c182d00dc64e8bcae832b55078b942.jpg");
   background-size: cover;
-  background-position: center center;
+  background-position: center;
   background-repeat: no-repeat;
 }
 
@@ -41,7 +38,6 @@ body {
   display: flex;
   flex-direction: column;
   gap: 15px;
-  z-index: 1;
 }
 
 .desktop-icon {
@@ -61,11 +57,9 @@ body {
   padding: 5px;
 }
 
-.desktop-icon:hover,
-.desktop-icon:focus {
+.desktop-icon:hover {
   background: rgba(30,110,210,.35);
   border: 1px dotted white;
-  outline: none;
 }
 
 .desktop-icon img {
@@ -84,13 +78,7 @@ body {
   left: 0;
   right: 0;
   z-index: 9999;
-
-  background: linear-gradient(
-    #3989e7,
-    #1764c5 45%,
-    #1455b4
-  );
-
+  background: linear-gradient(#3989e7,#1764c5 45%,#1455b4);
   border-top: 1px solid #70baff;
   display: flex;
   align-items: center;
@@ -102,7 +90,7 @@ body {
   width: 110px;
   border: none;
   border-radius: 0 15px 15px 0;
-  background: linear-gradient(#62c44b, #278c20);
+  background: linear-gradient(#62c44b,#278c20);
   color: white;
   font-size: 17px;
   font-weight: bold;
@@ -123,13 +111,13 @@ body {
 }
 
 .task-button {
-  min-width: 120px;
+  min-width: 100px;
   max-width: 180px;
   height: 27px;
   border: 1px solid #1552a1;
   border-radius: 3px;
   color: white;
-  background: linear-gradient(#4389d7, #2463b4);
+  background: linear-gradient(#4389d7,#2463b4);
   text-align: left;
   padding: 3px 9px;
   cursor: pointer;
@@ -139,21 +127,32 @@ body {
 }
 
 .task-button.active {
-  background: linear-gradient(#174a9b, #2867b9);
+  background: linear-gradient(#174a9b,#2867b9);
   box-shadow: inset 1px 1px 3px #103b78;
 }
 
 .tray {
-  height: 36px;
-  min-width: 85px;
-  padding: 0 12px;
-  background: linear-gradient(#1889e9, #0962bd);
+  min-height: 36px;
+  min-width: 112px;
+  padding: 3px 10px;
+  background: linear-gradient(#1889e9,#0962bd);
   border-left: 1px solid #5bb6ff;
   color: white;
   display: flex;
+  flex-direction: column;
   align-items: center;
   justify-content: center;
-  font-size: 12px;
+  font-size: 11px;
+  line-height: 14px;
+}
+
+#clock {
+  font-weight: bold;
+}
+
+#clockDate {
+  font-size: 10px;
+  opacity: .95;
 }
 
 /* WINDOWS */
@@ -162,8 +161,8 @@ body {
   position: absolute;
   top: 100px;
   left: 150px;
-  width: min(650px, calc(100vw - 30px));
-  height: min(440px, calc(100dvh - 65px));
+  width: min(650px,calc(100vw - 30px));
+  height: min(440px,calc(100dvh - 65px));
   min-width: 280px;
   min-height: 200px;
   display: flex;
@@ -284,7 +283,7 @@ body {
   border: 1px solid #9cc8f4;
 }
 
-.file-item .file-emoji { font-size: 32px; }
+.file-emoji { font-size: 32px; }
 
 .explorer-status {
   height: 23px;
@@ -294,12 +293,56 @@ body {
   font-size: 11px;
 }
 
+/* NOTEPAD */
+
+#textWindow {
+  width: min(550px,calc(100vw - 30px));
+  height: min(400px,calc(100dvh - 65px));
+}
+
+.notepad-menu {
+  height: 27px;
+  padding: 6px 9px;
+  background: #f5f3eb;
+  border-bottom: 1px solid #ccc;
+  font-size: 12px;
+}
+
+.notepad-content {
+  flex: 1;
+  min-height: 0;
+  background: white;
+  padding: 12px;
+}
+
+.notepad-content textarea {
+  width: 100%;
+  height: 100%;
+  resize: none;
+  border: none;
+  outline: none;
+  background: white;
+  color: #222;
+  font-family: "Courier New", monospace;
+  font-size: 14px;
+  line-height: 1.5;
+  user-select: text;
+}
+
+.notepad-status {
+  height: 22px;
+  padding: 4px 8px;
+  background: #f3f0e5;
+  border-top: 1px solid #ccc;
+  font-size: 11px;
+}
+
 /* TERMINAL */
 
 #terminalWindow .window-body {
   background: #090909;
   color: #35ff35;
-  font-family: Consolas, monospace;
+  font-family: Consolas,monospace;
   font-size: 13px;
   padding: 12px;
   display: flex;
@@ -318,6 +361,10 @@ body {
   align-items: center;
   gap: 6px;
   margin-top: 8px;
+}
+
+#terminalPrompt {
+  white-space: nowrap;
 }
 
 #terminalInput {
@@ -372,7 +419,7 @@ body {
   font-size: 12px;
 }
 
-/* RESPONSIVE */
+/* MOBILE */
 
 @media(max-width:500px) {
   .window {
@@ -383,6 +430,12 @@ body {
   }
 
   .desktop-icons { gap: 12px; }
+
+  .tray {
+    min-width: 105px;
+    padding-left: 5px;
+    padding-right: 5px;
+  }
 }
 </style>
 </head>
@@ -391,17 +444,17 @@ body {
 
 <div id="desktop">
 
-  <!-- DESKTOP SHORTCUTS -->
+  <!-- DESKTOP ICONS -->
 
   <div class="desktop-icons">
 
     <div class="desktop-icon" onclick="openWindow('documentsWindow')">
-      <img src="https://thatwolfyblake.github.io/lirons-museum/assets/desktop/file-icon.png">
+      <img src="https://thatwolfyblake.github.io/lirons-museum/assets/desktop/files-icon.png" alt="Documents">
       <span>Documents</span>
     </div>
 
     <div class="desktop-icon" onclick="openWindow('terminalWindow')">
-      <img src="https://thatwolfyblake.github.io/lirons-museum/assets/desktop/terminal-icon.png">
+      <img src="https://thatwolfyblake.github.io/lirons-museum/assets/desktop/terminal-icon.png" alt="Terminal">
       <span>Terminal</span>
     </div>
 
@@ -469,6 +522,46 @@ body {
 
   </div>
 
+  <!-- NOTEPAD WINDOW -->
+
+  <div class="window hidden" id="textWindow">
+
+    <div class="titlebar">
+      <div class="window-title">📄 Welcome.txt - Notepad</div>
+
+      <div class="window-controls">
+        <button onclick="minimizeWindow('textWindow')">_</button>
+        <button onclick="maximizeWindow('textWindow')">□</button>
+        <button class="close" onclick="closeWindow('textWindow')">X</button>
+      </div>
+    </div>
+
+    <div class="window-body" style="display:flex;flex-direction:column;">
+
+      <div class="notepad-menu">
+        File &nbsp;&nbsp; Edit &nbsp;&nbsp; Format &nbsp;&nbsp; View &nbsp;&nbsp; Help
+      </div>
+
+      <div class="notepad-content">
+        <textarea id="textContent" spellcheck="false" readonly>Welcome to Liron's Museum!
+
+This is your Windows XP desktop.
+
+You can explore the desktop, open applications, and discover more about the museum.
+
+Enjoy your visit!
+
+- Liron's Museum</textarea>
+      </div>
+
+      <div class="notepad-status">
+        Welcome.txt &nbsp; | &nbsp; Windows Notepad
+      </div>
+
+    </div>
+
+  </div>
+
   <!-- TERMINAL WINDOW -->
 
   <div class="window hidden" id="terminalWindow">
@@ -495,7 +588,7 @@ Type "help" to see available commands.
 </div>
 
       <div class="terminal-input-line">
-        <span>C:\Museum&gt;</span>
+        <span id="terminalPrompt">C:\Investigator&gt;</span>
         <input id="terminalInput" autocomplete="off" spellcheck="false">
       </div>
 
@@ -528,7 +621,7 @@ Type "help" to see available commands.
     </div>
 
     <div class="start-footer">
-      Log Off &nbsp;&nbsp; Turn Off Computer
+      Version 1.0.0 &nbsp; | &nbsp; Log Off &nbsp;&nbsp; Turn Off Computer
     </div>
 
   </div>
@@ -545,6 +638,7 @@ Type "help" to see available commands.
 
     <div class="tray">
       <span id="clock">00:00</span>
+      <span id="clockDate">10/06/2001</span>
     </div>
 
   </div>
@@ -555,10 +649,17 @@ Type "help" to see available commands.
 let highestZ = 10;
 let activeWindow = null;
 
+const SYSTEM_VERSION = "1.0.0";
+const SYSTEM_DATE = "10/06/2001";
+const TERMINAL_DIRECTORY = "C:\\Investigator";
+
 const windowNames = {
   documentsWindow: "Documents",
+  textWindow: "Welcome.txt - Notepad",
   terminalWindow: "Terminal"
 };
+
+/* WINDOWS */
 
 function openWindow(id) {
   const win = document.getElementById(id);
@@ -614,6 +715,8 @@ function maximizeWindow(id) {
 
   win.style.zIndex = ++highestZ;
 }
+
+/* TASKBAR */
 
 function updateTaskbar() {
   const container = document.getElementById("taskButtons");
@@ -711,6 +814,14 @@ function showDocuments() {
     "4 objects";
 }
 
+function selectFile(element) {
+  document.querySelectorAll(".file-item").forEach(item => {
+    item.style.background = "";
+  });
+
+  element.style.background = "#cce5ff";
+}
+
 function openFolder(name) {
   document.getElementById("currentPath").textContent =
     "C:\\Documents\\" + name;
@@ -730,9 +841,9 @@ function historyBack() {
 }
 
 function openFile(name) {
-  alert(
-    name + "\n\nWelcome to Liron's Museum!\n\nThis is a sample desktop file."
-  );
+  if(name === "Welcome.txt") {
+    openWindow("textWindow");
+  }
 }
 
 /* TERMINAL */
@@ -745,13 +856,17 @@ function printTerminal(text) {
   terminalOutput.scrollTop = terminalOutput.scrollHeight;
 }
 
+function printPrompt(command = "") {
+  printTerminal(TERMINAL_DIRECTORY + "> " + command);
+}
+
 terminalInput.addEventListener("keydown", e => {
   if(e.key !== "Enter") return;
 
   const command = terminalInput.value.trim();
   terminalInput.value = "";
 
-  printTerminal("C:\\Museum> " + command);
+  printPrompt(command);
 
   const parts = command.split(" ");
   const cmd = parts[0].toLowerCase();
@@ -763,13 +878,14 @@ terminalInput.addEventListener("keydown", e => {
       printTerminal(
 `Available commands:
 
-help       - Show commands
+help       - Show available commands
 clear      - Clear terminal
 echo       - Display a message
-date       - Show current date
+date       - Show system date
 time       - Show current time
 whoami     - Show current user
-dir        - List desktop applications
+dir        - List directory contents
+cd         - Show current directory
 ver        - Show system version
 exit       - Close terminal`
       );
@@ -784,7 +900,7 @@ exit       - Close terminal`
       break;
 
     case "date":
-      printTerminal(new Date().toLocaleDateString());
+      printTerminal(SYSTEM_DATE);
       break;
 
     case "time":
@@ -797,7 +913,7 @@ exit       - Close terminal`
 
     case "dir":
       printTerminal(
-`Directory of C:\\Museum
+`Directory of ${TERMINAL_DIRECTORY}
 
 <DIR> Documents
 <DIR> Terminal
@@ -805,8 +921,15 @@ exit       - Close terminal`
       );
       break;
 
+    case "cd":
+      printTerminal(TERMINAL_DIRECTORY);
+      break;
+
     case "ver":
-      printTerminal("Microsoft Windows XP [Version 5.1.2600]");
+      printTerminal(
+`Microsoft Windows XP [Version 5.1.2600]
+Liron's Museum Desktop [Version ${SYSTEM_VERSION}]`
+      );
       break;
 
     case "exit":
@@ -831,6 +954,8 @@ function updateClock() {
       hour: "2-digit",
       minute: "2-digit"
     });
+
+  document.getElementById("clockDate").textContent = SYSTEM_DATE;
 }
 
 updateClock();
