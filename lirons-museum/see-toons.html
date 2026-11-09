@@ -225,6 +225,44 @@ nav button.active {
   overflow-wrap: anywhere;
 }
 
+.class-list {
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 5px;
+  margin-top: 9px;
+}
+
+.class-badge {
+  display: inline-block;
+  padding: 4px 8px;
+  border: 1px solid #a85a2b;
+  border-radius: 7px;
+  background: #3b1d0d;
+  color: var(--gold);
+  font-size: .68rem;
+  font-weight: 800;
+  letter-spacing: .025em;
+}
+
+.class-badge.hallow {
+  border-color: #a85b35;
+  background: #54220f;
+  color: #ffad72;
+}
+
+.class-badge.egghunter {
+  border-color: #8d8142;
+  background: #3d3819;
+  color: #f1d878;
+}
+
+.class-badge.gifter {
+  border-color: #477c64;
+  background: #193d2d;
+  color: #a4e7bd;
+}
+
 .human-role {
   margin-top: 5px;
   color: var(--gold);
@@ -374,7 +412,10 @@ const categories = {
     "Solaris",
     "N3x0r",
     "Rose",
-    "Shiro"
+    "Shiro",
+    "Candy SugarTooth",
+    "Choccy Vanilloa",
+    "Fiona Starling"
   ],
 
   Rares: [
@@ -391,7 +432,10 @@ const categories = {
     "Randy",
     "Leon",
     "Balley",
-    "Ashy"
+    "Ashy",
+    "Harley",
+    "Basley",
+    "Cappy"
   ],
 
   Uncommons: [
@@ -404,14 +448,20 @@ const categories = {
     "Luki",
     "Violet-Lizzy",
     "Cardog",
-    "Marshy"
+    "Marshy",
+    "Billy",
+    "Carrol Bluefield",
+    "Frostey"
   ],
 
   Commons: [
     "Puffin",
     "Spike",
     "Straps",
-    "Gummy"
+    "Gummy",
+    "Batly",
+    "Eggsley",
+    "Henry"
   ],
 
   EX: [],
@@ -432,6 +482,30 @@ const categories = {
       "Aubrey"
     ]
   }
+
+};
+
+/*
+  Each toon can have up to three classes.
+  Holiday toons receive their regular rarity AND their holiday class.
+*/
+
+const characterClasses = {
+
+  "Batly": ["Common", "Hallow"],
+  "Billy": ["Uncommon", "Hallow"],
+  "Harley": ["Rare", "Hallow"],
+  "Candy SugarTooth": ["Main", "Hallow"],
+
+  "Eggsley": ["Common", "EggHunter"],
+  "Carrol Bluefield": ["Uncommon", "EggHunter"],
+  "Basley": ["Rare", "EggHunter"],
+  "Choccy Vanilloa": ["Main", "EggHunter"],
+
+  "Henry": ["Common", "Gifter"],
+  "Frostey": ["Uncommon", "Gifter"],
+  "Cappy": ["Rare", "Gifter"],
+  "Fiona Starling": ["Main", "Gifter"]
 
 };
 
@@ -459,7 +533,26 @@ function slugify(name) {
     .replace(/^-|-$/g, "");
 }
 
-function createCard(name, role = "") {
+function getCharacterClasses(name, category) {
+
+  if (characterClasses[name]) {
+    return characterClasses[name].slice(0, 3);
+  }
+
+  const rarityLabels = {
+    Primary: "Primary",
+    Leads: "Lead",
+    Mains: "Main",
+    Rares: "Rare",
+    Uncommons: "Uncommon",
+    Commons: "Common",
+    EX: "EX"
+  };
+
+  return [rarityLabels[category] || category].slice(0, 3);
+}
+
+function createCard(name, category, role = "") {
 
   const card = document.createElement("a");
   card.className = "toon-card";
@@ -471,6 +564,22 @@ function createCard(name, role = "") {
     + encodeURIComponent(name);
 
   card.setAttribute("aria-label", "View " + name);
+
+  const classes = role
+    ? []
+    : getCharacterClasses(name, category);
+
+  const classHTML = classes.map(className => {
+
+    const classSlug = className.toLowerCase();
+
+    return `
+      <span class="class-badge ${classSlug}">
+        ${className}
+      </span>
+    `;
+
+  }).join("");
 
   card.innerHTML = `
     <div class="portrait">
@@ -495,7 +604,10 @@ function createCard(name, role = "") {
 
     <div class="toon-name">${name}</div>
 
-    ${role ? `<div class="human-role">${role}</div>` : ""}
+    ${role
+      ? `<div class="human-role">${role}</div>`
+      : `<div class="class-list">${classHTML}</div>`
+    }
   `;
 
   return card;
@@ -518,7 +630,7 @@ function render(category) {
     grid.appendChild(foundersTitle);
 
     humans.Founders.forEach(name => {
-      grid.appendChild(createCard(name, "Founder"));
+      grid.appendChild(createCard(name, category, "Founder"));
     });
 
     const handlersTitle = document.createElement("h2");
@@ -528,7 +640,7 @@ function render(category) {
     grid.appendChild(handlersTitle);
 
     humans.Handlers.forEach(name => {
-      grid.appendChild(createCard(name, "Handler"));
+      grid.appendChild(createCard(name, category, "Handler"));
     });
 
     return;
@@ -549,7 +661,7 @@ function render(category) {
   }
 
   toons.forEach(name => {
-    grid.appendChild(createCard(name));
+    grid.appendChild(createCard(name, category));
   });
 
 }
