@@ -4,8 +4,8 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta name="theme-color" content="#245edb">
-<meta name="application-version" content="1.3.0">
-<title>Desktop- V1.3.0</title>
+<meta name="application-version" content="1.4.0">
+<title>Desktop- V1.4.0</title>
 
 <style>
 *{box-sizing:border-box}
@@ -203,6 +203,36 @@ body{margin:0;overflow:hidden;font-family:Tahoma,Arial,sans-serif;user-select:no
 .chat-light-theme .chat-setting-row select{background:#fff;color:#222}
 .chat-light-theme .chat-search-input{background:white;color:#222}
 .chat-light-theme .chat-search-result:hover{background:#ddd}
+
+/* SOFTGLOBE BROWSER */
+#softGlobeWindow{width:min(1000px,calc(100vw - 25px));height:min(680px,calc(100dvh - 65px))}
+.browser-toolbar{display:flex;align-items:center;gap:6px;padding:8px;background:linear-gradient(#f7fbff,#dceaf4);border-bottom:1px solid #9bb7c9;flex-wrap:wrap}
+.browser-toolbar button{border:1px solid #9bb5c7;background:linear-gradient(#fff,#dceaf0);border-radius:5px;padding:7px 10px;cursor:pointer}
+.browser-address{display:flex;gap:6px;flex:1;min-width:170px}
+.browser-address input{width:100%;min-width:0;padding:8px 10px;border:1px solid #91adbf;border-radius:14px;font:13px Tahoma;user-select:text}
+.browser-view{width:100%;height:100%;border:0;background:#fff}
+.browser-start{height:100%;min-height:250px;display:grid;place-items:center;text-align:center;padding:25px;background:radial-gradient(circle at 50% 25%,#fff 0,#e9f6ff 45%,#d4e9f6 100%);color:#24465e}
+.browser-start h2{font-size:30px;margin:0 0 8px;color:#2775a5}
+.browser-start p{font-size:13px;line-height:1.6;max-width:430px}
+.browser-start button{border:1px solid #8ab4ca;background:linear-gradient(#fff,#cde7f4);border-radius:18px;padding:10px 18px;color:#24536e;cursor:pointer}
+.browser-status{font-size:10px;padding:5px 9px;background:#eaf1f5;border-top:1px solid #c7d7e0;color:#536b79}
+/* MYVIDEO — FRUTIGER AERO */
+#myVideoWindow{width:min(1050px,calc(100vw - 25px));height:min(720px,calc(100dvh - 65px));border-color:#4a9ec4;background:#e8f8ff}
+#myVideoWindow .titlebar{background:linear-gradient(90deg,#087bb8,#4ac7e9,#087bb8)}
+.myvideo-shell{height:100%;min-height:0;display:flex;flex-direction:column;background:linear-gradient(145deg,#e7fbff,#b8e8f8 50%,#efffff);color:#174c69;overflow:hidden}
+.myvideo-top{padding:17px 20px;background:linear-gradient(120deg,#d8f8ffdd,#8bdcf0dd),radial-gradient(circle at 15% 0%,#fff,transparent 50%);border-bottom:1px solid #8acddd;box-shadow:0 3px 12px #5aaac344}
+.myvideo-brand{display:flex;align-items:center;gap:12px}
+.myvideo-orb{width:48px;height:48px;border-radius:50%;display:grid;place-items:center;font-size:25px;color:#fff;background:radial-gradient(circle at 30% 25%,#fff 0 8%,#b7f4ff 20%,#32b6e6 58%,#0876b6 100%);box-shadow:inset 0 2px 7px #fff,0 3px 8px #258db866}
+.myvideo-brand h2{margin:0;font-size:25px;color:#0875a9;text-shadow:0 1px #fff}
+.myvideo-brand small{display:block;margin-top:3px;color:#39758d}
+.myvideo-controls{display:flex;gap:8px;flex-wrap:wrap;margin-top:14px}
+.myvideo-controls button{border:1px solid #79bfd4;border-radius:18px;padding:8px 14px;color:#145b7b;background:linear-gradient(#fff,#bdeafa);box-shadow:inset 0 1px #fff,0 2px 4px #398eaa33;cursor:pointer}
+.myvideo-controls button:hover{filter:brightness(1.04)}
+.myvideo-frame-wrap{flex:1;min-height:0;padding:13px;display:flex;flex-direction:column}
+.myvideo-frame{flex:1;min-height:200px;width:100%;border:1px solid #78c2d8;border-radius:12px;background:#fff;box-shadow:inset 0 1px 8px #a4d9e8,0 5px 15px #3184a633}
+.myvideo-note{font-size:11px;line-height:1.5;color:#39758d;padding:8px 3px 0}
+@media(max-width:550px){.myvideo-top{padding:12px}.myvideo-brand h2{font-size:21px}.myvideo-frame-wrap{padding:7px}}
+
 @media(max-width:550px){
  .window{left:10px!important;top:42px!important;width:calc(100vw - 20px);height:calc(100dvh - 95px)}
  .desktop-icons{gap:8px}
@@ -232,6 +262,8 @@ body{margin:0;overflow:hidden;font-family:Tahoma,Arial,sans-serif;user-select:no
  <div class="desktop-icon" onclick="openWindow('minesWindow')"><span class="desktop-emoji" style="background:#050505;width:42px;color:white">💣</span><span>Minesweeper</span></div>
  <div class="desktop-icon" onclick="openWindow('paintWindow')"><span class="desktop-emoji">🎨</span><span>Paint</span></div>
  <div class="desktop-icon" onclick="openWindow('changelogWindow')"><span class="desktop-emoji">📋</span><span>Changelog</span></div>
+<div class="desktop-icon" onclick="openWindow('softGlobeWindow')"><span class="desktop-emoji">🌐</span><span>SoftGlobe</span></div>
+<div class="desktop-icon" onclick="openWindow('myVideoWindow')"><span class="desktop-emoji">▶️</span><span>MyVideo</span></div>
 </div>
 
 <!-- DOCUMENTS -->
@@ -306,14 +338,16 @@ Type "help" to see available commands.
  <div class="window-body">
   <div class="app-content">
    <h2 style="margin-top:0">Investigator Desktop</h2>
-   <p><strong>Version 1.3.0</strong> — Desktop improvements</p>
+   <p><strong>Version 1.4.0</strong> — Desktop improvements</p>
    <div class="changelog-entry"><strong>Desktop environment</strong><br>Windows XP-inspired desktop, Bliss wallpaper, desktop icons, movable windows, taskbar, Start menu, live clock, and window controls.</div>
    <div class="changelog-entry"><strong>Documents</strong><br>Added a Documents explorer with Research and Documentation folders. Research files are protected. Added the Not Canon documentation location and its disclaimer before opening.</div>
    <div class="changelog-entry"><strong>Terminal</strong><br>Investigator Terminal with help, clear, echo, date, time, whoami, dir, cd, ver, exit, and execute commands.</div>
    <div class="changelog-entry"><strong>User files</strong><br>Create, open, edit, rename, and delete personal text files. Files are stored in this browser using local storage.</div>
    <div class="changelog-entry"><strong>Minesweeper</strong><br>Beginner, Intermediate, and Expert game modes, mine flags, win/loss detection, and restart.</div>
    <div class="changelog-entry"><strong>Paint</strong><br>Drawing canvas supports mouse and touch input, adjustable brush size, color selection, erasing, and image export.</div>
-   <div class="changelog-entry"><strong>Desktop personalization</strong><br>Some desktop preferences and application shortcuts are remembered by this browser.</div>
+   <div class="changelog-entry"><strong>SoftGlobe</strong><br>Added an in-desktop web browser with an address bar, navigation controls, and an external-open fallback for sites that block embedded browsing.</div>
+    <div class="changelog-entry"><strong>MyVideo</strong><br>Added a Frutiger Aero-inspired video launcher focused on the Liron's Museum creator page.</div>
+    <div class="changelog-entry"><strong>Desktop personalization</strong><br>Application shortcuts can be remembered by this browser and restored when the desktop starts.</div>
    <p style="font-size:11px;color:#666">The changelog describes public features of this desktop project. It does not disclose protected files or hidden story information.</p>
   </div>
  </div>
@@ -390,6 +424,7 @@ Type "help" to see available commands.
      <div class="chat-setting-row"><div><strong>Theme</strong><div class="chat-setting-description">Change the appearance of ToonChat.</div></div>
       <select id="chatThemeSelect" onchange="saveChatSettings()"><option value="dark">Dark</option><option value="midnight">Midnight</option><option value="light">Light</option></select>
      </div>
+     <div class="chat-setting-row"><div><strong>Compact layout</strong><div class="chat-setting-description">Use tighter spacing in conversations.</div></div><input type="checkbox" id="chatCompact" onchange="saveChatSettings()"></div>
     </div>
 
     <div class="chat-settings-section">
@@ -434,6 +469,39 @@ Type "help" to see available commands.
  </div>
 </div>
 
+<!-- SOFTGLOBE -->
+<div class="window hidden" id="softGlobeWindow">
+ <div class="titlebar"><div class="window-title">🌐 SoftGlobe</div><div class="window-controls"><button onclick="minimizeWindow('softGlobeWindow')">_</button><button onclick="maximizeWindow('softGlobeWindow')">□</button><button class="close" onclick="closeWindow('softGlobeWindow')">X</button></div></div>
+ <div class="window-body" style="display:flex;flex-direction:column">
+  <div class="browser-toolbar">
+   <button onclick="browserGoBack()" title="Back">←</button><button onclick="browserGoForward()" title="Forward">→</button><button onclick="browserReload()" title="Reload">↻</button>
+   <div class="browser-address"><input id="softGlobeAddress" type="text" placeholder="Search or enter a web address..." autocomplete="off"><button onclick="softGlobeNavigate()">Go</button></div>
+   <button onclick="softGlobeOpenExternal()">↗ Open</button>
+  </div>
+  <div id="softGlobeStage" style="flex:1;min-height:0;position:relative">
+   <div class="browser-start"><div><div style="font-size:52px">🌐</div><h2>SoftGlobe</h2><p>A little window to the internet. Enter a website address or search for something above.</p><button onclick="softGlobeLoad('https://www.google.com')">Explore the web</button></div></div>
+  </div>
+  <div class="browser-status" id="softGlobeStatus">Ready · Some websites may prevent being displayed inside SoftGlobe. Use ↗ Open if a page does not load.</div>
+ </div>
+</div>
+
+<!-- MYVIDEO -->
+<div class="window hidden" id="myVideoWindow">
+ <div class="titlebar"><div class="window-title">▶ MyVideo</div><div class="window-controls"><button onclick="minimizeWindow('myVideoWindow')">_</button><button onclick="maximizeWindow('myVideoWindow')">□</button><button class="close" onclick="closeWindow('myVideoWindow')">X</button></div></div>
+ <div class="window-body">
+  <div class="myvideo-shell">
+   <div class="myvideo-top">
+    <div class="myvideo-brand"><div class="myvideo-orb">▶</div><div><h2>MyVideo</h2><small>Your little window for Liron's Museum videos ✦</small></div></div>
+    <div class="myvideo-controls"><button onclick="loadMyVideoProfile()">⌂ Refresh videos</button><button onclick="openMyVideoExternal()">↗ Open creator page</button></div>
+   </div>
+   <div class="myvideo-frame-wrap">
+    <iframe class="myvideo-frame" id="myVideoFrame" title="Liron's Museum TikTok videos" src="https://www.tiktok.com/@lirons.museum.au" allow="fullscreen; autoplay; encrypted-media; picture-in-picture" referrerpolicy="strict-origin-when-cross-origin"></iframe>
+    <div class="myvideo-note">Showing the creator page for <strong>@lirons.museum.au</strong>. MyVideo is restricted to this account; TikTok may require opening the page externally if its embedded view is unavailable.</div>
+   </div>
+  </div>
+ </div>
+</div>
+
 <!-- START MENU -->
 <div id="startMenu">
  <div class="start-header">🪟 Investigator</div>
@@ -444,11 +512,13 @@ Type "help" to see available commands.
   <div class="start-item" onclick="launch('minesWindow')">💣 Minesweeper</div>
   <div class="start-item" onclick="launch('paintWindow')">🎨 Paint</div>
   <div class="start-item" onclick="launch('changelogWindow')">📋 Changelog</div>
+  <div class="start-item" onclick="launch('softGlobeWindow')">🌐 SoftGlobe</div>
+  <div class="start-item" onclick="launch('myVideoWindow')">▶ MyVideo</div>
   <hr>
   <div class="start-item" onclick="location.href='https://thatwolfyblake.github.io/lirons-museum'">🏠 Return to Home</div>
   <div class="start-item" onclick="location.reload()">🔄 Restart Desktop</div>
  </div>
- <div class="start-footer">Version 1.3.0</div>
+ <div class="start-footer">Version 1.4.0</div>
 </div>
 
 <!-- DIALOG -->
@@ -470,13 +540,14 @@ Type "help" to see available commands.
 
 <script>
 let highestZ=10,activeWindow=null,currentFolder="",folderHistory=[],pendingDialogAction=null;
-const SYSTEM_VERSION="1.3.0",SYSTEM_DATE="10/06/2001",TERMINAL_DIRECTORY="C:\\Investigator";
+const SYSTEM_VERSION="1.4.0",SYSTEM_DATE="10/06/2001",TERMINAL_DIRECTORY="C:\\Investigator";
 const DISCLAIMER="Not canon, this is only for viewing purposes.";
 
 const windowNames={
  documentsWindow:"Documents",userFilesWindow:"User files",textWindow:"Notepad",
  terminalWindow:"Terminal",minesWindow:"Minesweeper",paintWindow:"Paint",
- changelogWindow:"Changelog",toonChatWindow:"ToonChat"
+ changelogWindow:"Changelog",toonChatWindow:"ToonChat",
+ softGlobeWindow:"SoftGlobe",myVideoWindow:"MyVideo"
 };
 
 const fileContents={
@@ -696,23 +767,24 @@ const researchFiles=[
 
 /* DESKTOP AND WINDOWS */
 const TOONCHAT_ICON_KEY="investigator_toonchat_icon_v1";
-function createToonChatDesktopIcon(){
- try{localStorage.setItem(TOONCHAT_ICON_KEY,"true")}catch(e){}
- renderToonChatDesktopIcon(true);
+function readToonChatShortcut(){
+ try{if(localStorage.getItem(TOONCHAT_ICON_KEY)==="true")return true}catch(e){}
+ return document.cookie.split(";").some(item=>item.trim()===TOONCHAT_ICON_KEY+"=true");
 }
-function renderToonChatDesktopIcon(force=false){
+function saveToonChatShortcut(){
  let saved=false;
- try{saved=localStorage.getItem(TOONCHAT_ICON_KEY)==="true"}catch(e){}
- if(!force&&!saved)return;
- if(document.getElementById("toonChatDesktopIcon"))return;
- const icon=document.createElement("div");
- icon.className="desktop-icon";
- icon.id="toonChatDesktopIcon";
- icon.innerHTML='<span class="desktop-emoji">💬</span><span>ToonChat</span>';
- icon.onclick=()=>openWindow("toonChatWindow");
- document.getElementById("desktopIcons").appendChild(icon);
+ try{localStorage.setItem(TOONCHAT_ICON_KEY,"true");saved=localStorage.getItem(TOONCHAT_ICON_KEY)==="true"}catch(e){}
+ try{document.cookie=TOONCHAT_ICON_KEY+"=true; path=/; max-age=31536000; SameSite=Lax";if(document.cookie.includes(TOONCHAT_ICON_KEY+"=true"))saved=true}catch(e){}
+ return saved;
 }
-
+function createToonChatDesktopIcon(){saveToonChatShortcut();renderToonChatDesktopIcon(true)}
+function renderToonChatDesktopIcon(force=false){
+ if(!force&&!readToonChatShortcut())return;
+ if(document.getElementById("toonChatDesktopIcon"))return;
+ const icon=document.createElement("div");icon.className="desktop-icon";icon.id="toonChatDesktopIcon";
+ icon.innerHTML='<span class="desktop-emoji">💬</span><span>ToonChat</span>';
+ icon.onclick=()=>openWindow("toonChatWindow");document.getElementById("desktopIcons").appendChild(icon);
+}
 function openWindow(id){
  const win=document.getElementById(id);if(!win)return;
  win.classList.remove("hidden");win.style.zIndex=++highestZ;activeWindow=id;updateTaskbar();
@@ -763,6 +835,31 @@ document.querySelectorAll(".titlebar").forEach(bar=>{
 });
 function toggleStart(){const m=document.getElementById("startMenu");m.style.display=m.style.display==="block"?"none":"block"}
 function launch(id){toggleStart();openWindow(id)}
+
+/* SOFTGLOBE + MYVIDEO */
+let softGlobeHistory=[],softGlobeHistoryIndex=-1,softGlobeCurrentUrl="";
+function normalizeBrowserAddress(raw){
+ const value=String(raw||"").trim();if(!value)return "";
+ if(/^https?:\/\//i.test(value))return value;
+ if(/^(localhost|[\w-]+(\.[\w-]+)+)(:\d+)?(\/.*)?$/i.test(value))return "https://"+value;
+ return "https://www.google.com/search?q="+encodeURIComponent(value);
+}
+function softGlobeLoad(url,addHistory=true){
+ const safe=normalizeBrowserAddress(url);if(!safe)return;
+ const iframe=document.createElement("iframe");iframe.className="browser-view";iframe.title="SoftGlobe web page";iframe.src=safe;iframe.referrerPolicy="strict-origin-when-cross-origin";iframe.allow="fullscreen";
+ document.getElementById("softGlobeStage").replaceChildren(iframe);
+ softGlobeCurrentUrl=safe;document.getElementById("softGlobeAddress").value=safe;
+ document.getElementById("softGlobeStatus").textContent="Loading "+safe+" · If this site blocks embedding, choose ↗ Open.";
+ if(addHistory){softGlobeHistory=softGlobeHistory.slice(0,softGlobeHistoryIndex+1);softGlobeHistory.push(safe);softGlobeHistoryIndex=softGlobeHistory.length-1}
+}
+function softGlobeNavigate(){softGlobeLoad(document.getElementById("softGlobeAddress").value)}
+function softGlobeOpenExternal(){if(softGlobeCurrentUrl)window.open(softGlobeCurrentUrl,"_blank","noopener")}
+function browserGoBack(){if(softGlobeHistoryIndex>0){softGlobeHistoryIndex--;softGlobeLoad(softGlobeHistory[softGlobeHistoryIndex],false)}}
+function browserGoForward(){if(softGlobeHistoryIndex<softGlobeHistory.length-1){softGlobeHistoryIndex++;softGlobeLoad(softGlobeHistory[softGlobeHistoryIndex],false)}}
+function browserReload(){if(softGlobeCurrentUrl)softGlobeLoad(softGlobeCurrentUrl,false)}
+document.getElementById("softGlobeAddress").addEventListener("keydown",e=>{if(e.key==="Enter")softGlobeNavigate()});
+function loadMyVideoProfile(){document.getElementById("myVideoFrame").src="https://www.tiktok.com/@lirons.museum.au"}
+function openMyVideoExternal(){window.open("https://www.tiktok.com/@lirons.museum.au","_blank","noopener")}
 
 /* DOCUMENTS */
 function showDocuments(){currentFolder="";folderHistory=[];renderFolder()}
@@ -895,7 +992,7 @@ ver        - Show system version
 execute    - Launch an installed application
 exit       - Close terminal
 
-Example: execute toonchat`);break;
+Examples: execute toonchat\n          execute softglobe\n          execute myvideo`);break;
  case "clear":terminalOutput.textContent="";break;
  case "echo":printTerminal(arg);break;
  case "date":printTerminal(SYSTEM_DATE);break;
@@ -915,9 +1012,10 @@ Example: execute toonchat`);break;
 Investigator Desktop [Version ${SYSTEM_VERSION}]`);break;
  case "execute":{
   const app=arg.toLowerCase().trim().replace(/\.exe$/,"").replace(/[™]/g,"").trim();
-  if(app==="toonchat"){
-   printTerminal("Launching application...");
-   openWindow("toonChatWindow");
+  const appWindows={toonchat:"toonChatWindow",softglobe:"softGlobeWindow",myvideo:"myVideoWindow"};
+  if(appWindows[app]){
+   printTerminal("Launching "+app+"...");
+   openWindow(appWindows[app]);
   }else if(arg===""){printTerminal("Usage: execute (appname)")}
   else{printTerminal("Application not found: "+arg)}
   break;
