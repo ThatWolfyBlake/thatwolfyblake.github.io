@@ -170,6 +170,20 @@ body{margin:0;overflow:hidden;font-family:Tahoma,Arial,sans-serif;user-select:no
 .chat-view-back:hover{background:#555d70}
 .chat-contact-remove{border:0;background:transparent;color:#999;cursor:pointer;font-size:14px;padding:3px}
 .chat-contact-remove:hover{color:#f66}
+.chat-contact-search{margin:9px 9px 2px;padding:8px 9px;border:1px solid #41434d;border-radius:5px;background:#292a31;color:#eee;font:11px Tahoma;outline:none}
+.chat-contact-search::placeholder{color:#999}
+.chat-local-note{padding:4px 11px 2px;color:#777;font-size:9px}
+.chat-compact .chat-messages{gap:8px;padding-top:10px;padding-bottom:10px}
+.chat-compact .chat-message-text{line-height:1.35}
+.chat-compact .chat-contact{padding-top:6px;padding-bottom:6px}
+.chat-midnight-theme .chat-sidebar{background:#111827}
+.chat-midnight-theme .chat-sidebar-heading,.chat-midnight-theme .chat-account{background:#0c1422}
+.chat-midnight-theme .chat-main,.chat-midnight-theme .chat-messages,.chat-midnight-theme .chat-profile,.chat-midnight-theme .chat-settings,.chat-midnight-theme .chat-search-view{background:#172235}
+.chat-midnight-theme .chat-topbar{border-color:#0d1728}
+.chat-midnight-theme .chat-composer-wrap{background:#172235}
+.chat-midnight-theme .chat-composer{background:#24344d}
+.chat-midnight-theme .chat-profile-section,.chat-midnight-theme .chat-settings-section{background:#101a2b}
+.chat-midnight-theme .chat-contact-search{background:#172235}
 .chat-light-theme #toonChatWindow .window-body{background:#e8e9ef;color:#222}
 .chat-light-theme .chat-sidebar{background:#d8d9e0;border-color:#bbb}
 .chat-light-theme .chat-sidebar-heading,.chat-light-theme .chat-account{background:#c9cbd4;color:#222}
@@ -374,7 +388,7 @@ Type "help" to see available commands.
     <div class="chat-settings-section">
      <h3>APPEARANCE</h3>
      <div class="chat-setting-row"><div><strong>Theme</strong><div class="chat-setting-description">Change the appearance of ToonChat.</div></div>
-      <select id="chatThemeSelect" onchange="saveChatSettings()"><option value="dark">Dark</option><option value="light">Light</option></select>
+      <select id="chatThemeSelect" onchange="saveChatSettings()"><option value="dark">Dark</option><option value="midnight">Midnight</option><option value="light">Light</option></select>
      </div>
     </div>
 
@@ -393,7 +407,7 @@ Type "help" to see available commands.
     <div class="chat-settings-section">
      <h3>ACCOUNT</h3>
      <div class="chat-setting-row"><div><strong>Username</strong><div class="chat-setting-description">Investigator</div></div><span style="color:#999;font-size:11px">LOCAL ACCOUNT</span></div>
-     <div class="chat-setting-row"><div><strong>Storage</strong><div class="chat-setting-description">Your desktop shortcut and settings are saved in this browser.</div></div><span style="color:#3ba55d;font-size:11px">Enabled</span></div>
+     <div class="chat-setting-row"><div><strong>Storage</strong><div class="chat-setting-description">Your shortcut, friends, settings, and chat history are saved in this browser.</div></div><span style="color:#3ba55d;font-size:11px">Enabled</span></div>
     </div>
 
     <button class="chat-view-back" onclick="hideChatSettings()">← Back to messages</button>
@@ -683,12 +697,13 @@ const researchFiles=[
 /* DESKTOP AND WINDOWS */
 const TOONCHAT_ICON_KEY="investigator_toonchat_icon_v1";
 function createToonChatDesktopIcon(){
- if(localStorage.getItem(TOONCHAT_ICON_KEY)==="true")return;
- localStorage.setItem(TOONCHAT_ICON_KEY,"true");
- renderToonChatDesktopIcon();
+ try{localStorage.setItem(TOONCHAT_ICON_KEY,"true")}catch(e){}
+ renderToonChatDesktopIcon(true);
 }
-function renderToonChatDesktopIcon(){
- if(localStorage.getItem(TOONCHAT_ICON_KEY)!=="true")return;
+function renderToonChatDesktopIcon(force=false){
+ let saved=false;
+ try{saved=localStorage.getItem(TOONCHAT_ICON_KEY)==="true"}catch(e){}
+ if(!force&&!saved)return;
  if(document.getElementById("toonChatDesktopIcon"))return;
  const icon=document.createElement("div");
  icon.className="desktop-icon";
@@ -899,8 +914,8 @@ Example: execute toonchat`);break;
  case "ver":printTerminal(`Microsoft Windows XP [Version 5.1.2600]
 Investigator Desktop [Version ${SYSTEM_VERSION}]`);break;
  case "execute":{
-  const app=arg.toLowerCase().replace(/[™(). ]/g,"");
-  if(app==="toonchat"||app==="toonchat.exe"){
+  const app=arg.toLowerCase().trim().replace(/\.exe$/,"").replace(/[™]/g,"").trim();
+  if(app==="toonchat"){
    printTerminal("Launching application...");
    openWindow("toonChatWindow");
   }else if(arg===""){printTerminal("Usage: execute (appname)")}
@@ -944,10 +959,25 @@ const chatData={
 
 const CHAT_SETTINGS_KEY="investigator_toonchat_settings_v1";
 const CHAT_FRIENDS_KEY="investigator_toonchat_friends_v1";
-let chatSettings={theme:"dark",notifications:false,sounds:false,showStatus:true,friendRequests:true};
+const CHAT_MESSAGES_KEY="investigator_toonchat_messages_v1";
+let chatSettings={theme:"dark",notifications:false,sounds:false,showStatus:true,friendRequests:true,compact:false};
 
 function loadChatSettings(){
  try{chatSettings={...chatSettings,...JSON.parse(localStorage.getItem(CHAT_SETTINGS_KEY)||"{}")}}catch(e){}
+}
+function loadChatHistory(){
+ try{
+  const saved=JSON.parse(localStorage.getItem(CHAT_MESSAGES_KEY)||"{}");
+  Object.keys(saved).forEach(id=>{
+   if(chatData[id]&&Array.isArray(saved[id]))chatData[id].messages=saved[id];
+  });
+ }catch(e){}
+}
+function saveChatHistory(){
+ const snapshot={};
+ Object.keys(chatData).forEach(id=>{snapshot[id]=chatData[id].messages});
+ try{localStorage.setItem(CHAT_MESSAGES_KEY,JSON.stringify(snapshot))}
+ catch(e){console.warn("ToonChat history could not be saved. Browser storage may be full.",e)}
 }
 function saveChatSettings(){
  chatSettings={
@@ -955,15 +985,20 @@ function saveChatSettings(){
   notifications:document.getElementById("chatNotifications").checked,
   sounds:document.getElementById("chatSounds").checked,
   showStatus:document.getElementById("chatShowStatus").checked,
-  friendRequests:document.getElementById("chatFriendRequests").checked
+  friendRequests:document.getElementById("chatFriendRequests").checked,
+  compact:document.getElementById("chatCompact").checked
  };
- localStorage.setItem(CHAT_SETTINGS_KEY,JSON.stringify(chatSettings));
+ try{localStorage.setItem(CHAT_SETTINGS_KEY,JSON.stringify(chatSettings))}catch(e){}
  applyChatTheme();
 }
 function applyChatTheme(){
  const body=document.getElementById("toonChatBody");
  if(!body)return;
  body.classList.toggle("chat-light-theme",chatSettings.theme==="light");
+ body.classList.toggle("chat-midnight-theme",chatSettings.theme==="midnight");
+ body.classList.toggle("chat-compact",!!chatSettings.compact);
+ const accountStatus=document.querySelector(".chat-account-status");
+ if(accountStatus)accountStatus.textContent=chatSettings.showStatus===false?"● Status hidden":"● Online";
 }
 function populateChatSettings(){
  document.getElementById("chatThemeSelect").value=chatSettings.theme||"dark";
@@ -971,6 +1006,7 @@ function populateChatSettings(){
  document.getElementById("chatSounds").checked=!!chatSettings.sounds;
  document.getElementById("chatShowStatus").checked=chatSettings.showStatus!==false;
  document.getElementById("chatFriendRequests").checked=chatSettings.friendRequests!==false;
+ document.getElementById("chatCompact").checked=!!chatSettings.compact;
 }
 loadChatSettings();
 
@@ -1064,6 +1100,7 @@ function sendChatMessage(){
  const timestamp=new Date().toLocaleTimeString([],{hour:"2-digit",minute:"2-digit"});
  const message={sender:"Investigator",initial:"",text:value,time:timestamp,failed:true};
  chat.messages.push(message);
+ saveChatHistory();
  document.getElementById("chatMessages").appendChild(makeChatMessage(message));
  input.value="";input.style.height="36px";
  const messages=document.getElementById("chatMessages");messages.scrollTop=messages.scrollHeight;
@@ -1081,7 +1118,7 @@ function attachChatImage(event){
  const file=event.target.files&&event.target.files[0];
  if(!file)return;
  if(!file.type.startsWith("image/")){alert("Please select an image file.");event.target.value="";return}
- if(file.size>5*1024*1024){alert("That image is too large. Please choose an image smaller than 5 MB.");event.target.value="";return}
+ if(file.size>2*1024*1024){alert("That image is too large. Please choose an image smaller than 2 MB.");event.target.value="";return}
  const reader=new FileReader();
  reader.onload=()=>{
   const chat=chatData[activeChat];if(!chat)return;
@@ -1091,6 +1128,7 @@ function attachChatImage(event){
    imageName:file.name,time:timestamp,failed:true
   };
   chat.messages.push(message);
+  saveChatHistory();
   const messages=document.getElementById("chatMessages");
   messages.appendChild(makeChatMessage(message));
   messages.scrollTop=messages.scrollHeight;
@@ -1117,7 +1155,7 @@ function saveExtraFriends(){
  const extras=Object.keys(chatData)
   .filter(id=>!["lunaris","bluy"].includes(id))
   .map(id=>({id,name:chatData[id].name}));
- localStorage.setItem(CHAT_FRIENDS_KEY,JSON.stringify(extras));
+ try{localStorage.setItem(CHAT_FRIENDS_KEY,JSON.stringify(extras))}catch(e){}
 }
 function renderFriendList(){
  const list=document.getElementById("chatContactList");
@@ -1137,6 +1175,12 @@ function renderFriendList(){
   row.append(avatar,info,remove);list.appendChild(row);
  });
 }
+function filterChatContacts(){
+ const query=(document.getElementById("chatContactSearch").value||"").toLowerCase().trim();
+ document.querySelectorAll("#chatContactList .chat-contact").forEach(row=>{
+  row.style.display=row.textContent.toLowerCase().includes(query)?"flex":"none";
+ });
+}
 function addFriend(){
  if(chatSettings.friendRequests===false){alert("Friend requests are disabled in your settings.");return}
  const username=prompt("Enter the exact ToonChat username of the person you want to add:");
@@ -1148,14 +1192,15 @@ function addFriend(){
  const id="friend_"+name.toLowerCase().replace(/[^a-z0-9]/g,"_");
  chatData[id]={name,avatar:name[0].toUpperCase(),about:"ToonChat user.",online:false,messages:[]};
  saveExtraFriends();renderFriendList();showChat(id);
- alert(name+" was added to your local friends list.");
+ alert(name+" was added to your local friends list. This is a local demo account; it cannot contact a real person.");
 }
 function removeFriend(id){
  const friend=chatData[id];if(!friend)return;
  if(!confirm("Remove "+friend.name+" from your friends list?"))return;
- delete chatData[id];saveExtraFriends();renderFriendList();showChat("lunaris");
+ delete chatData[id];saveExtraFriends();saveChatHistory();renderFriendList();showChat("lunaris");
 }
 loadExtraFriends();
+loadChatHistory();
 renderFriendList();
 
 /* SETTINGS */
@@ -1174,6 +1219,7 @@ function populateChatSettings(){
  document.getElementById("chatSounds").checked=!!chatSettings.sounds;
  document.getElementById("chatShowStatus").checked=chatSettings.showStatus!==false;
  document.getElementById("chatFriendRequests").checked=chatSettings.friendRequests!==false;
+ document.getElementById("chatCompact").checked=!!chatSettings.compact;
 }
 
 /* MESSAGE SEARCH */
@@ -1307,6 +1353,8 @@ function updateClock(){
  document.getElementById("clockDate").textContent=SYSTEM_DATE;
 }
 updateClock();setInterval(updateClock,1000);
+renderToonChatDesktopIcon();
+applyChatTheme();
 showDocuments();
 document.getElementById("dialogInput").addEventListener("keydown",e=>{if(e.key==="Enter")confirmDialog()});
 </script>
