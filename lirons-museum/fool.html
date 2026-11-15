@@ -1,0 +1,165 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>A Little Fool</title>
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background: #080808;
+            color: white;
+            font-family: Arial, sans-serif;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            overflow-x: hidden;
+        }
+
+        h1 {
+            margin-bottom: 25px;
+            font-size: 2rem;
+            letter-spacing: 3px;
+        }
+
+        .video-container {
+            width: 90%;
+            max-width: 900px;
+            border: 1px solid #333;
+            border-radius: 12px;
+            overflow: hidden;
+            background: black;
+        }
+
+        video {
+            display: block;
+            width: 100%;
+            height: auto;
+        }
+
+        .music-controls {
+            margin-top: 25px;
+            text-align: center;
+        }
+
+        button {
+            background: #222;
+            color: white;
+            border: 1px solid #555;
+            padding: 12px 25px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+
+        button:hover {
+            background: #444;
+        }
+
+        .song-title {
+            margin-top: 12px;
+            color: #aaa;
+            font-size: 14px;
+        }
+
+        footer {
+            margin-top: 35px;
+            color: #555;
+            font-size: 12px;
+        }
+
+        #youtube-player {
+            position: absolute;
+            left: -9999px;
+        }
+    </style>
+</head>
+
+<body>
+
+    <h1>LIRON'S MUSEUM</h1>
+
+    <div class="video-container">
+        <video autoplay muted loop playsinline>
+            <source
+                src="assets/videos/1000298239.mp4"
+                type="video/mp4"
+            >
+            Your browser does not support HTML video.
+        </video>
+    </div>
+
+    <div class="music-controls">
+
+        <button id="music-button">
+            ▶ Play Music
+        </button>
+
+        <p class="song-title">
+            FOOL-ME-NOT — rattlepate
+        </p>
+
+    </div>
+
+    <div id="youtube-player"></div>
+
+    <footer>
+        Liron's Museum
+    </footer>
+
+    <script>
+        let player;
+        let isPlaying = false;
+
+        // Load YouTube API
+        const tag = document.createElement('script');
+        tag.src = "https://www.youtube.com/iframe_api";
+
+        document.head.appendChild(tag);
+
+        function onYouTubeIframeAPIReady() {
+            player = new YT.Player('youtube-player', {
+                height: '0',
+                width: '0',
+                videoId: 'rL-Zq4NXPoU',
+
+                playerVars: {
+                    autoplay: 0,
+                    loop: 1,
+                    playlist: 'rL-Zq4NXPoU'
+                }
+            });
+        }
+
+        document.getElementById('music-button')
+            .addEventListener('click', function() {
+
+                if (!player) return;
+
+                if (isPlaying) {
+                    player.pauseVideo();
+
+                    this.textContent = '▶ Play Music';
+                    isPlaying = false;
+
+                } else {
+                    player.playVideo();
+
+                    this.textContent = '⏸ Pause Music';
+                    isPlaying = true;
+                }
+            });
+    </script>
+
+</body>
+</html>
